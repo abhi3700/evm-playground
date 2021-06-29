@@ -43,6 +43,9 @@ Ethereum Contracts [helpful for EOSIO Developers]
 > - Functions
 
 ### Contract
+* Contracts and libraries should be named using the CapWords style. Examples: SimpleToken, SmartBank, CertificateHashRepository, Player, Congress, Owned.
+* Contract and library names should also match their filenames.
+* If a contract file includes multiple contracts and/or libraries, then the filename should match the core contract.
 * Contracts consist of 2 main types:
 	- Persistent data kept in __state variables__
 	- Runnable __functions__ that can modify state variables
@@ -53,6 +56,20 @@ Ethereum Contracts [helpful for EOSIO Developers]
 
 * Creating contracts programmatically on Ethereum is best done via using the JavaScript API `web3.js`. It has a function called `web3.eth.Contract` to facilitate contract creation.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
+* When a contract is created, its constructor (a function declared with the constructor keyword) is executed once.
+* A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
+* Inheritance:
+```
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.4.0 <0.9.0;
+
+import "./Owned.sol";
+
+
+contract Congress is Owned, TokenRecipient {
+    //...
+}
+```
 
 #### [State Variable types](https://docs.soliditylang.org/en/develop/types.html#types)
 #### [Enums](https://docs.soliditylang.org/en/develop/types.html#enums) cannot have more than 256 members
