@@ -282,6 +282,17 @@ Uint constant public ENTRANCE_FEE = 1 ether; // admission fee
 mapping (uint => mapping (uint => mapping (uint => Player))) public players;    
 ```
 
+#### Mapping
+* can't be iterated across the keys unlike arrays.
+* Example - [Mapping.sol](./base/Mapping/Mapping.sol)
+* check if key exists:
+```
+if (abi.encodePacked(balances[addr]).length > 0) {
+    delete balances[addr];
+}
+```
+* delete key: `delete balances[addr]`
+
 #### Array
 * delete at an index using `delete myArray[3]`
 * delete the last element using `delete myArray[myArray.length-1]`

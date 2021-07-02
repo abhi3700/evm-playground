@@ -62,7 +62,7 @@ contract MemStor {
         return numbers.length;
     }
 
-    function getAllElement()  public view returns (uint[] memory) {
+    function getAllElement() external view returns(uint[] memory) {
         return numbers;
     }
 
