@@ -281,6 +281,34 @@ Uint constant public ENTRANCE_FEE = 1 ether; // admission fee
 // according to roomId => gameId => playerId => Player
 mapping (uint => mapping (uint => mapping (uint => Player))) public players;    
 ```
+* Storage keywords in Solidity is analogous to Computer’s hard drive. 
+* Storage holds data between function calls.
+* State variables and Local Variables of structs, array, mapping are always stored in storage by default.
+* Storage on the other hand is persistent, each execution of the Smart contract has access to the data previously stored on the storage area.
+
+#### Memory
+* Memory keyword in Solidity is analogous to Computer’s RAM. 
+* Much like RAM, Memory in Solidity is a temporary place to store data
+* The Solidity Smart Contract can use any amount of memory during the execution but once the execution stops, the Memory is completely wiped off for the next execution.
+* Function parameters including return parameters are stored in the memory.
+* Whenever a new instance of an array is created using the keyword ‘memory’, a new copy of that variable is created. Changing the array value of the new instance does not affect the original array.
+* Therefore, it is always better to use Memory for intermediate calculations and store the final result in Storage.
+* The memory location is temporary data and cheaper than the storage location.
+* Usually, Memory data is used to save temporary variables for calculation during function execution.
+* Local variables with a value type are stored in the memory. However, for a reference type, you need to specify the data location explicitly. Local variables with value types cannot be overriden explicitly. 
+```
+function doSomething() public  {  
+    
+  /* these all are local variables  */  
+    
+  bool memory flag2; //error   
+  uint Storage number2; // error  
+  address account2;                  
+} 
+```
+
+#### Calldata
+* Calldata is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, Calldata is the default location of parameters (not return parameters) of external functions.
 
 #### Mapping
 * can't be iterated across the keys unlike arrays.
@@ -291,6 +319,9 @@ if (abi.encodePacked(balances[addr]).length > 0) {
     delete balances[addr];
 }
 ```
+* get length of the mapping:
+  - whenever add the element, try to add a key_counter or an array holding the keys;
+  - that's how, the counter value or the length of the array is the length of the mapping.
 * delete key: `delete balances[addr]`
 
 #### Array
@@ -314,6 +345,33 @@ function popElement() public returns (uint []){
     arr.length--;
     return arr;
  }
+```
+
+#### Struct
+* They can have only fields, but not methods.
+* [Example](./base/MyStruct/MyStruct.sol)
+* definition
+```
+struct User {
+    address addr;
+    uint score;
+    string name;
+}
+
+// here, memory/storage can be used as per the requirement. `memory` is used here as it is not required to be stored & computation happening within the function itself.
+function foo(string calldata _name) external {
+    User memory u1 = User(msg.sender, 0, _name);
+    User memory u2 = User({name: _name, score: 0, addr: msg.sender})    // Pros: no need to remember the order. Cons: write little more variables
+
+    // access the variables
+    u1.addr;
+
+    // update
+    u1.score = 20;
+
+    // delete
+    delete u1;
+}
 ```
 
 #### Modifiers
@@ -439,6 +497,25 @@ if (x < 10)
         value: 42
  
     }));    
+```
+* Wrong way to use `storage`, `memory`: Here, State variables are always stored in the `storage`. Also, you can not explicitly override the location of state variables. 
+```
+pragma solidity ^0.5.0;  
+  
+contract DataLocation {  
+     
+   //storage     
+   uint stateVariable;  
+   uint[] stateArray;  
+}  
+❌ Unregulated way:
+pragma solidity ^0.5.0;  
+  
+contract DataLocation {  
+     
+   uint storage stateVariable; // error  
+   uint[] memory stateArray; // error  
+}
 ```
 * [Names to avoid](https://docs.soliditylang.org/en/v0.8.6/style-guide.html#names-to-avoid)
 
