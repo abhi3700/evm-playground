@@ -313,7 +313,12 @@ function doSomething() public  {
 #### Mapping
 * Mappings act as hash tables which consist of key types and corresponding value type pairs.
 * When mappings are initialized every possible key exists in the mappings and are mapped to values whose byte-representations are all zeros.
-* can't be iterated across the keys unlike arrays.
+* can't be iterated across the keys unlike arrays. But, can be iterated across keys by storing the keys into a separate state var arrays of keys.
+```
+mapping(address => User) userList2;
+// uint mappingLen; // M-1, cons: getting only length, but not able to iterate across keys
+address[] mappingKeyArr;  // M-2
+```
 * Example - [Mapping.sol](./base/Mapping/Mapping.sol)
 * check if key exists:
 ```
@@ -380,6 +385,11 @@ function foo(string calldata _name) external {
     delete u1;
 }
 ```
+
+#### Multi-index
+* directly it's not possible like in EOSIO using `eosio::multi_index`, but by creating a `mapping` with values type as `struct` & then get features like:
+  - to store the length of array & 
+  - also iterate across keys
 
 #### Modifiers
 * Modifier definition useHump ​​nomenclature,Initialslower case,Such as:

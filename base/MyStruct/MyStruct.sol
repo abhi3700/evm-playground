@@ -29,7 +29,7 @@ contract MyStruct {
 	User[] users;
 	mapping(address => User) userList2;
 	// uint mappingLen;	// M-1
-	address[] mappingKeyArr;	// M-1
+	address[] mappingKeyArr;	// M-2
 
 
 	function setName(address _addr, string calldata n) external {
