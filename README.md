@@ -311,6 +311,8 @@ function doSomething() public  {
 * Calldata is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, Calldata is the default location of parameters (not return parameters) of external functions.
 
 #### Mapping
+* Mappings act as hash tables which consist of key types and corresponding value type pairs.
+* When mappings are initialized every possible key exists in the mappings and are mapped to values whose byte-representations are all zeros.
 * can't be iterated across the keys unlike arrays.
 * Example - [Mapping.sol](./base/Mapping/Mapping.sol)
 * check if key exists:
@@ -319,10 +321,14 @@ if (abi.encodePacked(balances[addr]).length > 0) {
     delete balances[addr];
 }
 ```
+* Mapping length is missing, not multi-index directly, but can be made as multi-index by keeping the value as struct of many fields.
 * get length of the mapping:
   - whenever add the element, try to add a key_counter or an array holding the keys;
   - that's how, the counter value or the length of the array is the length of the mapping.
 * delete key: `delete balances[addr]`
+* Use cases:
+  - [blockchain-based puzzle game](https://github.com/upstateinteractive/blockchain-puzzle)
+    + a blockchain-based puzzle game that manages user state and ETH payments to players using smart contracts
 
 #### Array
 * delete at an index using `delete myArray[3]`
@@ -346,6 +352,7 @@ function popElement() public returns (uint []){
     return arr;
  }
 ```
+* get size/length of array using `arr.length`
 
 #### Struct
 * They can have only fields, but not methods.
@@ -638,3 +645,4 @@ contract Test {
 * [Solidity contract development specification](https://www.programmersought.com/article/4362686832/)
 * [Contract Hacks challenges](https://capturetheether.com/challenges/)
 * [Solidity Tutorial playlist](https://www.youtube.com/watch?v=jPHXG82WCYA&list=PLbbtODcOYIoE0D6fschNU4rqtGFRpk3ea)
+* [Mappings in Solidity Explained in Under Two Minutes](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)

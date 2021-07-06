@@ -28,6 +28,9 @@ contract MyStruct {
 	
 	User[] users;
 	mapping(address => User) userList2;
+	// uint mappingLen;	// M-1
+	address[] mappingKeyArr;	// M-1
+
 
 	function setName(address _addr, string calldata n) external {
 		User[] storage u = users;
@@ -117,14 +120,40 @@ contract MyStruct {
 		for(uint i = 0; i < users.length; ++i) {
 			if (users[i].addr == _addr) {
 				userList2[_addr] = users[i];
+				// ++mappingLen;		// M-1
+				mappingKeyArr.push(_addr);		// M-2
+				break;
+			}
+		}
+	}
+
+	function getNamefromMapping(address _addr) external view returns(string memory) {
+		string memory name = "";
+		for(uint i=0; i < mappingKeyArr.length; ++i) {
+			if(mappingKeyArr[i] == _addr) {
+				name = userList2[_addr].name;
 				break;
 			}
 		}
 
-		
+		return name;
 	}
 
-	// function getUserfrmMap(address _addr) external view returns(User) {
+	function getScorefromMapping(address _addr) external view returns(uint) {
+		uint score = 0;
+		for(uint i=0; i < mappingKeyArr.length; ++i) {
+			if(mappingKeyArr[i] == _addr) {
+				score = userList2[_addr].score;
+				break;
+			}
+		}
 
-	// }
+		return score;
+	}
+	
+	function getMappingLen() external view returns(uint) {
+		// return mappingLen;	// M-1
+		return mappingKeyArr.length;	// M-2
+	}
+
 }
