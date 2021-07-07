@@ -13,3 +13,6 @@
 1. `$ npx hardhat` >> Choose "Create an empty hardhat.config.js". Now, config file created
 1. Now, install plugins using `$ npm install -D @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle ethereum-wallet chai`
 1. Next add the line `require('@nomiclabs/hardhat-waffle')` in file `hardhat.config.js`
+
+### OpenZeppelin
+* `$ npm install @openzeppelin/contracts`

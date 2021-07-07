@@ -32,10 +32,12 @@ contract SendEthfrmCont {
 
     function sendEther(address payable recipient, uint256 amt) external {
         // transfer 1 ETH from contract to recipient
-        // recipient.transfer(1 ether);         // [NOT Recommended]
+        // recipient.transfer(1 ether);         // safer than send(), also has gas limit() like send() 
 
-        (bool success, ) = recipient.call{value:amt}("");
-        require(success, "Transfer failed.");    
+        // only cons: doesn't have gas limit
+        (bool success, ) = recipient.call{value:amt}(new bytes(0));
+        require(success, "Transfer failed.");
+
     }
 
     function balanceOf() external view returns(uint256) {

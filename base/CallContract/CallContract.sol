@@ -46,8 +46,8 @@ contract A {
 
 }
 
-// contract B {
-//     function hello() external pure returns(string memory) {
-//         return "hello world";
-//     }
-// }
+contract B {
+    function hello() external pure returns(string memory) {
+        return "hello world";
+    }
+}

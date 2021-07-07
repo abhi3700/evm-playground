@@ -76,8 +76,9 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 
 * Creating contracts programmatically on Ethereum is best done via using the JavaScript API `web3.js`. It has a function called `web3.eth.Contract` to facilitate contract creation.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
-* When a contract is created, its constructor (a function declared with the constructor keyword) is executed once.
+* When a contract is created, its constructor (a function declared with the constructor keyword) is executed once. All the values are immutable: they can only be set once during deploy.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
+* Constructor can't be called from inside another function
 * Inheritance:
 ```
 // SPDX-License-Identifier: GPL-3.0
@@ -398,7 +399,7 @@ function foo(string calldata _name) external {
 #### Sending Ether to a smart contract (function payable keyword)
 * [example](./base/SendEthToCont/SendEthToCont.sol)
 
-#### Sending Ether from a smart contract (function payable keyword)
+#### Sending Ether from a smart contract
 * [example](./base/SendEthfrmCont/SendEthfrmCont.sol)
 * `send`, `transfer` is avoided as per latest `v0.8.6`, rather `.call()` is preferred
 
@@ -435,7 +436,7 @@ function kill() onlyowner public {
 * The idea behind this distinction is that `address payable` is an address you can send Ether to, while a plain `address` cannot be sent Ether.
 * Implicit conversions from `address payable` to `address` are allowed, whereas conversions from `address` to `address payable` must be explicit via `payable(<address>)`
 * If you need a variable of type `address` and plan to send Ether to it, then declare its type as `address payable` to make this requirement visible. Also, try to make this distinction or conversion as early as possible.
-* `transfer` is much safer than `send`, as the former throws an exception.
+* `transfer` is much safer than `send`, as the former throws an exception. And both has gas limit of 2300 gas
 * `transfer` (throws exception):
 ```
 <address>.transfer(amount);
@@ -685,12 +686,16 @@ contract Test {
 * `constant` replaced by `view` in function
 * `msg.gas` replaced by `gasleft()` in global variables
 * `now` replaced by `block.timestamp` in global variables
-* `send` ( `recipient.send(1 ether);` ), `transfer` ( `recipient.transfer(1 ether);` ) is replaced by this:
+* `send` ( `recipient.send(1 ether);` ), `transfer` ( `recipient.transfer(1 ether);` ) is less safer than this:
 ```
-(bool success, ) = recipient.call{value:amt}("");
+(bool success, ) = recipient.call{gas: 10000, value:1 ether}(new bytes(0));
 require(success, "Transfer failed.");
 ```
   - [original discussion](https://github.com/ethereum/solidity/issues/610)
+  - hence, `call` > `transfer` > `send` [More](https://docs.soliditylang.org/en/latest/types.html#members-of-addresses)
+
+> There are some dangers in using send: The transfer fails if the call stack depth is at 1024 (this can always be forced by the caller) and it also fails if the recipient runs out of gas. So in order to make safe Ether transfers, always check the return value of send, use transfer or even better: use a pattern where the recipient withdraws the money.
+
 * The distinction between `address` and `address payable` was introduced with version `0.5.0`. [More](https://docs.soliditylang.org/en/v0.6.10/types.html#address)
 
 
