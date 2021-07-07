@@ -396,7 +396,11 @@ function foo(string calldata _name) external {
   - also iterate across keys
 
 #### Sending Ether to a smart contract (function payable keyword)
-* []
+* [example](./base/SendEthToCont/SendEthToCont.sol)
+
+#### Sending Ether from a smart contract (function payable keyword)
+* [example](./base/SendEthfrmCont/SendEthfrmCont.sol)
+* `send`, `transfer` is avoided as per latest `v0.8.6`, rather `.call()` is preferred
 
 #### Modifiers
 * Modifier definition useHump ​​nomenclature,Initialslower case,Such as:
@@ -424,6 +428,28 @@ function kill() onlyowner public {
  
 }
 ```
+
+#### Address
+* [Member types](https://docs.soliditylang.org/en/latest/units-and-global-variables.html#members-of-address-types)
+* `address payable`: Same as `address`, but with the additional members `transfer` and `send`
+* The idea behind this distinction is that `address payable` is an address you can send Ether to, while a plain `address` cannot be sent Ether.
+* Implicit conversions from `address payable` to `address` are allowed, whereas conversions from `address` to `address payable` must be explicit via `payable(<address>)`
+* If you need a variable of type `address` and plan to send Ether to it, then declare its type as `address payable` to make this requirement visible. Also, try to make this distinction or conversion as early as possible.
+* `transfer` is much safer than `send`, as the former throws an exception.
+* `transfer` (throws exception):
+```
+<address>.transfer(amount);
+```
+* `send` (return `bool` type):
+```
+bool success = <address>.send(amount);
+if(!success) {
+  // deal with the failure case
+} else {
+  // deal with the success case
+}
+```
+
 
 ### Special Variables and Functions
 * There are special variables and functions which always exist in the global namespace and are mainly used to provide information about the blockchain or are general-use utility functions
@@ -652,10 +678,21 @@ contract Test {
 }
 ```
 
+### Reentrancy
+* [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
+
 ## DEPRECATED
 * `constant` replaced by `view` in function
 * `msg.gas` replaced by `gasleft()` in global variables
 * `now` replaced by `block.timestamp` in global variables
+* `send` ( `recipient.send(1 ether);` ), `transfer` ( `recipient.transfer(1 ether);` ) is replaced by this:
+```
+(bool success, ) = recipient.call{value:amt}("");
+require(success, "Transfer failed.");
+```
+  - [original discussion](https://github.com/ethereum/solidity/issues/610)
+* The distinction between `address` and `address payable` was introduced with version `0.5.0`. [More](https://docs.soliditylang.org/en/v0.6.10/types.html#address)
+
 
 ## References
 * [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)
