@@ -161,6 +161,10 @@ function() public payable {
     emit Deposit(msg.sender, msg.value);
 }
 ```
+* indexing a field inside an event. This is done using `indexed`, shown [here](./base/MyEvent/MyEvent.sol).
+* Max. 3 indexing can be done.
+* Events can't be read from smart contract. This happens from blockchain to the outside world.
+* Events consume very less gas, as they are not `storage` variables.
 
 #### [Function](https://docs.soliditylang.org/en/develop/types.html#enums)
 ```
@@ -390,6 +394,9 @@ function foo(string calldata _name) external {
 * directly it's not possible like in EOSIO using `eosio::multi_index`, but by creating a `mapping` with values type as `struct` & then get features like:
   - to store the length of array & 
   - also iterate across keys
+
+#### Sending Ether to a smart contract (function payable keyword)
+* []
 
 #### Modifiers
 * Modifier definition useHump ​​nomenclature,Initialslower case,Such as:
