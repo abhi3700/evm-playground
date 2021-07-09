@@ -14,6 +14,9 @@ $ which truffle
 
 ## Commands
 * `truffle init` - creates an empty Truffle project with no example contracts included.
+* `truffle develop` - create a network for SC deploy
+* `truffle migrate` - migrate the contracts onto the running network
+* `truffle migrate --reset` - replace the deployed contracts with new addresses
 
 
 ## Project Setup
