@@ -33,5 +33,7 @@ if web3.isConnected():
 	message_hello = contract.functions.hello().call()
 	print(message_hello)
 
+	print(contract.functions.owner().call())
+
 else:
 	print(f"Sorry, blockchain network - {blockchain_address} is not running!")
