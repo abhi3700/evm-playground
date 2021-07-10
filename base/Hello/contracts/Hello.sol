@@ -2,7 +2,7 @@
 pragma solidity ^0.8.6;
 
 contract Hello {
-    address owner;
+    address public owner;
     string public hello;
     string public name;
 
