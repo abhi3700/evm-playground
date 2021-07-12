@@ -683,6 +683,90 @@ contract Test {
 ### Reentrancy
 * [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
 
+### Gas Optimization
+* Variable packing:
+  - Solidity stores data in 256-bit memory slots. Variables less than 256 bits will be stored in a single slot, Data that does not fit in a single slot is spread over several slots.
+  - Each storage slot costs gas, packing the variables helps you optimize your gas usage by reducing the number of slots our contract requires.
+  - [Image](./img/solidity_gasopt_1_variables_packing.png)
+* Turn-on Solidity Optimizer: 
+  - specify an optimization flag to tell the Solidity compiler to produce highly optimized bytecode. 
+  - [Image](./img/solidity_gasopt_2_turnon_sol_optimizer.png)
+* Delete variables that you don’t need:
+  - In Ethereum, you get a gas refund for freeing up storage space.
+  - Deleting a variable refund 15,000 gas up to a maximum of half the gas cost of the transaction. Deleting with the `delete` keyword is equivalent to assigning the initial value for the data type, such as `0` for integers.
+* Compute known value-off chain:
+  - If you know what data to hash, there is no need to consume more computational power to hash it using `keccak256` , you’ll end up consuming 2x amount of gas.
+  - [Image](./img/solidity_gasopt_3_compute_known_val_offchain.png)
+* Do not shrink Variables:
+  - If only `uint8`, `uint16`, `uint32`, etc. are used as a state variables, then there is going to be gas consumed in converting it into `256 bit`. So, it's better if it's already defined as `uint256`
+  - In solidity, you can pack multiple small variables into one slot, but if you are defining a lone variable and can’t pack it, it’s optimal to use a `uint256` rather than `uint8`. 
+* Data location:
+  - Variable packing only occurs in storage — memory and call data does not get packed. You will not save space trying to pack function arguments or local variables.
+* Reference data types:
+  - Structs and arrays always begin in a new storage slot — however their contents can be packed normally. A uint8 array will take up less space than an equal length uint256 array.
+  - It is more gas efficient to initialize a tightly packed struct with separate assignments instead of a single assignment. Separate assignments makes it easier for the optimizer to update all the variables at once.
+  - Initialize structs like this:
+```
+Point storage p = Point()
+p.x = 0;
+p.y = 0;
+```
+  - Instead of:
+```
+Point storage p = Point(0, 0);
+```
+* Inheritance
+  - When we extend a contract, the variables in the child can be packed with the variables in the parent.
+  - The order of variables is determined by C3 linearization. For most applications, all you need to know is that child variables come after parent variables.
+* Use Events:
+  - Data that does not need to be accessed on-chain can be stored in events to save gas.
+  - While this technique can work, it is not recommended — events are not meant for data storage. If the data we need is stored in an event emitted a long time ago, retrieving it can be too time consuming because of the number of blocks we need to search.
+* User Assembly:
+  - When you compile a Solidity smart contract, it is transformed into a series of EVM (Ethereum virtual machine) opcodes.
+  - With assembly, you write code very close to the opcode level. It’s not very easy to write code at such a low level, but the benefit is that you can manually optimize the opcode and outperform Solidity bytecode in some cases.
+* Use Libraries:
+  - If you have several contracts that use the same functionalities, you can extract these common functions into a single library, and then you’re gonna deploy this library just once and all your contracts will point to this library to execute the shared functionalities.
+* Minimize on-chain data:
+  - The less you put on-chain, the less your gas costs.
+  - When you design a Dapp you don’t have to put 100% of your data on the blockchain, usually, you have part of the system (Unnecessary data (metadata, etc .. ) ) on a centralized server.
+* Avoid manipulating storage data
+  - Performing operations on memory or call data, which is similar to memory is always cheaper than storage.
+  - [Image](./img/solidity_gasopt_4_avoid_manipul_storage_data.png)
+  - In the Second contract, before running the for loop we’re assigning the value of a storage data d to `_d` to avoid accessing the storage each time we iterate.
+  - A common way to reduce the number of storage operations is manipulating a local memory variable before assigning it to a storage variable.
+  - We see this often in loops:
+```
+uint256 return = 5; // assume 2 decimal places
+uint256 totalReturn;
+function updateTotalReturn(uint256 timesteps) external {
+    uint256 r = totalReturn || 1;
+    for (uint256 i = 0; i < timesteps; i++) {
+        r = r * return;
+    }
+    totalReturn = r;
+}
+```
+  - In `updateTotalReturn`, we use the local memory variable `r` to store intermediate values and assign the final value to our storage variable `totalReturn`.
+* [This reporter](https://www.npmjs.com/package/eth-gas-reporter) displays gas consumption changes to each function in your smart contract.
+* Use Short-Circuiting rules to your advantage:
+  - When using logical disjunction (||), logical conjunction (&&), make sure to order your functions correctly for optimal gas usage. 
+  - In logical disjunction (OR), if the first function resolves to true, the second one won’t be executed and hence save you gas. 
+  - In logical disjunction (AND), if the first function evaluates to false, the next function won’t be evaluated. Therefore, you should order your functions accordingly in your solidity code to reduce the probability of needing to evaluate the second function.
+* Use `ERC1167` To Deploy the same Contract many time
+  - EIP1167 minimal proxy contract is a standardized, gas-efficient way to deploy a bunch of contract clones from a factory.EIP1167 not only minimizes length, but it is also literally a “minimal” proxy that does nothing but proxying. __It minimizes trust.__ Unlike other upgradable proxy contracts that rely on the honesty of their administrator (who can change the implementation), the address in EIP1167 is hardcoded in bytecode and remain unchangeable.
+* Avoid assigning values that You’ll never use:
+  - Every variable assignment in Solidity costs gas. When initializing variables, we often waste gas by assigning default values that will never be used.
+  - `uint256 value;` is cheaper than `uint256 value = 0;`.
+* Use Mappings instead of Arrays:
+  - Solidity is the first language in which mappings are less expensive than arrays. 
+  - Most of the time it will be better to use a `mapping` instead of an array because of its cheaper operations.
+* Limit the string length in the Require Statements `require()`
+  - define `strings` as `bytes32`
+* Fixed-size Arrays are cheaper than dynamic ones:
+  - If we know how long an array should be, we specify a fixed size: `uint256[12] monthlyTransfers;`
+  - This same rule applies to strings. A `string` or `bytes` variable is dynamically sized; we should use a `bytes32` if our string is short enough to fit.
+  - If we absolutely need a dynamic array, it is best to structure our functions to be additive instead of subtractive. Extending an array costs constant gas whereas truncating an array costs linear gas.
+
 ## DEPRECATED
 * `constant` replaced by `view` in function
 * `msg.gas` replaced by `gasleft()` in global variables
@@ -706,3 +790,5 @@ require(success, "Transfer failed.");
 * [Contract Hacks challenges](https://capturetheether.com/challenges/)
 * [Solidity Tutorial playlist](https://www.youtube.com/watch?v=jPHXG82WCYA&list=PLbbtODcOYIoE0D6fschNU4rqtGFRpk3ea)
 * [Mappings in Solidity Explained in Under Two Minutes](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)
+* [Gas Optimization in Solidity](https://yamenmerhi.medium.com/gas-optimization-in-solidity-75945e12322f)
+* [Gas Optimization in Solidity Part I: Variables](https://medium.com/coinmonks/gas-optimization-in-solidity-part-i-variables-9d5775e43dde)
