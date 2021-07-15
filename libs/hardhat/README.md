@@ -130,6 +130,10 @@ module.exports = {
 * `$ npx hardhat compile`: compile a contract
 * `$ npx hardhat compile --force`: compile a contract, even if it's compiled already
 * `$ npx hardhat clean`: clear the `cache` folder and delete the `artifacts/` folder.
+* Multiple Solidity versions compilation within same folder - [here](https://hardhat.org/guides/compile-contracts.html#multiple-solidity-versions)
+* `npx hardhat test` - runs all the files in the folder
+* `npx hardhat test ./test/Greeter-test.js` - runs particularly the file
+* [testing for selected `describe` inside `*.js` file, add `.only`](https://mochajs.org/#exclusive-tests)
 
 ### OpenZeppelin
 * `$ npm install @openzeppelin/contracts`
@@ -139,8 +143,10 @@ module.exports = {
 * This gets displayed, when there is an already existing `artifacts/` folder.
 * Solution: delete the folder & then `$ npx hardhat compiled`
 
+### Console.log Support error
+* Check the type of variables parsed. Ensure it's of these supported types: Integer, String, Bool, address
+
 ## TODO
-- deploy to a live network using Ganache
 - call the solidity functions using CLI
 
 ## References

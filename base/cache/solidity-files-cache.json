@@ -1,0 +1,111 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/Greeter.sol": {
+      "lastModificationDate": 1626351276717,
+      "contentHash": "1cbce65df197103457e05f71a5d6c89d",
+      "sourceName": "contracts/Greeter.sol",
+      "solcConfig": {
+        "version": "0.8.6",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.6"
+      ],
+      "artifacts": [
+        "Greeter"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1626347073360,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.6",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/MyToken.sol": {
+      "lastModificationDate": 1626354282063,
+      "contentHash": "05de39624ad86c3877c9eb0cce449a71",
+      "sourceName": "contracts/MyToken.sol",
+      "solcConfig": {
+        "version": "0.8.6",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.6"
+      ],
+      "artifacts": [
+        "MyToken"
+      ]
+    }
+  }
+}
