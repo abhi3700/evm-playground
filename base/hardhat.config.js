@@ -1,5 +1,11 @@
 require("@nomiclabs/hardhat-waffle");
 
+/*
+  mainly for ERC20 Token contract, but can be used for 
+  any contract using this lib
+*/
+require('@openzeppelin/hardhat-upgrades');
+
 // Go to https://admin.moralis.io/speedyNodes, sign up, create
 // a new App in its dashboard, and replace "KEY" with its key
 const MORALIS_API_KEY = "a0bb5e42536be98ee47765ff";
@@ -12,13 +18,26 @@ const RINKEBY_PRIVATE_KEY = "cf2a6872928392175e383fc10f93c13eab0c050bd4dbd6b4520
 
 module.exports = {
   solidity: {
-    version: "0.8.6",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 1000,
+    compilers: [
+      {
+        version: "0.8.6",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
       },
-    },
+      {
+        version: "0.5.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
+      },
+    ]
   },
   networks: {
     rinkeby: {
