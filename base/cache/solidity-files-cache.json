@@ -2,11 +2,11 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/Greeter.sol": {
-      "lastModificationDate": 1626351276717,
-      "contentHash": "1cbce65df197103457e05f71a5d6c89d",
+      "lastModificationDate": 1626605093523,
+      "contentHash": "d87446d8ac3117eb9489f1ebefa52d40",
       "sourceName": "contracts/Greeter.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -31,7 +31,7 @@
         "hardhat/console.sol"
       ],
       "versionPragmas": [
-        "^0.8.6"
+        "^0.8.4"
       ],
       "artifacts": [
         "Greeter"
@@ -42,7 +42,7 @@
       "contentHash": "cc4777addd464ea56fa35b1c45df0591",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -72,11 +72,11 @@
       ]
     },
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/MyToken.sol": {
-      "lastModificationDate": 1626354282063,
-      "contentHash": "05de39624ad86c3877c9eb0cce449a71",
+      "lastModificationDate": 1626605103142,
+      "contentHash": "23aec296a12e004ac38b5cacc0c3c891",
       "sourceName": "contracts/MyToken.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -101,18 +101,18 @@
         "hardhat/console.sol"
       ],
       "versionPragmas": [
-        "^0.8.6"
+        "^0.8.4"
       ],
       "artifacts": [
         "MyToken"
       ]
     },
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/ERC20Token.sol": {
-      "lastModificationDate": 1626370092736,
-      "contentHash": "b7fa3683f1fe7d48c9d620e09722694b",
+      "lastModificationDate": 1626605086560,
+      "contentHash": "4d3d26451495bcbf49b9eb5bbfe834d6",
       "sourceName": "contracts/ERC20Token.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -138,7 +138,7 @@
         "hardhat/console.sol"
       ],
       "versionPragmas": [
-        "^0.8.6"
+        "^0.8.4"
       ],
       "artifacts": [
         "ERC20Token"
@@ -149,7 +149,7 @@
       "contentHash": "acad756301f0fb200ecc66138e8cd5c5",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -187,7 +187,7 @@
       "contentHash": "0eac3e1a83ee62326ca007811285b274",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -221,7 +221,7 @@
       "contentHash": "aa1be06992a99bb7393b26a6af3c4dfb",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -257,7 +257,7 @@
       "contentHash": "07f148e0d44b2ffc23b3ae6dd6e38cfb",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -287,11 +287,11 @@
       ]
     },
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/FactoryContract.sol": {
-      "lastModificationDate": 1626553377026,
-      "contentHash": "e9361ddfa6ad0ca42c8506a9b0f17d07",
+      "lastModificationDate": 1626607688593,
+      "contentHash": "59f57d7e9c5f3bb29f7aebec56aa5123",
       "sourceName": "contracts/FactoryContract.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -316,7 +316,7 @@
         "hardhat/console.sol"
       ],
       "versionPragmas": [
-        "^0.8.6"
+        "^0.8.4"
       ],
       "artifacts": [
         "Counter",
@@ -324,11 +324,11 @@
       ]
     },
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/CrowdFunding.sol": {
-      "lastModificationDate": 1626554327218,
-      "contentHash": "fe3e7a21c0c6967475775c582a53bca6",
+      "lastModificationDate": 1626605083895,
+      "contentHash": "dff5605bfd7841ddba58d45c8c55e256",
       "sourceName": "contracts/CrowdFunding.sol",
       "solcConfig": {
-        "version": "0.8.6",
+        "version": "0.8.4",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -351,10 +351,85 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.6"
+        "^0.8.4"
       ],
       "artifacts": [
         "CrowdFunding"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/BaseCaller.sol": {
+      "lastModificationDate": 1626615336451,
+      "contentHash": "96b9281fa4b447034ac5543820d7a4d0",
+      "sourceName": "contracts/BaseCaller.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Base",
+        "Caller"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/ContextSwitcher.sol": {
+      "lastModificationDate": 1626613716879,
+      "contentHash": "0eccc0edb32e6c7b00cf634f45d9a4e2",
+      "sourceName": "contracts/ContextSwitcher.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Base",
+        "FirstCaller",
+        "SecondCaller"
       ]
     }
   }

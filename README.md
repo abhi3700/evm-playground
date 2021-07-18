@@ -501,6 +501,19 @@ if(!success) {
 }
 ```
 
+#### Inter-Contract execution
+* [Example 1: Base Caller Contracts](./base/contracts/BaseCaller.sol)
+* [Example 2: Context Switcher](./base/contracts/ContextSwitcher.sol)
+	- call, delegatecall
+* calling a contract function with multiple arguments:
+```
+// w/o gas limit
+x.call(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myUIntVal, myStringVal, myAddressVal));
+
+// with gas limit (in Wei)
+x.call.value(1000)(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myUIntVal, myStringVal, myAddressVal));
+```
+
 
 ### Special Variables and Functions
 * There are special variables and functions which always exist in the global namespace and are mainly used to provide information about the blockchain or are general-use utility functions
@@ -841,6 +854,7 @@ require(success, "Transfer failed.");
 require(_counters[account] != Counter(0));			// as per v0.5.17
 require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 ```
+* `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168)
 
 ## Cons of EVM Solidity (when compared to EOSIO)
 * __Payable__: Unlike EOSIO, function can't be triggered by sending other tokens, but only ETH.

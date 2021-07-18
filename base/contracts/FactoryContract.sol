@@ -1,11 +1,17 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.4;
 
 import "hardhat/console.sol";
 // import "@openzeppelin/contracts/math/SafeMath.sol";
 
 
 /*
+About
+- Here, during deployment, only deploy "FactoryContract" because, the Counter is used as a user-defined type.
+
+Watch Video for understanding:
+    - "https://github.com/abhi3700/ethio_playground_videos/blob/main/factory_contract_demo.m4v"
+
 References: 
     - https://ethereumdev.io/interact-with-other-contracts-from-solidity/
 */
