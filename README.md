@@ -514,6 +514,25 @@ x.call(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myU
 x.call.value(1000)(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myUIntVal, myStringVal, myAddressVal));
 ```
 
+### Libraries
+* Libraries are contracts that do not have storage, they cannot hold ether.
+* They cannot have state variables
+* They cannot inherit or be inherited by other contracts. 
+* Libraries can be seen as implicit base contracts of the contracts that use them.
+* They exist for the purpose of code reuse.
+* They cannot receive Ether
+* They cannot be destroyed
+* Libraries are similar to contracts, but their purpose is that they are deployed only once at a specific address and their code is reused using the `DELEGATECALL` (`CALLCODE` until Homestead) feature of the EVM. This means that if library functions are called, their code is executed in the context of the calling contract, i.e. `this` points to the calling contract, and especially the storage from the calling contract can be accessed.
+* Contracts can call library functions without having to implement or deploy the functions for itself - [allowing the library functions to modify the state of the calling contract](https://docs.soliditylang.org/en/latest/contracts.html#libraries). 
+* This is made possible by the DELEGATECALL opcode of the EVM. This enables developers to use code that has already been audited and battle-tested in the wild.
+* A caveat - calling a library function from a contract is a bit more expensive than calling internal functions, so there is a trade-off to consider. If the contract functions calling the library are frequently called, it may be better to pay the higher deployment cost to get cheaper function calls. You will have to run tests to determine which is best for your use case.
+* To connect to a library, you need the library contract as well as the address of the deployed instance.
+
+#### Using For
+* The directive `using A for B;` can be used to attach library functions (from the library A) to any type (B) in the context of a contract. 
+* The effect of `using A for *;` is that the functions from the library `A` are attached to any type.
+
+### Oracle
 
 ### Special Variables and Functions
 * There are special variables and functions which always exist in the global namespace and are mainly used to provide information about the blockchain or are general-use utility functions
@@ -745,9 +764,6 @@ contract Test {
 ### Destroy
 * It makes the contract inoperable.
 
-### Reentrancy
-* [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
-
 ### Gas Optimization
 * Variable packing:
 	- Solidity stores data in 256-bit memory slots. Variables less than 256 bits will be stored in a single slot, Data that does not fit in a single slot is spread over several slots.
@@ -832,6 +848,21 @@ function updateTotalReturn(uint256 timesteps) external {
 	- This same rule applies to strings. A `string` or `bytes` variable is dynamically sized; we should use a `bytes32` if our string is short enough to fit.
 	- If we absolutely need a dynamic array, it is best to structure our functions to be additive instead of subtractive. Extending an array costs constant gas whereas truncating an array costs linear gas.
 
+## Smart Contract Security
+* The attacks are:
+	- Reentrancy
+
+### Reentrancy
+* [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
+
+### More
+* [By Consensys](https://consensys.github.io/smart-contract-best-practices/)
+* [Common Bugs/Attacks and Best Practices](https://sunnya97.gitbooks.io/a-beginner-s-guide-to-ethereum-and-dapp-developme/content/smart-contract-best-practices.html)
+* [To Sink Frontrunners, Send in the Submarines](https://hackingdistributed.com/2017/08/28/submarine-sends/)
+* [Ethereum is a Dark Forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest/)
+* [A founder’s guide to smart contact audits](https://blog.b9lab.com/https-blog-b9lab-com-saved-by-audits-bc64ea65446c)
+
+
 ## DEPRECATED
 * `constant` replaced by `view` in function
 * `msg.gas` replaced by `gasleft()` in global variables
@@ -854,7 +885,7 @@ require(success, "Transfer failed.");
 require(_counters[account] != Counter(0));			// as per v0.5.17
 require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 ```
-* `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168)
+* `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168). `callcode` was until Homestead.
 
 ## Cons of EVM Solidity (when compared to EOSIO)
 * __Payable__: Unlike EOSIO, function can't be triggered by sending other tokens, but only ETH.

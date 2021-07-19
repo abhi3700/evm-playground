@@ -15,6 +15,8 @@ Inter-Contract Execution
     DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. 
     If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob).
 
+- `call` will make change in the callee contract storage variables (one that is called, A->B, B is callee). 
+- `delegatecall` will make change in the caller contract storage variables (one that calls the callee, A->B, A is caller). Used normally in case of deployed libraries.
 - For more, refer https://ethereum.stackexchange.com/a/3672/76168
 
 - NOTE: here, source code of "Base contract" is not needed, just its address.
