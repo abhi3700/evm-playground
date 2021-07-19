@@ -875,7 +875,11 @@ function withdrawBalance() public {
     require(msg.sender.call.value(amountToWithdraw)()); // The user's balance is already 0, so future invocations won't withdraw anything
 }
 ```
+* The best practices to avoid Reentrancy weaknesses are:
+	- Make sure all internal state changes are performed before the call is executed. This is known as the Checks-Effects-Interactions pattern
+	- Use a reentrancy lock (ie. OpenZeppelin's ReentrancyGuard.
 * [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
+* [Reentrancy by SWC](https://swcregistry.io/docs/SWC-107)
 
 ### More
 * [By Consensys](https://consensys.github.io/smart-contract-best-practices/)
@@ -883,6 +887,7 @@ function withdrawBalance() public {
 * [To Sink Frontrunners, Send in the Submarines](https://hackingdistributed.com/2017/08/28/submarine-sends/)
 * [Ethereum is a Dark Forest](https://www.paradigm.xyz/2020/08/ethereum-is-a-dark-forest/)
 * [A founder’s guide to smart contact audits](https://blog.b9lab.com/https-blog-b9lab-com-saved-by-audits-bc64ea65446c)
+* [SWC Registry](https://swcregistry.io/)
 
 
 ## DEPRECATED
