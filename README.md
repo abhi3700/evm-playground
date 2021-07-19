@@ -853,6 +853,28 @@ function updateTotalReturn(uint256 timesteps) external {
 	- Reentrancy
 
 ### Reentrancy
+* It can be problematic because calling external contracts passes control flow to them. The called contract may take over the control flow and end up calling the smart contract function again in a recursive manner.
+```
+// INSECURE
+mapping (address => uint) private userBalances;
+
+function withdrawBalance() public {
+    uint amountToWithdraw = userBalances[msg.sender];
+    require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call withdrawBalance again
+    userBalances[msg.sender] = 0;
+}
+```
+* If you can’t remove the external call, the next simplest way to prevent this attack is to do the internal work before making the external function call.
+```
+// SECURE
+mapping (address => uint) private userBalances;
+
+function withdrawBalance() public {
+    uint amountToWithdraw = userBalances[msg.sender];
+    userBalances[msg.sender] = 0;
+    require(msg.sender.call.value(amountToWithdraw)()); // The user's balance is already 0, so future invocations won't withdraw anything
+}
+```
 * [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
 
 ### More

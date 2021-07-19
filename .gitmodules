@@ -1,0 +1,3 @@
+[submodule "libs/SetTypes"]
+	path = libs/SetTypes
+	url = https://github.com/rob-Hitchens/SetTypes.git
