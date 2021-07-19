@@ -1,3 +1,6 @@
 [submodule "libs/SetTypes"]
 	path = libs/SetTypes
 	url = https://github.com/rob-Hitchens/SetTypes.git
+[submodule "base/openzeppelin"]
+	path = base/openzeppelin
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts.git

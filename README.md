@@ -479,6 +479,30 @@ function kill() onlyowner public {
  
 }
 ```
+* Example:
+```
+modifier modi() {
+    prolog();
+    _;
+    epilog();
+}
+
+function func() modi() {
+    stuff();
+}
+```
+
+is equivalent to 
+
+```
+function func() {
+    prolog();
+    stuff();
+    epilog();
+}
+```
+
+* In the above example, if the stuff() includes any external call (say `call`, `delegatecall`), then the `epilog()` of the modifier is executed only after the whole function `func()` is executed. Watch this [Understanding Reentrancy modifier execution](https://github.com/abhi3700/ethio_playground_videos/blob/main/reentrancy_attack_demo.m4v)
 
 #### Address
 * [Member types](https://docs.soliditylang.org/en/latest/units-and-global-variables.html#members-of-address-types)
@@ -853,6 +877,7 @@ function updateTotalReturn(uint256 timesteps) external {
 	- Reentrancy
 
 ### Reentrancy
+* One of the major dangers of calling external contracts is that they can take over the control flow. In the reentrancy attack (a.k.a. recursive call attack), a malicious contract calls back into the calling contract before the first invocation of the function is finished. This may cause the different invocations of the function to interact in undesirable ways.
 * It can be problematic because calling external contracts passes control flow to them. The called contract may take over the control flow and end up calling the smart contract function again in a recursive manner.
 ```
 // INSECURE
@@ -875,13 +900,36 @@ function withdrawBalance() public {
     require(msg.sender.call.value(amountToWithdraw)()); // The user's balance is already 0, so future invocations won't withdraw anything
 }
 ```
+* In this case, the attacker can call transfer() when their code is executed on the external call in withdrawBalance. Since their balance has not yet been set to 0, they are able to transfer the tokens even though they already received the withdrawal. This vulnerability was also used in the DAO attack.
+```
+// INSECURE
+mapping (address => uint) private userBalances;
+
+function transfer(address to, uint amount) {
+    if (userBalances[msg.sender] >= amount) {
+       userBalances[to] += amount;
+       userBalances[msg.sender] -= amount;
+    }
+}
+
+function withdrawBalance() public {
+    uint amountToWithdraw = userBalances[msg.sender];
+    require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call transfer()
+    userBalances[msg.sender] = 0;
+}
+```
+* Remediation: It is generally a good idea to handle your internal contract state changes before calling external contracts, such as in the withdrawal design pattern. Use battle tested design patterns and learn from other people’s mistakes and heed their advice.
+* [example-1](http://lswcregistry.io/docs/SWC-107#modifier_reentrancysol) & its [fix](https://swcregistry.io/docs/SWC-107#modifier_reentrancy_fixedsol)
+* [example-2](https://swcregistry.io/docs/SWC-107#simple_daosol) & its [fix](https://swcregistry.io/docs/SWC-107#simple_dao_fixedsol)
 * The best practices to avoid Reentrancy weaknesses are:
 	- Make sure all internal state changes are performed before the call is executed. This is known as the Checks-Effects-Interactions pattern
 	- Use a reentrancy lock (ie. OpenZeppelin's ReentrancyGuard.
 * [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
 * [Reentrancy by SWC](https://swcregistry.io/docs/SWC-107)
+* [Reentrancy by OpenZeppelin](https://blog.openzeppelin.com/reentrancy-after-istanbul/)
 
 ### More
+* [By Solidity Official](https://docs.soliditylang.org/en/latest/security-considerations.html)
 * [By Consensys](https://consensys.github.io/smart-contract-best-practices/)
 * [Common Bugs/Attacks and Best Practices](https://sunnya97.gitbooks.io/a-beginner-s-guide-to-ethereum-and-dapp-developme/content/smart-contract-best-practices.html)
 * [To Sink Frontrunners, Send in the Submarines](https://hackingdistributed.com/2017/08/28/submarine-sends/)
@@ -929,3 +977,5 @@ require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 * [Gas Optimization in Solidity](https://yamenmerhi.medium.com/gas-optimization-in-solidity-75945e12322f)
 * [Gas Optimization in Solidity Part I: Variables](https://medium.com/coinmonks/gas-optimization-in-solidity-part-i-variables-9d5775e43dde)
 * [Solidity: A Small Test of the Self-Destruct Operation](https://betterprogramming.pub/solidity-what-happens-with-selfdestruct-f337fcaa58a7)
+* [The Curious Case of `_;` in Solidity](https://medium.com/coinmonks/the-curious-case-of-in-solidity-16d9eb4440f1)
+* [Ethernaut Solutions by CMichel](https://cmichel.io/ethernaut-solutions/)
