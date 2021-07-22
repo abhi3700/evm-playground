@@ -134,6 +134,7 @@ module.exports = {
 * `npx hardhat test` - runs all the files in the folder
 * `npx hardhat test ./test/Greeter-test.js` - runs particularly the file
 * [testing for selected `describe` inside `*.js` file, add `.only`](https://mochajs.org/#exclusive-tests)
+* `npx hardhat node` - start a hardhat node at an address
 
 ### OpenZeppelin
 * `$ npm install @openzeppelin/contracts`
@@ -142,6 +143,16 @@ module.exports = {
 ### Nothing to compile
 * This gets displayed, when there is an already existing `artifacts/` folder.
 * Solution: delete the folder & then `$ npx hardhat compiled`
+
+### TypeError: Cannot read property 'address' of undefined
+* remove the `const` from this line:
+```js
+const [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
+
+To
+
+[owner, addr1, addr2, ...addrs] = await ethers.getSigners();
+```
 
 ### Console.log Support error
 * Check the type of variables parsed. Ensure it's of these supported types: Integer, String, Bool, address

@@ -108,8 +108,8 @@
       ]
     },
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/ERC20Token.sol": {
-      "lastModificationDate": 1626605086560,
-      "contentHash": "4d3d26451495bcbf49b9eb5bbfe834d6",
+      "lastModificationDate": 1626987470674,
+      "contentHash": "920d107d7bacc2d3c55c9652d99c911a",
       "sourceName": "contracts/ERC20Token.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -395,8 +395,8 @@
       ]
     },
     "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/ContextSwitcher.sol": {
-      "lastModificationDate": 1626613716879,
-      "contentHash": "0eccc0edb32e6c7b00cf634f45d9a4e2",
+      "lastModificationDate": 1626622964621,
+      "contentHash": "4b77a2d25cda0ef4539366654aedfdb4",
       "sourceName": "contracts/ContextSwitcher.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -431,6 +431,279 @@
         "FirstCaller",
         "SecondCaller"
       ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/ArithmeticOperations.sol": {
+      "lastModificationDate": 1626699527685,
+      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "sourceName": "contracts/ArithmeticOperations.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/SimpleDAO.sol": {
+      "lastModificationDate": 1626705925615,
+      "contentHash": "7c861049681923ccac309db037141def",
+      "sourceName": "contracts/SimpleDAO.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol",
+        "../openzeppelin/contracts/utils/math/SafeMath.sol",
+        "../openzeppelin/contracts/security/ReentrancyGuard.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "SimpleDAO"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/openzeppelin/contracts/utils/math/SafeMath.sol": {
+      "lastModificationDate": 1626702829085,
+      "contentHash": "5365090efc586b728719e562ebfed0d6",
+      "sourceName": "openzeppelin/contracts/utils/math/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1626698762347,
+      "contentHash": "53fbff678f378956efcb207fa748eaa6",
+      "sourceName": "openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/MyCrowdsale.sol": {
+      "lastModificationDate": 1626987249407,
+      "contentHash": "f9fc2a9e722b754235f067b50bda6404",
+      "sourceName": "contracts/MyCrowdsale.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol",
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        ">=0.6.4 <=0.9.0"
+      ],
+      "artifacts": [
+        "MyCrowdsale"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol": {
+      "lastModificationDate": 1626369713104,
+      "contentHash": "5365090efc586b728719e562ebfed0d6",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1626369713073,
+      "contentHash": "53fbff678f378956efcb207fa748eaa6",
+      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "/mnt/f/Coding/github_repos/ethio_playground/base/contracts/MultiSignatureWallet.sol": {
+      "lastModificationDate": 1626987850343,
+      "contentHash": "9a7b52f5e92cdbf9ae25a0ad211fb798",
+      "sourceName": "contracts/MultiSignatureWallet.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 1000
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
     }
   }
 }
