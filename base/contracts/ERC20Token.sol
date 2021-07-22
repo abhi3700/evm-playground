@@ -9,7 +9,7 @@ contract ERC20Token is ERC20{
     address public admin;
 
     constructor() ERC20("My Token", "MTN") {
-        _mint(msg.sender, 1000000 * (10 ** uint256(decimals())));
+        _mint(msg.sender, 10_000_000_000 * (10 ** uint256(decimals())));
         admin = msg.sender;
     }
 
