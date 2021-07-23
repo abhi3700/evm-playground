@@ -26,12 +26,12 @@ contract ERC20Token is ERC20{
     }
 
     // M-2
-    constructor(string memory n, string memory s ) ERC20("My Token", "MTN") {
-        _name = n;
-        _symbol = s;
-        _mint(msg.sender, 10_000_000_000 * (10 ** uint256(decimals())));
-        admin = msg.sender;
-    }
+    // constructor(string memory n, string memory s ) ERC20(n, s) {
+    //     _name = n;
+    //     _symbol = s;
+    //     _mint(msg.sender, 10_000_000_000 * (10 ** uint256(decimals())));
+    //     admin = msg.sender;
+    // }
 
 
     function mint(address to, uint256 amount) external {
