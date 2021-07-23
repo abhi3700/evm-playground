@@ -24,6 +24,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  *      - ../../img/crowdsale_pt2.jpg
  * Videos:
  *      - "https://github.com/abhi3700/ethio_playground_videos/blob/main/crowdsale_w_erc20.m4v"
+ * References:
+ *      - https://docs.openzeppelin.com/contracts/2.x/api/crowdsale
  */
 
 contract MyCrowdsale is ReentrancyGuard {

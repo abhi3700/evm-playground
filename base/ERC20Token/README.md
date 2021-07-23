@@ -61,3 +61,4 @@ Contract address: 0x8Da5764cbbB70D73D73086b81ba3cD22c8d821aD
 ## References
 * [How to Create an ERC20 Token the Simple Way | Toptal](https://www.toptal.com/ethereum/create-erc20-token-tutorial)
 * [Understanding ERC-20 token contracts](https://www.wealdtech.com/articles/understanding-erc20-token-contracts/)
+* https://solidity-by-example.org/app/erc20/

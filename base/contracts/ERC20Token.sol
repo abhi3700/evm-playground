@@ -14,6 +14,7 @@ Watch Video for understanding:
 References: 
     - https://www.toptal.com/ethereum/create-erc20-token-tutorial
     - https://www.wealdtech.com/articles/understanding-erc20-token-contracts/
+    - https://solidity-by-example.org/app/erc20/
 */
 
 contract ERC20Token is ERC20{
