@@ -8,24 +8,22 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
- * @title Vether
+ * @title Crowdsale
  * @author abhi3700
- * @notice Vether contract is used as a mode of investment of ETH & getting back BOOT tokens
+ * @notice Crowdsale contract is used as a mode of investment of ETH & getting back MTN tokens
  * in return.
  * @dev Using this contract people will be able to send Ethers to this contract &
- * in return receive BOOT tokens.
- * Details:
- *      M-1: 
- *      - to keep the minted public sale tokens in the MainToken contract &
- *      - call MainToken contract's transfer & approve functions on every BOOT distribution 
- *          giveaway inside deposit() function.
- *      - cons: gas will be very high because of calling 2 functions of the MainToken contract.
- *      
- *      M-2:[RECOMMENDED] 
+ * in return receive MTN tokens.
+ * 
+ * Token contract - "./ERC20Token.sol"
+ * Workflow:
  *      - to manually transfer the minted public sale tokens at once from MainToken to the Vether contract.
- *      - And during each giveaway of BOOT tokens, just update the balanceofPublicSaleTokens on every transfer.
- *      - cons: a balance mapping storage variable has to be maintained so that every BOOT tokens holder's balance 
- *          is stored.
+ *      - Now, a person when transfers ETH to Crowdsale contract, in return give proportionate value of MTN tokens
+ * Images:
+ *      - ../../img/crowdsale_pt1.jpg
+ *      - ../../img/crowdsale_pt2.jpg
+ * Videos:
+ *      - "https://github.com/abhi3700/ethio_playground_videos/blob/main/crowdsale_w_erc20.m4v"
  */
 
 contract MyCrowdsale is ReentrancyGuard {
@@ -90,11 +88,9 @@ contract MyCrowdsale is ReentrancyGuard {
         // 4. send BOOT tokens to the ICO participator
         IERC20 tcontract = IERC20(mainTokenAddress);
         // require(tcontract.allowance(address(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4), address(this)) >= weiAmount, "Not permitted to spend.");
-        
-        
-        require(tcontract.transferFrom(address(this), msg.sender, tokens), "Don't have enough balance");
-        require(tcontract.approve(msg.sender, tokens), "Don't have enough balance");
-        // require(tcontract.transfer(msg.sender, tokens), "Don't have enough balance");
+                
+        require(tcontract.transfer(msg.sender, tokens), "Don't have enough balance");       // transfer tokens to the caller
+        require(tcontract.approve(msg.sender, tokens), "Don't have enough balance");        // approve tokens for the caller to spend
 
         emit Invest(msg.sender, msg.value, tokens);
     }

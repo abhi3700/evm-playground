@@ -13,6 +13,29 @@
 ## Contract
 * [Example](./contracts/ERC20Token.sol)
 
+## Concepts
+* Watch these in series
+	- https://youtu.be/xtDkat5f6Hs
+	- 
+* `transfer` >> `approve`
+	- sender is the owner in `allowance` to check the recipient's spendable value
+	- Example: Suppose, Alice (100 MTN) wants to transfer 10 MTN to Bob (0 MTN).
+		1. Alice calls `transfer(Bob, 10)` function => `balanceOf(Bob)` updated from `0` to `10`
+		1. Now, `approve(Bob, 10)` can be called by either Alice or Bob, so that the Bob could spend max. 10 MTN tokens. => `allowance(Alice, Bob)` updated from 0 to 10.
+* `approve` >> `transferFrom`:
+	- sender is the owner in `allowance` to check the recipient's spendable value
+	- Example: Suppose, Bob(10 MTN) wants to request 20 MTN tokens from Alice (90 MTN).
+	  1. Alice calls `approve(Bob, 20)` so that Bob can transfer 20 MTN on behalf of Alice. => `allowance(Alice, Bob)` updated to 20.
+	  1. Bob calls `transferFrom(Alice, Bob, 20)` function => `balanceOf(Bob)` = 30
+* `approve(spender, token)` 
+	- to approve the spending of token
+	- allowance(owner, spender) mapping storage var gets updated.
+		- here, owner: owner of the amount of tokens, not necessarily the token admin.
+		- here, spender: spender of the amount of tokens. 
+		- Example: Suppose out of 100 MTN tokens of Alice (owner), Bob (spender) is allowed to spend 10 MTN tokens. i.e. `allowance[Alice][Bob] = 10`
+		- A person is allowed to spend the amount shown in `allowance[Owner][Person]`. Note: Owner is not the token Admin.
+
+
 ## Compile
 ```console
 $ npx hardhat compile
