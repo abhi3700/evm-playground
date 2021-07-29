@@ -165,3 +165,4 @@ To
 * [Solidity Writing To Console (console.log) - Hardhat Introduction](https://www.youtube.com/watch?v=5V5vDJhafwk)
 * [Hardhat with Typescript](https://github.com/amanusk/hardhat-template)
 * [TypeScript Support by Hardhat](https://hardhat.org/guides/typescript.html)
+* [Writing automated smart contract tests](https://docs.openzeppelin.com/learn/writing-automated-tests?pref=hardhat#about_testing)
