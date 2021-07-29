@@ -163,3 +163,4 @@ To
 ## References
 * [Getting Started guide](https://hardhat.org/getting-started/)
 * [Solidity Writing To Console (console.log) - Hardhat Introduction](https://www.youtube.com/watch?v=5V5vDJhafwk)
+* [Hardhat with Typescript](https://github.com/amanusk/hardhat-template)
