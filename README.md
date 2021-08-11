@@ -784,6 +784,14 @@ contract Test {
 	}
 }
 ```
+* check if the address is present
+```
+// 1. store the addresses in a mapping
+mapping(address => uint256) mapAddressBool;
+
+// 2. check if the address is blocked
+require(mapAddressBool[addr] == 0, "the address is not blocked");  
+```
 
 ### Destroy
 * It makes the contract inoperable.
