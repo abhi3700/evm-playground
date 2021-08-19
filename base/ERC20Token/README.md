@@ -15,13 +15,15 @@
 
 ## Concepts
 * Watch these in series
-	- https://youtu.be/xtDkat5f6Hs
-	- 
+	- [How to Use an ERC-20 Token | Solidity (0.6)](https://youtu.be/xtDkat5f6Hs)
 * `transfer` >> `approve`
 	- sender is the owner in `allowance` to check the recipient's spendable value
 	- Example: Suppose, Alice (100 MTN) wants to transfer 10 MTN to Bob (0 MTN).
 		1. Alice calls `transfer(Bob, 10)` function => `balanceOf(Bob)` updated from `0` to `10`
 		1. Now, `approve(Bob, 10)` can be called by either Alice or Bob, so that the Bob could spend max. 10 MTN tokens. => `allowance(Alice, Bob)` updated from 0 to 10.
+		1. [ ] TODO: Also check `allowance(Bob, Bob)` where signer is Alice/Bob (2 cases).
+		1. [ ] TODO: Also check `allowance(Alice, Bob)` where signer is Alice/Bob (2 cases).
+
 * `approve` >> `transferFrom`:
 	- sender is the owner in `allowance` to check the recipient's spendable value
 	- Example: Suppose, Bob(10 MTN) wants to request 20 MTN tokens from Alice (90 MTN).

@@ -970,11 +970,28 @@ require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 ```
 * `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168). `callcode` was until Homestead.
 
-## Cons of EVM Solidity (when compared to EOSIO)
+## EVM
+## Cons (when compared to EOSIO)
 * __Payable__: Unlike EOSIO, function can't be triggered by sending other tokens, but only ETH.
 * __Storage__: Unlike EOSIO, there is no option to keep user's data onto their storage system. Because EOAs doesn't have any storage mechanism.
 * __Upgradeable__: Contracts are not upgradeable which prevents a lot of customization after deployment. And it's dangerous as well. What if there is a bug. That's why SC Audit is a must. But, if the company doesn't have sufficient budget, as the price is hefty. For info, the SC Auditor's salary is min. 250 k USD annually.
 
+## Web3
+Interaction with Smart contracts using binding languages like Javascript, Typescript, Python
+
+* Using JS: Usually to interact with a smart contract on the Ethereum blockchain you use Web3js: you pass an ABI and an address, you call methods, and create transactions regarding the given smart contract.
+* Using TS: Unfortunately, such dynamic interfaces (as above) — created during runtime — can’t be expressed in the Typescript type system.
+	- by default, there are these problems:
+		+ No code completion
+	- There comes "Typechain". 
+		+ TypeChain is here to solve all these problems. It uses provided ABI files to generate typed wrappers for smart contracts. It still uses Web3js under the hood, but on the surface it provides robust, type safe API with support for promises and much more. 
+		+ TypeChain is a code generator - provide ABI file and name of your blockchain access library (ethers/truffle/web3.js) and you will get TypeScript typings compatible with a given library.
+	- Why TS over JS in Ethereum?
+		+ Interacting with blockchain in Javascript is a pain. Developers need to remember not only a name of a given smart contract method or event but also it's full signature. This wastes time and might introduce bugs that will be triggered only in runtime. TypeChain solves these problems (as long as you use TypeScript).
+	- Installation
+		+ `$ npm install --save-dev typechain`
+		+ For ethers: `$ npm install --save-dev @typechain/ethers-v5` (requires TS 4.0 >=)
+		+ For web3: `$ npm install --save-dev @typechain/web3-v1`
 
 ## References
 * [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)

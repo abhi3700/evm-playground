@@ -64,13 +64,22 @@ You can use of the `--network` CLI parameter to quickly change the network. Clic
 ## Plugins & Dependencies
 * [`Ether.js`](https://docs.ethers.io/)
 * [`Waffle`](https://getwaffle.io/)
+	- a framework for testing smart contracts.
 	- used in config file
+* `hardhat-deploy` is a plugin for deployment in case of typescript.
 * [`Chai`](https://www.chaijs.com/)
 	- used for assertion, which comes from `Waffle`
 * [`Mocha`](https://mochajs.org/)
 	- test runner to organized your tests. All Mocha functions are available in the global scope.
 	- has 4 functions: `before`, `beforeEach`, `after`, `afterEach`.
 	- They're very useful to setup the environment for tests, and to clean it up after they run.
+* OpenZeppelin gives us a Solidity template for our ERC-20 contract & many more like `OnlyOwner`, `Reentrancy`.
+* In Typescript, `hardhat-gas-reporter` (for gas amount) along with `hardhat-deploy` (for txn_id, gas amount) gives the gas amount like this:
+```bash
+Nothing to compile
+deploying "Token" (tx: 0x259d19f33819ec8d3bd994f82912aec6af1a18ec5d74303cfb28d793a10ff683)...: deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 with 592983 gas
+Done in 3.66s.
+```
 * You may have seen this notice when creating the sample project:
 ```
 You need to install these dependencies to run the sample project:
@@ -82,14 +91,22 @@ require("@nomiclabs/hardhat-waffle");
 
 module.exports = {};
 ```
+* Typechain: Automatically generate TypeScript bindings for smartcontracts while using Hardhat.
+	- [Source](https://www.npmjs.com/package/typechain)
+	- installation: 
+		- `$ npm install --save-dev typechain @typechain/hardhat @typechain/ethers-v5`
+		- `$ npm install --save-dev typechain @typechain/ethers-v5`
 
 
 ## Project Setup
+### JavaScript
+[Example](https://github.com/abhi3700/eth-hardhat-js)
+
 1. Open bash in a folder & then run `$ npm init -y` or `$ npm init --yes`. Already done [here](../../base/Greeter)
-1. Then, download hardhat using `$ npm install --save hardhat`
+1. Then, download hardhat using `$ npm install --save hardhat` in `node_modules/` folder.
 1. `$ npx hardhat` >> Choose "Create an empty hardhat.config.js". Now, config file created
-1. Hardhat will install plugins like `hardhat-waffle`, `hardhat-ethers`. If missed, install using `$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers`
-1. To first get a quick sense of what's available and what's going on, run npx hardhat in your project folder using `$ npx hardhat`
+1. Hardhat will install plugins like `hardhat-waffle`, `hardhat-ethers`. If missed, install using `$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/hardhat @typechain/ethers-v5`
+1. To first get a quick sense of what's available and what's going on, run `$ npx hardhat` in your project folder.
 1. Next add the line `require('@nomiclabs/hardhat-waffle');` in file `hardhat.config.js`
 
 > We're only requiring hardhat-waffle here because it depends on hardhat-ethers so adding both isn't necessary.
@@ -124,7 +141,61 @@ module.exports = {
   },
 };
 ```
-	- __Rinkeby network__: use `$ npx hardhat run scripts/deploy.js --network rinkeby`. View the contract - https://ropsten.etherscan.io/address/<contract_address>
+	- __Rinkeby network__: use `$ npx hardhat run scripts/deploy.js --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
+
+### TypeScript
+[Example](https://github.com/abhi3700/eth-hardhat-ts)
+
+1. Open bash in a folder & then run `$ npm init -y` or `$ npm init --yes`. Already done [here](../../base/Greeter)
+1. Then, download hardhat using `$ npm install --save hardhat` in `node_modules/` folder.
+1. `$ npx hardhat` >> Choose "Create an empty hardhat.config.js". Now, config file created
+1. Now, convert JS to TS
+```bash
+$ npm install --save-dev ts-node typescript
+$ npm install --save-dev chai @types/node @types/mocha @types/chai
+$ mv hardhat.config.js hardhat.config.ts
+```
+1. Dependency packages like `hardhat-waffle`, `hardhat-ethers`. If missed, install using 
+```bash
+$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/ethers-v5
+```
+1. To first get a quick sense of what's available and what's going on, run `$ npx hardhat` in your project folder.
+1. Next add the line `import '@nomiclabs/hardhat-waffle';` in file `hardhat.config.ts`
+
+> We're only requiring hardhat-waffle here because it depends on hardhat-ethers so adding both isn't necessary.
+
+1. If you take a look at the `hardhat.config.ts` file, you will find the definition of the task `accounts`. Now, list down the accounts `$ npx hardhat accounts`
+1. Now, to compile use `$ npx hardhat compile` 
+	- the compiled artifacts saved in the `artifacts/` directory by default or whatever your configured artifacts path is.
+	- If you didn't change any files since the last compilation, nothing will be compiled & it shows like this: `Nothing to compile`
+	- Enforce a recompilation using `npx hardhat compile --force`
+1. Now, for testing use `$ npx hardhat test` after creating a file `test/test.ts` (filename doesn't matter.). Here, the contract(s) have been tested locally w/o deployment.
+
+> 3 main concepts: `Signer`, `ContractFactory` and `Contract` are explained here.
+
+1. To deploy the contract, [source](https://hardhat.org/tutorial/debugging-with-hardhat-network.html) after creating the `scripts/deploy.ts`:
+	- __Hardhat network__: use `$ npx hardhat run scripts/deploy.ts`
+	- __local network__: use `$ npx hardhat run scripts/deploy.ts --network local` using Ganache local chain & to see rich contract data, compile using truffle. View the contract in Ganache.
+```console
+$ npx hardhat run scripts/deploy.ts --network local
+Deploying contracts with the account: 0xef92fAA501c2B7F84763066fE382DfC455A2Bf82
+Account balance: 99558873620000000000
+Token address: 0xBC9b6a9Ba4C0C83F4A8BE90D32419365ACeB10B9
+```
+		+ Add the `network` in config file `hardhat.config.ts`:
+```
+const config: HardhatUserConfig = {
+  solidity: "0.8.6",
+  networks: {
+    local: {
+      url: 'http://127.0.0.1:7545/',
+      accounts: ['0xe0db4b3fa4af41d065eb3c2e5df3dfbed18203607e59ec428e225e7b2d23c194'],
+    },
+  },
+};
+```
+	- __Rinkeby network__: use `$ npx hardhat run scripts/deploy.ts --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
+
 
 ## Commands
 * `$ npx hardhat compile`: compile a contract
@@ -135,6 +206,7 @@ module.exports = {
 * `npx hardhat test ./test/Greeter-test.js` - runs particularly the file
 * [testing for selected `describe` inside `*.js` file, add `.only`](https://mochajs.org/#exclusive-tests)
 * `npx hardhat node` - start a hardhat node at an address
+* `$ npx hardhat deploy --network <NETWORK> --tags <SOLIDITY_CONTRACT>`: `NETWORK` must be defined in the `hardhat.config.ts`. E.g. `$ npx hardhat deploy --network rinkeby --tags MyToken`
 
 ### OpenZeppelin
 * `$ npm install @openzeppelin/contracts`
@@ -166,3 +238,11 @@ To
 * [Hardhat with Typescript](https://github.com/amanusk/hardhat-template)
 * [TypeScript Support by Hardhat](https://hardhat.org/guides/typescript.html)
 * [Writing automated smart contract tests](https://docs.openzeppelin.com/learn/writing-automated-tests?pref=hardhat#about_testing)
+* Github repo templates for Hardhat + TypeScript
+	- Using `hardhat-deploy`: https://github.com/wighawag/tutorial-hardhat-deploy
+	- https://github.com/kalouo/hardhat-deployer
+	- Template to build smart contract with hardhat + typechain + typescript: https://github.com/amanusk/hardhat-template
+* [`hardhat-etherscan`: Hardhat plugin for integration with Etherscan's contract verification service](https://hardhat.org/plugins/nomiclabs-hardhat-etherscan.html)
+	- This plugin helps you verify the source code for your Solidity contracts on Etherscan
+* [`hardhat-gas-reporter`](https://hardhat.org/plugins/hardhat-gas-reporter.html)
+* [Introducing TypeChain — Typescript bindings for Ethereum smart contracts](https://blog.neufund.org/introducing-typechain-typescript-bindings-for-ethereum-smart-contracts-839fc2becf22)
