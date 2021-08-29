@@ -733,6 +733,7 @@ contract ExternalPublicTest {
 ```
 
 	- It's actually about `memory` or `calldata`. The former would consume more gas (491 wei) & the later would consume 260 wei gas.
+* `now` -> which is equivalent to `block.timestamp` may not be as accurate as one may think. It is up to the miner to pick it, so it could be up to 15 minutes (900 seconds) off.
 * `view` vs `pure` in function
 	- `view` demo: Here, the function is making a change (optional) into the state variables num1, num2 & getting the output. 
 ```

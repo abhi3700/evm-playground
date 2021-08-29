@@ -100,12 +100,12 @@ module.exports = {};
 
 ## Project Setup
 ### JavaScript
-[Example](https://github.com/abhi3700/eth-hardhat-js)
+[Example](https://github.com/abhi3700/eth-sol-hardhat-js)
 
-1. Open bash in a folder & then run `$ npm init -y` or `$ npm init --yes`. Already done [here](../../base/Greeter)
+1. Open bash in a folder & then run `$ npm init -y` or `$ npm init --yes` to create a `package.json`
 1. Then, download hardhat using `$ npm install --save hardhat` in `node_modules/` folder.
 1. `$ npx hardhat` >> Choose "Create an empty hardhat.config.js". Now, config file created
-1. Hardhat will install plugins like `hardhat-waffle`, `hardhat-ethers`. If missed, install using `$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/hardhat @typechain/ethers-v5`
+1. Hardhat will install plugins like `hardhat-waffle`, `hardhat-ethers`. If missed, install using `$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter hardhat-deploy @openzeppelin/contracts typechain @typechain/hardhat @typechain/ethers-v5`
 1. To first get a quick sense of what's available and what's going on, run `$ npx hardhat` in your project folder.
 1. Next add the line `require('@nomiclabs/hardhat-waffle');` in file `hardhat.config.js`
 
@@ -144,9 +144,9 @@ module.exports = {
 	- __Rinkeby network__: use `$ npx hardhat run scripts/deploy.js --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
 
 ### TypeScript
-[Example](https://github.com/abhi3700/eth-hardhat-ts)
+[Example](https://github.com/abhi3700/eth-sol-hardhat-ts)
 
-1. Open bash in a folder & then run `$ npm init -y` or `$ npm init --yes`. Already done [here](../../base/Greeter)
+1. Open bash in a folder & then run `$ npm init -y` or `$ npm init --yes` to create a `package.json`
 1. Then, download hardhat using `$ npm install --save hardhat` in `node_modules/` folder.
 1. `$ npx hardhat` >> Choose "Create an empty hardhat.config.js". Now, config file created
 1. Now, convert JS to TS
@@ -157,7 +157,7 @@ $ mv hardhat.config.js hardhat.config.ts
 ```
 1. Dependency packages like `hardhat-waffle`, `hardhat-ethers`. If missed, install using 
 ```bash
-$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/ethers-v5
+$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/hardhat @typechain/ethers-v5 dotenv
 ```
 1. To first get a quick sense of what's available and what's going on, run `$ npx hardhat` in your project folder.
 1. Next add the line `import '@nomiclabs/hardhat-waffle';` in file `hardhat.config.ts`
@@ -196,6 +196,97 @@ const config: HardhatUserConfig = {
 ```
 	- __Rinkeby network__: use `$ npx hardhat run scripts/deploy.ts --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
 
+#### Points to Ponder
+* In __namedAccounts__ key of `hardhat.config.ts`, `deployer` is the 0th index & the `tokenOwner` is the 1st index, here in `const {deployer, tokenOwner} = await getNamedAccounts();` of `deploy.ts` file.
+```ts
+	namedAccounts: {
+    deployer: 0,
+    tokenOwner: 1,
+  },
+```
+
+```ts
+import {HardhatRuntimeEnvironment} from 'hardhat/types'; // This adds the type from hardhat runtime environment.
+import {DeployFunction} from 'hardhat-deploy/types'; // This adds the type that a deploy function is expected to fulfill.
+
+const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) { // the deploy function receives the hardhat runtime env as an argument
+  const {deployments, getNamedAccounts} = hre; // we get the deployments and getNamedAccounts which are provided by hardhat-deploy.
+  const {deploy} = deployments; // The deployments field itself contains the deploy function.
+
+  const {deployer, tokenOwner} = await getNamedAccounts(); // Fetch the accounts. These can be configured in hardhat.config.ts as explained above.
+
+  await deploy('Token', { // This will create a deployment called 'Token'. By default it will look for an artifact with the same name. The 'contract' option allows you to use a different artifact.
+    from: deployer, // Deployer will be performing the deployment transaction.
+    args: [tokenOwner], // tokenOwner is the address used as the first argument to the Token contract's constructor.
+    log: true, //display the address and gas used in the console (not when run in test though).
+  });
+};
+export default func;
+func.tags = ['Token']; // This sets up a tag so you can execute the script on its own (and its dependencies).
+```
+* The plugin hardhat-deploy allows you to name your accounts. Here there are 2 named accounts:
+	- `deployer` will be the account used to deploy the contract.
+	- `tokenOwner` which is passed to the constructor of Token.sol and which will receive the initial supply.
+* Another way to write `deploy` function in `deploy.ts`:
+```ts
+await deploy('MyToken_1', { // name of the deployed contract
+  contract: 'Token', // name of the token source
+  from: deployer,
+  args: [tokenOwner],
+  log: true,
+});
+```
+* 2 methods to write deploy script:
+	- M-1: traditional method using etherjs, web3js lib [link](https://github.com/amanusk/hardhat-template/blob/main/scripts/deploy.ts)
+	- M-2: using hardhat-deploy [link](https://github.com/kalouo/hardhat-deployer/blob/master/deploy/00_deploy_test.ts)
+```ts
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction } from 'hardhat-deploy/types';
+
+const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  const {
+    deployments: { deploy },
+    getNamedAccounts,
+  } = hre;
+  const { deployer } = await getNamedAccounts();
+
+  await deploy('MyToken', {
+    from: deployer,
+    args: ['Medium', 'MDM'],
+    log: true,
+  });
+};
+
+export default func;
+func.tags = ['MyToken'];
+```
+	- M-3: using deployContract, deployContractwithLibraries [link](https://github.com/bootfinance/boot-customswap.git)
+```ts
+async function deploySwap(): Promise<void> {
+  const [deployer]: SignerWithAddress[] = await ethers.getSigners()
+  console.log(`Deploying with ${deployer.address}`)
+
+  // Deploy FRAX token
+  const fraxToken = (await deployContract(
+    deployer,
+    GenericERC20Artifact,
+    ["Frax", "FRAX", "18"],
+  )) as GenericERC20
+  await fraxToken.deployed()
+  console.log(`FRAX token address: ${fraxToken.address}`)
+
+  // Deploy SwapUtils with MathUtils library
+  const swapUtils = (await deployContractWithLibraries(
+    deployer,
+    SwapUtilsArtifact,
+    {
+      MathUtils: mathUtils.address,
+    },
+  )) as SwapUtils
+  await swapUtils.deployed()
+  console.log(`swapUtils address: ${swapUtils.address}`)
+}
+```
 
 ## Commands
 * `$ npx hardhat compile`: compile a contract
@@ -206,10 +297,12 @@ const config: HardhatUserConfig = {
 * `npx hardhat test ./test/Greeter-test.js` - runs particularly the file
 * [testing for selected `describe` inside `*.js` file, add `.only`](https://mochajs.org/#exclusive-tests)
 * `npx hardhat node` - start a hardhat node at an address
+* `$ npx hardhat deploy --network <name>`: deploy to any network configured under the networks key in [`hardhat.config.ts`](./hardhat.config.ts).
 * `$ npx hardhat deploy --network <NETWORK> --tags <SOLIDITY_CONTRACT>`: `NETWORK` must be defined in the `hardhat.config.ts`. E.g. `$ npx hardhat deploy --network rinkeby --tags MyToken`
 
+
 ### OpenZeppelin
-* `$ npm install @openzeppelin/contracts`
+* `$ npm install @openzeppelin/contracts` (-g for global, --save-dev for local in node_modules folder)
 
 ## Troubleshooting
 ### Nothing to compile
@@ -246,3 +339,5 @@ To
 	- This plugin helps you verify the source code for your Solidity contracts on Etherscan
 * [`hardhat-gas-reporter`](https://hardhat.org/plugins/hardhat-gas-reporter.html)
 * [Introducing TypeChain — Typescript bindings for Ethereum smart contracts](https://blog.neufund.org/introducing-typechain-typescript-bindings-for-ethereum-smart-contracts-839fc2becf22)
+* Get your network chain id from [here](https://chainlist.org/).
+* Combines Hardhat, TypeChain, Ethers, Waffle, Solhint, Solcover and Prettier - https://github.com/paulrberg/solidity-template
