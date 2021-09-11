@@ -154,30 +154,15 @@ enum GameState {
  GameState public gameState; // The state of the current game    
 ```
 
-#### Event
-* Statement initialscapital, variable initialslower case, send event to add keywordsemit,Such as:
+#### Constructor
+* The constructor is a special function run during the creation of the contract and you cannot call it afterwards.
+* Syntax
 ```
-event Deposit(
-				 Address from, // transfer address
-				 Uint amount // transfer amount
-);
- 
-function() public payable {
-		emit Deposit(msg.sender, msg.value);
+constructor() <functionModifiers> {}
+    // Code
 }
 ```
-* indexing a field inside an event. This is done using `indexed`, shown [here](./base/MyEvent/MyEvent.sol).
-* Max. 3 indexing can be done.
-* Events can't be read from smart contract. This happens from blockchain to the outside world.
-* Events consume very less gas, as they are not `storage` variables.
-* The common uses for events can be broken down into three main use cases:
-	- Events can provide smart contract return values for the User Interface
-	- They can act as asynchronous triggers with data and
-	- They can act a cheaper form of storage.
-* Logs cost 8 gas per byte whereas contract storage costs 20,000 per 32 bytes, or 625 gas per byte.
-* Events are inheritable members of contracts. You can call events of parent contracts from within child contracts.
-* Remember that events are not emitted until the transaction has been successfully mined.
-* Logging an event for every state change of the contract is a good heuristic for when you should use events. This allows you to track any and all updates to the state of the contract by setting up event watchers in your javascript files.
+* A constructor can only use the public or internal function modifiers.
 
 #### [Function](https://docs.soliditylang.org/en/develop/types.html#enums)
 ```
@@ -311,12 +296,47 @@ contract A is B, C, D {
 	- It is mandatory to mark it external.
 	- It is limited to 2300 gas when called by another function. It is so for as to make this function call as cheap as possible.
 
+* NOTE: Because they don't modify the state, view and pure functions do not have a gas cost - which is to say they are FREE!
 
 #### constant
 * Constant definitions are all usedcapitalEasy to distinguish from variables and function parameters, such as:
 ```
-Uint constant public ENTRANCE_FEE = 1 ether; // admission fee
+uint256 constant public ENTRANCE_FEE = 1 ether; // admission fee
 ```
+
+#### Event
+* Contracts can emit events on the Blockchain that Ethereum clients such as web applications can listen for without much cost. As soon as the event is emitted, the listener receives any arguments sent with it and can react accordingly.
+* Syntax
+```
+// create event
+event <eventName>(<List of parameters and types to send with event>);
+
+// emit event
+emit <eventName>(<List of variables to send>);
+```
+* Statement initialscapital, variable initialslower case, send event to add keywordsemit,Such as:
+```
+event Deposit(
+				 Address from, // transfer address
+				 Uint amount // transfer amount
+);
+ 
+function() public payable {
+		emit Deposit(msg.sender, msg.value);
+}
+```
+* indexing a field inside an event. This is done using `indexed`, shown [here](./base/MyEvent/MyEvent.sol).
+* Max. 3 indexing can be done.
+* Events can't be read from smart contract. This happens from blockchain to the outside world.
+* Events consume very less gas, as they are not `storage` variables.
+* The common uses for events can be broken down into three main use cases:
+	- Events can provide smart contract return values for the User Interface
+	- They can act as asynchronous triggers with data and
+	- They can act a cheaper form of storage.
+* Logs cost 8 gas per byte whereas contract storage costs 20,000 per 32 bytes, or 625 gas per byte.
+* Events are inheritable members of contracts. You can call events of parent contracts from within child contracts.
+* Remember that events are not emitted until the transaction has been successfully mined.
+* Logging an event for every state change of the contract is a good heuristic for when you should use events. This allows you to track any and all updates to the state of the contract by setting up event watchers in your javascript files.
 
 #### Storage
 ```
@@ -354,6 +374,11 @@ function doSomething() public  {
 
 #### Mapping
 * Mappings act as hash tables which consist of key types and corresponding value type pairs.
+* Mappings types allow you to create your own custom types, consisting of key/value pairs. Both the key and the value can be any type.
+* Syntax
+```
+mapping (<key> => <value>) <modifiers> <mappingName>;
+```
 * key data is not stored in the mapping, rather its keccack256 hash.
 * A mapping declared public will create a getter requiring the `_keyType` as a parameter and return the `_valueType`.
 * When mappings are initialized every possible key exists in the mappings and are mapped to values whose byte-representations are all zeros.
@@ -523,6 +548,17 @@ if(!success) {
 } else {
 	// deal with the success case
 }
+```
+
+#### Error Handling
+* Solidity uses state-reverting exceptions to handle errors. Such an exception undoes all changes made to the state in the current call (and all its sub-calls) and flags an error to the caller.
+* 3 convenience functions:
+	- `assert`
+	- `require`
+	- `revert`
+* Syntax for `require`
+```
+require(<logicalCheck>, <optionalErrorMessage>);
 ```
 
 #### Inter-Contract execution
