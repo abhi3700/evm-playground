@@ -1030,6 +1030,23 @@ Interaction with Smart contracts using binding languages like Javascript, Typesc
 		+ For ethers: `$ npm install --save-dev @typechain/ethers-v5` (requires TS 4.0 >=)
 		+ For web3: `$ npm install --save-dev @typechain/web3-v1`
 
+## Debugging
+* In order to see any value inside Solidity just do this:
+```sol
+import "hardhat/console.sol";
+
+
+// wherever needed inside the function
+console.log("pre approved tokens");
+console.log("print value: %s", v.d0);
+```
+* In order to see any value inside Typescript (inside test function) just do this:
+```sol
+// wherever needed inside the `describe`, `it` function
+// console.log("pre approved tokens")
+console.log("print value: %s", await lpToken.totalSupply())
+```
+
 ## References
 * [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)
 * [Solidity contract development specification](https://www.programmersought.com/article/4362686832/)
