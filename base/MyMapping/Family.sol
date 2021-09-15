@@ -2,7 +2,14 @@
 pragma solidity ^0.8.0;
 
 /*
+Title:
+=====
+Mapping of key/value
+    - key: address
+    - value: array of struct
+
 Lesson:
+======
     - if `bytes32` is used instead of `string`, then it doesn't accept value like this:
     ```
     380 FF, Sector 86
