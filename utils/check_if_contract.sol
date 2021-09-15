@@ -1,13 +1,7 @@
-function foundContract(address _addr) external pure returns(bool) {
-    bool found = false;
+function isContract(address account) public view returns (bool) {
+    uint32 size;
     assembly {
-        size := extcodesize(_addr)
+        size := extcodesize(account)
     }
-
-    if (size > 0) {
-        found = true;
-    } else {
-        found = false;
-    }
-    return found;
+    return (size > 0);
 }
