@@ -2,7 +2,10 @@
 pragma solidity ^0.8.0;
 
 /*
-Title:
+Title: Family Tree
+Description: Create a family tree with each family having many children with attribute like eth_address, name, home_address, age.
+Image: ./FamilyTree.png
+Implementation:
 =====
 Mapping of key/value
     - key: address
@@ -28,6 +31,7 @@ contract Family {
 
     mapping(address => Children[]) public family;
     
+    // @notice Add children to a family
     function addChildren(
         address familyAddr, 
         address childrenAddr,
@@ -43,6 +47,7 @@ contract Family {
         family[familyAddr].push(c[0]);
     }
     
+    // @notice Get a children details of a family
     function getChildren(address familyAddr, uint256 childrenNo) public view returns (Children memory) {
         return family[familyAddr][childrenNo];
     }

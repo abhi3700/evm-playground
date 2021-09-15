@@ -19,7 +19,7 @@
 
 pragma solidity ^0.8.6;
 
-contract Mapping {
+contract MyMapping {
 	mapping(address => uint) balances;
 
 	// an address has mappings of address with approved status (bool)
