@@ -477,6 +477,10 @@ Campaign storage c = campaigns[campaignID];
 * [example](./base/SendEthfrmCont/SendEthfrmCont.sol)
 * `send`, `transfer` is avoided as per latest `v0.8.6`, rather `.call()` is preferred
 
+#### Sending ERC20 tokens from/to a smart contract
+* [example](./base/SendEthfrmtoCont/SendEthfrmtoCont.sol)
+* No need to declare `payable` for the `deposit` function
+
 #### Modifiers
 * [Example](./base/MyModifier/MyModifier.sol)
 * Modifier definition useHump ​​nomenclature,Initialslower case,Such as:
