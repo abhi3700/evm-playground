@@ -23,7 +23,6 @@ contract SendERC20frmtoCont is Ownable, Pausable {
     // ===============EVENTS============================================================================================
     event TokenDeposited(address indexed sender, uint256 amount, uint256 currentTimestamp);
     event TokenWithdrawn(address indexed receiver, uint256 amount, uint256 currentTimestamp);
-    // event Revoke(address indexed account, uint256 currentTimestamp);
 
     //================CONSTRUCTOR================================================================
     /// @notice Constructor
@@ -40,6 +39,7 @@ contract SendERC20frmtoCont is Ownable, Pausable {
 
     //=================FUNCTIONS=================================================================
     /// @notice Deposit function accessed by anyone
+    /// @dev NOTE: no `payable` keyword to be used for the function
     /// @param _amount vesting amount
     function deposit(uint256 _amount) external whenNotPaused {
         require( _amount > 0, "amount must be positive");
@@ -49,7 +49,9 @@ contract SendERC20frmtoCont is Ownable, Pausable {
         // update the balance of caller
         balances[msg.sender] = balances[msg.sender].add(_amount);
 
-        // SC receive tokens. NOTE: the caller must approve the tokens to the SC address using `approve()` function.
+        // transfer to SC using delegate transfer
+        // NOTE: the tokens has to be approved first by the caller to the SC using `approve()` method.
+        // It's like the caller gives the permission to SC to call the `transferFrom` method.
         token.transferFrom(msg.sender, address(this), _amount);      
         
         emit TokenDeposited(msg.sender, _amount, block.timestamp);
