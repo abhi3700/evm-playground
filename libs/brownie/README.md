@@ -65,7 +65,25 @@ $ pipx install eth-brownie
 
 > `pip` vs `pipx`: With pipx when you install things they go into isolated environments. With pip you're just installing things globally.
 
+## Commands
+* `$ brownie init` - initialize a project having empty folder
+
+## Project Structure
+* structure
+```console
+/contracts
+/interfaces
+/scripts
+/tests
+```
+* `contracts/` - contains `.sol` or `.vy` files
+* `interfaces/` - contains `.sol` or `.vy` files
+* `scripts/` - contains `.py` files
+* `tests/` - contains `.py` files
+* `reports/` - contains reports. No need to put inside this.
+* `build/` - generate files automatically.
 
 ## References
 * Brownie tutorial by Curve Finance - https://github.com/curvefi/brownie-tutorial
 * Brownie playlist by Curve Finance - https://www.youtube.com/playlist?list=PLVOHzVzbg7bFUaOGwN0NOgkTItUAVyBBQ
+* Templates - https://github.com/brownie-mix
