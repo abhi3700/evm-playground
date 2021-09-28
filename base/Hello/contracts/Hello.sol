@@ -15,11 +15,7 @@ contract Hello {
         name = _name;
     }
 
-    function getName() public view returns(string memory) {
-        return name;
-    }
-
-    function sayHello(string memory user ) public {
+    function sayHello(string memory user ) external {
         hello = string(abi.encodePacked("Hello ", user));
     }
 

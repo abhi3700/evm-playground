@@ -39,7 +39,7 @@ if web3.isConnected():
 	# call contract function (this is not persisted to the blockchain)
 	tx_hash = contract.functions.setName("abhijit roy").transact()
 	print(binascii.hexlify(tx_hash).decode())
-	message_name = contract.functions.getName().call()
+	message_name = contract.functions.name().call()
 	print(message_name)
 
 	tx_hash = contract.functions.sayHello("abhijit").transact()
