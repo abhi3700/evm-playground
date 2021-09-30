@@ -2,7 +2,7 @@
     
     References
     ==========
-    - https://consensys.net/blog/developers/how-to-send-money-using-python-a-web3-py-tutorial/
+    - Here, the transaction call is signed with an address's private key for a public testnet - Rinkeby
 '''
 import json
 from web3 import Web3
