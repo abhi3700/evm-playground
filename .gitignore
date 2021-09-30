@@ -2,3 +2,5 @@ node_modules/
 ~$*
 libs/web3/py/input.py
 base/ERC20Token/input.py
+build/
+__pycache__

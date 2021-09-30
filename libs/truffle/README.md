@@ -18,7 +18,16 @@ $ which truffle
 * `truffle develop` - create a network for SC deploy
 * `truffle migrate` - migrate the contracts onto the running network
 * `truffle migrate --reset` - replace the deployed contracts with new addresses
+* `truffle compile` - compile contracts in `contracts/` folder.
 
+## Getting Started
+* kickstart a cloned project
+  - pre-requisites:
+    + `package.json`: all the packages used
+    + `truffle-config.js`: config file for truffle
+  - compile the contracts in order to get the `artifacts` (in JSON format)
+    + `$ npm install`
+    + `$ truffle compile`
 
 ## Project Setup
 * Create a folder via `mkdir pet-shop-tutorial`
