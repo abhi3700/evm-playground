@@ -1051,6 +1051,9 @@ console.log("print value: %s", v.d0);
 console.log("print value: %s", await lpToken.totalSupply())
 ```
 
+## Upgrading
+* In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
+
 ## References
 * [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)
 * [Solidity contract development specification](https://www.programmersought.com/article/4362686832/)
@@ -1062,3 +1065,4 @@ console.log("print value: %s", await lpToken.totalSupply())
 * [Solidity: A Small Test of the Self-Destruct Operation](https://betterprogramming.pub/solidity-what-happens-with-selfdestruct-f337fcaa58a7)
 * [The Curious Case of `_;` in Solidity](https://medium.com/coinmonks/the-curious-case-of-in-solidity-16d9eb4440f1)
 * [Ethernaut Solutions by CMichel](https://cmichel.io/ethernaut-solutions/)
+* [How to Write Upgradable Smart Contracts](https://simpleaswater.com/upgradable-smart-contracts/)
