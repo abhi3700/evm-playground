@@ -976,6 +976,29 @@ function withdrawBalance() public {
 * [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
 * [Reentrancy by SWC](https://swcregistry.io/docs/SWC-107)
 * [Reentrancy by OpenZeppelin](https://blog.openzeppelin.com/reentrancy-after-istanbul/)
+* Instead of writing 1st code snippet, 2nd code snippet is preferred. This vulnerability is detected by Slither.
+```sol
+		// Inside a function
+		...
+		vestingToken.transferFrom(msg.sender, address(this), _amount);
+
+		emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
+		...
+```
+
+```sol
+		// Inside a function
+		...
+        bool success = vestingToken.transferFrom(msg.sender, address(this), _amount);
+        if(success) {
+            emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
+        } else {
+            emit VestTransferFromFailed(_amount);
+            revert("vestingToken.transferFrom function failed");
+        }
+		...
+```
+
 
 ### More
 * [By Solidity Official](https://docs.soliditylang.org/en/latest/security-considerations.html)
