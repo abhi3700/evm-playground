@@ -922,8 +922,12 @@ function updateTotalReturn(uint256 timesteps) external {
 	- If we absolutely need a dynamic array, it is best to structure our functions to be additive instead of subtractive. Extending an array costs constant gas whereas truncating an array costs linear gas.
 
 ## Smart Contract Security
-* The attacks are:
-	- Reentrancy
+* The attacks & preventions are:
+	1. Reentrancy attack. 
+	1. Use SafeMath to prevent variable overflow 
+	1. add all the pre-requisites in the modifier for every function 
+	1. Use Slither to find smart contract vulnerabilities (if any) 
+	1. Use gas-reporter inside hardhat to prevent functions from failing due to touching gas limit.
 
 ### Reentrancy
 * One of the major dangers of calling external contracts is that they can take over the control flow. In the reentrancy attack (a.k.a. recursive call attack), a malicious contract calls back into the calling contract before the first invocation of the function is finished. This may cause the different invocations of the function to interact in undesirable ways.
