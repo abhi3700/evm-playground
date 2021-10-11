@@ -12,9 +12,9 @@ Ethereum Contracts [helpful for EOSIO Developers]
 		+ [Ethereum]()
 
 ## Compile
-* Ethereum smart contracts are generally written in Solidity and then compiled into EVM bytecode and corresponding ABI via solc.
+* Ethereum smart contracts are generally written in Solidity and then compiled into EVM bytecode and ABI via `solc`.
 
-> NOTE: most people do not compile contracts directly through commands, because there are very convenient tools and frameworks such as remix or truffle.
+> NOTE: most people do not compile contracts directly through commands, because there are very convenient tools and frameworks such as remix or truffle or hardhat.
 
 * Comparo
 
@@ -23,6 +23,16 @@ Ethereum Contracts [helpful for EOSIO Developers]
 | Compile Contract | solcjs --abi --bin hello.sol | eosio-cpp hello.cpp -o hello.wasm |
 | Deployment contract |	hello=(web3.eth.contract([…])).new({…}) |	cleos set contract hello ./hello -p hello@active |
 | Call contract | hello.hi.sendTransaction(…) | cleos push action hello hi '["bob"]' -p bob@active |
+
+* The EVM bytecode is further converted into OPCODE which looks like this:
+```
+PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH3 0x11 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x40 MLOAD PUSH3 0xB7A CODESIZE SUB DUP1 PUSH3 0xB7A DUP4 CODECOPY DUP2 DUP2 ADD PUSH1 0x40 MSTORE DUP2 ADD SWAP1 PUSH3 0x37 SWAP2 SWAP1 PUSH3 0x1E4 JUMP JUMPDEST CALLER PUSH1 0x0 DUP1 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP DUP2 PUSH1 0x1 SWAP1 DUP1
+```
+
+* The EVM opcode gives instruction to EVM to execute commands.
+* [Bytecode to Opcode converter tool](https://etherscan.io/opcode-tool)
+
+> NOTE: It's almost impossible to generate Smart contract code from EVM ABI & Bytecode.
 
 ## Deploy
 * The address of the contract account (not external account) is automatically generated at deployment time, and the contract can never be changed once deployed.
@@ -1093,3 +1103,4 @@ console.log("print value: %s", await lpToken.totalSupply())
 * [The Curious Case of `_;` in Solidity](https://medium.com/coinmonks/the-curious-case-of-in-solidity-16d9eb4440f1)
 * [Ethernaut Solutions by CMichel](https://cmichel.io/ethernaut-solutions/)
 * [How to Write Upgradable Smart Contracts](https://simpleaswater.com/upgradable-smart-contracts/)
+* [EVM Opcodes](https://github.com/crytic/evm-opcodes)
