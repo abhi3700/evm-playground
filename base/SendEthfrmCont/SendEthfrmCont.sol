@@ -54,6 +54,10 @@ contract SendEthfrmCont {
         (bool success, ) = recipient.call{gas: 4500, value: amt}(new bytes(0));
         require(success, "Transfer failed.");
 
+        // NOTE: there are 3 methods: transfer, send, call
+        // The most safe & recommended is `call`
+        // Reference: https://solidity-by-example.org/sending-ether/
+
     }
 
     function balanceOf() external view returns(uint256) {
