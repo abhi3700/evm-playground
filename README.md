@@ -1088,6 +1088,11 @@ console.log("print value: %s", v.d0);
 console.log("print value: %s", await lpToken.totalSupply())
 ```
 
+## Troubleshoot
+### Warning: `Relevant source part starts here and spans across multiple lines`
+* _Cause_: an struct inside a contract has same name as that of contract.
+* _Solution_: Change struct or contract name. Rename them as different.
+
 ## Upgrading
 * In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
 
