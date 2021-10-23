@@ -1013,7 +1013,7 @@ function withdrawBalance() public {
 		...
 ```
 
-### Write Secure code
+### Write Professional code
 * Use Openzeppelin libs like `Context.sol`
 * Debug `hardhat/console.sol`
 * Any inter-contract communication is to supported with `RenetrancyGuard.sol`
