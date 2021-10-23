@@ -1056,7 +1056,7 @@ mapping( address => Price ) public mapTstampPrice;
 	- `Implementation`
 	- `Unit Testing`
 	- `Deployment`
-	- `Audit`
+	- `Security Audit`
 * Use multiple checks to avoid for security.
 * Don't use redundant event firing when transactions reverted i.e. Don't use this:
 ```
