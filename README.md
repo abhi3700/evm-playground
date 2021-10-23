@@ -1013,6 +1013,58 @@ function withdrawBalance() public {
 		...
 ```
 
+### Write Secure code
+* Use Openzeppelin libs like `Context.sol`
+* Debug `hardhat/console.sol`
+* Any inter-contract communication is to supported with `RenetrancyGuard.sol`
+* Try to minimize gas fees by reducing loop's use like "calculate total amount". Instead create a separate variable which is updated with adding of new parsed values to previous stored. [Eg-1](https://github.com/abhi3700/evm_contracts_strips), Eg-2: Prezerv/Staking-contract
+```
+// struct definition
+struct Price {
+    uint256 currentPrice;   // current price at a timestamp
+    uint256 totalPrice;     // total Price yet from 1st timestamp to till date
+    bool exist;             // to check if the timestamp is valid
+    uint256 index;          // index of timestamp/price. This is to get the total count 
+}
+
+// mapping of token address & mapping of timestamp & Price struct
+mapping( address => mapping(uint256 => Price) ) public mapTstampPrice;
+
+// total price till date
+uint256 public totalPrice;
+
+// next available index
+uint256 public availableIndex;
+```
+
+instead of
+
+```language
+struct Price {
+    uint256 currentPrice;   // current price at a timestamp
+    uint256 timestamp;		// timestamp for current price
+}
+
+// mapping of token address & Price struct
+mapping( address => Price ) public mapTstampPrice;
+```
+* Use verbose type naming for all (state variables, temp variables inside functions) variables.
+* Use comments as much as possible & also follow NAT spec in Solidity documentation.
+* Use documentation in `docs/` folder in this hierarchy:
+	- `Home`
+	- `Features`
+	- `Implementation`
+	- `Unit Testing`
+	- `Deployment`
+	- `Audit`
+* Use multiple checks to avoid for security.
+* Don't use redundant event firing when transactions reverted i.e. Don't use this:
+```
+if(false) {
+	revert("failed due to transfer");
+	emit TransferFailed(_msgSender(), amountWei);
+}
+```
 
 ### More
 * [By Solidity Official](https://docs.soliditylang.org/en/latest/security-considerations.html)
