@@ -1141,9 +1141,42 @@ console.log("print value: %s", await lpToken.totalSupply())
 ```
 
 ## Troubleshoot
-### Warning: `Relevant source part starts here and spans across multiple lines`
+### Contract
+List of Warnings, Errors in Contract
+
+#### 1. Warning: `Relevant source part starts here and spans across multiple lines`
 * _Cause_: an struct inside a contract has same name as that of contract.
 * _Solution_: Change struct or contract name. Rename them as different.
+
+### Testing
+List of Warnings, Errors in Unit testing
+
+#### 1. Error: invalid ENS name
+* _Cause_: The signer is parsed.
+* _Solution_: The address is parsed.
+```js
+// Before
+await token.mint(addr1, String(1e22));
+
+// After
+await token.mint(addr1.address, String(1e22));
+```
+
+#### 2. Error: invalid BigNumber string
+* _Cause_: number > `1e18` parsed as number
+* _Solution_: number > `1e18` should be parsed as BigNumber
+```js
+// Before
+await token.mint(addr1.address, String(1e22));
+
+// After
+await token.mint(addr1.address, BigNumber.from("10000000000000000000000"));
+```
+
+#### 3. TypeError: Cannot read property 'stake' of undefined
+* _Cause_: The object of which method is being called, has not been created yet.
+* _Solution_: First create the object, & also ensure the variable if used in concatenated functions, then keep it as global.
+
 
 ## Upgrading
 * In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
