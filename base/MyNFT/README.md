@@ -43,7 +43,11 @@ This is an example where the technicality will be explained:
 
 
 ## Coding
-* 
+
+### Token/Asset ID
+* Generating token/asset id(s) can be done in 2 ways:
+	- __on-chain__: Using blocknumber, timestamp, global counter. The digit has to be long so as to support more different NFT assets.
+	- __off-chain__: generated outside smart contract & then parsed into the NFT creation function of contract.
 
 ## References
 * [Ultimate NFT Programming Tutorial - FULL COURSE](https://youtu.be/tBMk1iZa85Y)
