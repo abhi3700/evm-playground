@@ -9,7 +9,8 @@ Ethereum Contracts [helpful for EOSIO Developers]
 * Sublime Text 3
 	- packages
 		+ [Solidity Docstring Generator](https://packagecontrol.io/packages/Solidity%20Docstring%20Generator)
-		+ [Ethereum]()
+		+ [Ethereum](https://packagecontrol.io/packages/Ethereum)
+                + [Ethereum​Solidity​Snippets](https://packagecontrol.io/packages/EthereumSoliditySnippets)
 
 ## Compile
 * Ethereum smart contracts are generally written in Solidity and then compiled into EVM bytecode and ABI via `solc`.
