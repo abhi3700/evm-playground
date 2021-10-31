@@ -1140,6 +1140,12 @@ console.log("print value: %s", v.d0);
 console.log("print value: %s", await lpToken.totalSupply())
 ```
 
+## Unit Testing
+Writing unit test functions for every 
+* `.skip()`: to skip a unit test function
+* `.only()`: to run a unit test function
+* `before`, `beforeEach`, `afterEach`, `after` [Explained here](https://stackoverflow.com/a/21419208/6774636)
+
 ## Troubleshoot
 ### Contract
 List of Warnings, Errors in Contract
