@@ -52,7 +52,8 @@ contract SendERC20frmtoCont is Ownable, Pausable {
         // transfer to SC using delegate transfer
         // NOTE: the tokens has to be approved first by the caller to the SC using `approve()` method.
         // It's like the caller gives the permission to SC to call the `transferFrom` method.
-        token.transferFrom(msg.sender, address(this), _amount);      
+        bool success = token.transferFrom(msg.sender, address(this), _amount);
+        require(success, "Token transferFrom failed");    
         
         emit TokenDeposited(msg.sender, _amount, block.timestamp);
     }
@@ -74,7 +75,8 @@ contract SendERC20frmtoCont is Ownable, Pausable {
         totalWithdrawnAmount = totalWithdrawnAmount.add(_amount);
 
         // SC receive tokens
-        token.transfer(msg.sender, _amount);
+        bool success = token.transfer(msg.sender, _amount);
+        require(success, "token transfer failed");
         
         emit TokenWithdrawn(msg.sender, _amount, block.timestamp);
     }
