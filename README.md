@@ -1146,6 +1146,7 @@ Writing unit test functions for every
 * `.skip()`: to skip a unit test function
 * `.only()`: to run a unit test function
 * `before`, `beforeEach`, `afterEach`, `after` [Explained here](https://stackoverflow.com/a/21419208/6774636)
+* In case of reverting, use `await expect(fn())` instead of `expect(await fn())`.
 
 ## Troubleshoot
 ### Contract
@@ -1184,6 +1185,20 @@ await token.mint(addr1.address, BigNumber.from("10000000000000000000000"));
 * _Cause_: The object of which method is being called, has not been created yet.
 * _Solution_: First create the object, & also ensure the variable if used in concatenated functions, then keep it as global.
 
+#### 4. Error: VM Exception while processing transaction: reverted with reason string 'Invalid address'
+* _Cause_: This is because of using `await` inside `expect`.
+* _Solution_: Instead use `await` before `expect`.
+
+* Before:
+```js
+expect(await stakingContract.getStakedAmtTot(ZERO_ADDRESS))
+				.to.be.revertedWith("Invalid address");
+```
+* After
+```js
+await expect(stakingContract.getStakedAmtTot(ZERO_ADDRESS))
+				.to.be.revertedWith("Invalid address");
+```
 
 ## Upgrading
 * In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
