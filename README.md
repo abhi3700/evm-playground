@@ -1,8 +1,9 @@
 # evm_playground
-Ethereum Contracts [helpful for EOSIO Developers]
+Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Developers]
 
 ## Introduction
-* The contract code can't be updated, but all the state variables can be updated.
+* The contract code can't be updated (by default), but all the state variables can be updated.
+* The contract code can be updated via proxy method using technique proposed by Openzeppelin.
 
 ## Installation
 ### Editor
