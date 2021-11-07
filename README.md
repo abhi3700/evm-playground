@@ -932,6 +932,19 @@ function updateTotalReturn(uint256 timesteps) external {
 	- This same rule applies to strings. A `string` or `bytes` variable is dynamically sized; we should use a `bytes32` if our string is short enough to fit.
 	- If we absolutely need a dynamic array, it is best to structure our functions to be additive instead of subtractive. Extending an array costs constant gas whereas truncating an array costs linear gas.
 
+#### EVM Storage:
+* [Refer](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
+* [Images](./img/evm_storage/)
+* Two expensive functions:
+	- `SSTORE` (AKA, “Store this data in this storage slot”)
+	- `SLOAD` (AKA, “Load the data from this slot into memory”)
+* Summary:
+	- Don’t Store if You Don’t Have To
+	- Use Constants and Immutables
+	- Make it Obvious You’re Touching Storage
+	- Don’t Read and Write Too Often
+	- Pack Your Structs
+
 ## Smart Contract Security
 * The attacks & preventions are:
 	1. Reentrancy attack. 
@@ -1216,3 +1229,4 @@ await expect(stakingContract.getStakedAmtTot(ZERO_ADDRESS))
 * [Ethernaut Solutions by CMichel](https://cmichel.io/ethernaut-solutions/)
 * [How to Write Upgradable Smart Contracts](https://simpleaswater.com/upgradable-smart-contracts/)
 * [EVM Opcodes](https://github.com/crytic/evm-opcodes)
+* [Hitchhikers Guide to the EVM](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
