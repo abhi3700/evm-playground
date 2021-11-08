@@ -590,6 +590,30 @@ x.call(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myU
 x.call.value(1000)(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myUIntVal, myStringVal, myAddressVal));
 ```
 
+#### Time
+* While the clock on a computer ticks at least once a millisecond, the clock on a blockchain only ticks as often as blocks are added to the chain.
+* In the following code, the time attribute would be the same for all events emitted by this function as it is set by block.timestamp.
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Time {
+    event TimeLog(uint256 time);
+
+    function reportTime() public {
+        for(uint8 iterator; iterator < 10; iterator++){
+            emit TimeLog(block.timestamp);
+        }
+    }
+}
+```
+* The block.timestamp returns the current block timestamp in seconds since the UNIX epoch as a `unit256` number.
+* As a result, the block.timestamp property will be identical for each transaction on the block.
+* We can never expect an exact second due to the low-resolution clock of blockchain; therefore, our time comparison should always include greater or less than, rather than equal.
+* It’s also worth remembering that block creators can influence the time a block is created and the order in which transactions are processed to their benefit, leading to a Front-Running attack, a known Ethereum protocol issue.
+* In conclusion, it would be prudent not to take non-trivial decisions based on the time provided by the blockchain. When comparing time instead of exact seconds, use greater than or less than, but not equal to.
+
+
 ### Libraries
 * Libraries are contracts that do not have storage, they cannot hold ether.
 * They cannot have state variables
