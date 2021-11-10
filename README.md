@@ -1239,6 +1239,18 @@ await expect(stakingContract.getStakedAmtTot(ZERO_ADDRESS))
 ```
 
 ## Upgrading
+* Proxy method is the most robust method to upgrade any contract. It is the 1st layer before interacting with the main contract. The contract's address is fed into the proxy contract.
+
+![](proxy_contract_1.png)
+
+![](proxy_contract_2.png)
+
+* To update the contract, just change the `implementation` address in the proxy contract. And then the it will be routed to the new contract address.
+
+![](proxy_contract_3.png)
+
+* To change the contract address, a DAO contract can be created inside the `upgrade` function and based on the voting result the `implementation` address would be allowed to change.
+
 * In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
 
 ## References
@@ -1255,3 +1267,5 @@ await expect(stakingContract.getStakedAmtTot(ZERO_ADDRESS))
 * [How to Write Upgradable Smart Contracts](https://simpleaswater.com/upgradable-smart-contracts/)
 * [EVM Opcodes](https://github.com/crytic/evm-opcodes)
 * [Hitchhikers Guide to the EVM](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
+* [Upgrading your Smart Contracts | A Tutorial & Introduction](https://www.youtube.com/watch?v=bdXJmWajZRY)
+* [Deploying More Efficient Upgradeable Contracts](https://www.youtube.com/watch?v=kWUDTZhxKZI)
