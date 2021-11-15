@@ -1238,6 +1238,12 @@ await expect(stakingContract.getStakedAmtTot(ZERO_ADDRESS))
 				.to.be.revertedWith("Invalid address");
 ```
 
+#### 5. Error: digital envelope routines::unsupported
+* _Cause_: The node has been upgraded. It’s likely that your application or a module you’re using is attempting to use an algorithm or key size which is no longer allowed by default with OpenSSL 3.0.
+* _Solution_: Just downgrade the node back to the previous working version. Note: keep it > v14.0. Install via `sudo n v0.15.1`.
+
+
+
 ## Upgrading
 * Proxy method is the most robust method to upgrade any contract. It is the 1st layer before interacting with the main contract. The contract's address is fed into the proxy contract.
 
