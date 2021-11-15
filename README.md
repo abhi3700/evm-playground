@@ -75,6 +75,7 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 > - Functions
 
 ### Contract
+* max size: __`24 KB`__
 * Contracts and libraries should be named using the CapWords style. Examples: SimpleToken, SmartBank, CertificateHashRepository, Player, Congress, Owned.
 * Contract and library names should also match their filenames.
 * If a contract file includes multiple contracts and/or libraries, then the filename should match the core contract.
