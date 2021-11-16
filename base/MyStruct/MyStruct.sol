@@ -156,4 +156,17 @@ contract MyStruct {
 		return mappingKeyArr.length;	// M-2
 	}
 
+	// return struct
+	function getUser(address addr) external returns (
+		address addr,
+		uint256 score,
+		string memory name
+	) {
+		User memory u = userList2[addr];
+		return (
+			u.addr,
+			u.score,
+			u.name
+		);
+	}
 }
