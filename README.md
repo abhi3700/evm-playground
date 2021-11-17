@@ -1186,6 +1186,8 @@ Writing unit test functions for every
 * `.only()`: to run a unit test function
 * `before`, `beforeEach`, `afterEach`, `after` [Explained here](https://stackoverflow.com/a/21419208/6774636)
 * In case of reverting, use `await expect(fn())` instead of `expect(await fn())`.
+* `BigNumber` in JS/TS is used to handle Solidity's `uint256` basically more than 64-bit.
+* Try to use single return values function rather than multi-return values. It seems the multiple arrays and types seem to confuse the code causing this issue.
 
 ## Troubleshoot
 ### Contract
