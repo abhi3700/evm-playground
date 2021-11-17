@@ -1244,6 +1244,19 @@ await expect(stakingContract.getStakedAmtTot(ZERO_ADDRESS))
 * _Solution_: Just downgrade the node back to the previous working version. Note: keep it > v14.0. Install via `sudo n v0.15.1`.
 
 
+#### 6. Error: overflow (fault="overflow", operation="toNumber", Error: invalid BigNumber value (argument="value", value=undefined, code=INVALID_ARGUMENT, version=bignumber/5.5.0)
+* _Cause_: That number is too big to use .toNumber() on as it exceeds the 53-bits JavaScript IEEE754 number allows. It seems the multiple arrays and types seem to confuse the code causing this issue.
+* _Solution_: Try to use single return function in a unit testing rather than multiple return values function like returning a struct.
+```
+// Before
+// Here, the function `getUserRecord` returns multiple values
+const [stakedAmtAfterUnstaking, , unstakedAmtAfterUnstaking, , rewardAmtAfterUnstaking] = await stakingContract.getUserRecord(token.address, addr1.address);
+
+// After
+// Here, the function `getUserRecord` returns single value
+const rewardAmtAfterUnstaking = await stakingContract.getUserRewardAmt(token.address, addr1.address);
+```
+
 
 ## Upgrading
 * Proxy method is the most robust method to upgrade any contract. It is the 1st layer before interacting with the main contract. The contract's address is fed into the proxy contract.
