@@ -351,6 +351,23 @@ function() public payable {
 * Remember that events are not emitted until the transaction has been successfully mined.
 * Logging an event for every state change of the contract is a good heuristic for when you should use events. This allows you to track any and all updates to the state of the contract by setting up event watchers in your javascript files.
 
+> NOTE: Inside a function, events are emitted before the return statement like this:
+
+```
+// deploy a new purchase contract
+function newPurchase()
+    public
+    payable
+    returns(address newContract)
+{
+    Purchase c = (new Purchase).value(msg.value)(address(msg.sender));
+    contracts.push(c);
+    lastContractAddress = address(c);
+    emit newPurchaseContract(c);
+    return c;
+}
+```
+
 #### Storage
 ```
 // according to roomId => gameId => playerId => Player
