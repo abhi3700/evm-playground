@@ -1278,6 +1278,20 @@ const rewardAmtAfterUnstaking = await stakingContract.getUserRewardAmt(token.add
 
 
 ## Upgrading
+### Methods
+#### 1. Simple 
+* Deploy a contract at `addr1` and then upgrade the contract at `addr2`. Now, `pause` the previous contract at `addr1`.
+* Cons:
+	- the storage variables data has to be moved from old contract to new contract address.
+	- the old contract address has to be replaced with new contract address wherever referenced. E.g. In case of Uniswap, the new version address is to be updated in the 3rd party's referenced contract addresses.
+
+#### 2. Proxy [RECOMMENDED]
+* Deploy a contract at `addr1` and then upgrade the contract at the same address `addr1`.
+* DAO governance based control over the contract can be added on the top so as to prevent centralized decision-making about updating contracts.
+* Cons:
+	- the contract deployed is difficult for the security auditors as it is updateable all the time.
+
+
 * Proxy method is the most robust method to upgrade any contract. It is the 1st layer before interacting with the main contract. The contract's address is fed into the proxy contract.
 
 ![](proxy_contract_1.png)
