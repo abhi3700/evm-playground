@@ -2,11 +2,13 @@
 
 ## About
 * Merkle proof is used to verify a node is a child (leaf or mid) of root-node.
+* For a node to check its membership of a Merkle tree with given root hash, it has to download the merkle proof. And this is not the case if only hashes of leaf nodes are stored. But, the cons is one has to store the hash of every files (say billions in size).
 
 ## My repo
 * [evm_contracts_merkleairdrop](https://github.com/abhi3700/evm_contracts_merkleairdrop)
 
 ## References
+* [Theory of Merkle Tree & use cases](https://decentralizedthoughts.github.io/2020-12-22-what-is-a-merkle-tree/)
 * [Merkle Tree Blockchain](https://www.youtube.com/watch?v=fB41w3JcR7U)
 * [How Merkle Trees Enable the Decentralized Web!](https://www.youtube.com/watch?v=YIc6MNfv5iQ)
 * [Merkle Trees and Patricia Tries - Blockchain for Developers [Lab 7]](https://www.youtube.com/watch?v=wwrf87bq6jo)
