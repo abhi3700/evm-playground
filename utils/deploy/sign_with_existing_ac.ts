@@ -17,6 +17,7 @@ async function main(): Promise<void> {
   await incrementer.connect(acc1).inc().then((tx: any) => {
     return tx.wait().then((receipt: any) => {
         // This is entered if the transaction receipt indicates success
+        console.log(`The transaction hash: ${tx.hash}`);
         return true;
     }, (error: any) => {
         // This is entered if the status of the receipt is failure
