@@ -1306,6 +1306,38 @@ const rewardAmtAfterUnstaking = await stakingContract.getUserRewardAmt(token.add
 
 * In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
 
+##### Diamond standard
+* The [EIP-2535 Diamonds](https://github.com/ethereum/EIPs/issues/2535) is a way to organize your Solidity code and contracts to give them the right amount of modularity and cohesion for your system. In addition, flexible upgrade capability is a key part of it.
+* <u>Diamond</u>: A diamond is a contract that uses the external functions of other contracts as its own.
+* <u>Facet</u>: The contracts that a diamond uses for its external functions.
+
+![](./img/diamond_standard_1.jpg)
+
+* A diamond has a mapping which stores contract addresses corresponding to functions as key. When an external function is called on a diamond the diamond looks in the mapping to find the facet to retrieve the function from and execute.
+```c
+mapping(bytes4 => address) facets;
+```
+
+![](./img/diamond_standard_2.png)
+
+In the diagram above you can see that functions `func1` and `func2` are associated with `FacetA`. Functions `func3`, `func4`, `func5` are associated with `FacetB`. Functions `func6` and `func7` are associated with `FacetC`.
+
+Also in this diagram you see that different structs within the diamond are used by different facets. `FacetA` uses `DiamondStorage3`. `FacetB` uses `DiamondStorage3` and `DiamondStorage2`. `FacetC` uses `DiamondStorage2` and `DiamondStorage1`.
+
+* <u>Storage</u>: All the data is stored in the diamond storage in form of a `struct`, not in the facets. The facets contain only the functions, but can use multiple diamond storage.
+
+* By default, when you create new state variables like unsigned integers, structs, mappings etc. Solidity automatically takes care of where exactly these things are stored within contract storage. But this default automatic functionality becomes a problem when upgrading diamonds with new facets. New facets declaring new state variables clobber existing state variables -- data for new state variables gets written to where existing state variables exist.
+* __Diamond Storage__ solves this problem by bypassing Solidity's automatic storage location mechanism by enabling you to specify where your data gets stored within contract storage.
+
+> This might sound risky but it is not if you use a hash of a string that applies to your application or is specific to your application. Use the hash as the starting location of where to store your data in contract storage.
+
+```js
+bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.storage");
+```
+
+* Doing that might seem risky to you too. But it is not. Realize that this is how Solidity's [storage location mechanism works](https://solidity.readthedocs.io/en/v0.6.11/internals/layout_in_storage.html#mappings-and-dynamic-arrays) for maps and arrays. Solidity uses hashes of data for starting locations of data stored in contract storage. You can do it too.
+* <u>Diamond storage</u>: Since Solidity 0.6.4 it is possible to create pointers to structs in arbitrary places in contract storage. This enables diamonds and their facets to create their own storage layouts that are separate from each other and do not conflict with each other, but can still be shared between them.
+
 ## References
 * [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)
 * [Solidity contract development specification](https://www.programmersought.com/article/4362686832/)
@@ -1322,3 +1354,21 @@ const rewardAmtAfterUnstaking = await stakingContract.getUserRewardAmt(token.add
 * [Hitchhikers Guide to the EVM](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
 * [Upgrading your Smart Contracts | A Tutorial & Introduction](https://www.youtube.com/watch?v=bdXJmWajZRY)
 * [Deploying More Efficient Upgradeable Contracts](https://www.youtube.com/watch?v=kWUDTZhxKZI)
+* [Understanding Diamonds on Ethereum](https://dev.to/mudgen/understanding-diamonds-on-ethereum-1fb)
+* [What is Diamond Storage?](https://dev.to/mudgen/what-is-diamond-storage-3n7c)
+* [EIP-2535](https://github.com/ethereum/EIPs/issues/2535)
+* [How to Share Functions Between Facets of a Diamond](https://dev.to/mudgen/how-to-share-functions-between-facets-of-a-diamond-1njb)
+* [Ethereum Diamonds Solve These Problems](https://dev.to/mudgen/ethereum-diamonds-solve-these-problems-3fmp)
+* [Aavegotchi follows Diamond standard](https://github.com/aavegotchi/aavegotchi-contracts/tree/master/contracts/Aavegotchi)
+
+### Gas optimization
+* [Awesome Solidity Gas Optimization](https://github.com/iskanderandrews/awesome-solidity-gas-optimization)
+
+
+
+
+
+
+
+
+
