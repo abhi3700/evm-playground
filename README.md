@@ -1338,6 +1338,31 @@ bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.
 * Doing that might seem risky to you too. But it is not. Realize that this is how Solidity's [storage location mechanism works](https://solidity.readthedocs.io/en/v0.6.11/internals/layout_in_storage.html#mappings-and-dynamic-arrays) for maps and arrays. Solidity uses hashes of data for starting locations of data stored in contract storage. You can do it too.
 * <u>Diamond storage</u>: Since Solidity 0.6.4 it is possible to create pointers to structs in arbitrary places in contract storage. This enables diamonds and their facets to create their own storage layouts that are separate from each other and do not conflict with each other, but can still be shared between them.
 
+## Other Blockchain Protocols
+### Solana
+| EVM | Solana |
+|--|--|
+| Event | Event |
+| Modifier | Attach `#[access_control()]` attribute to a function |
+| Function | Function |
+| Variable, Array | Accounts in `struct` which store data |
+| `public`, `private`, `external`, `internal` | `pub`, by default all are private |
+| Code, data stored in contract | Code, Data stored separately in different accounts. Each data account is owned by code/program account |
+| EOA, SCA | EOA, PDA, PA |
+| mapping | multiple derived PDAs |
+
+For more, refer to [Interview Q.s](https://github.com/abhi3700/sol-playground/blob/main/interview_qa.md)
+
+
+#### Glossary
+* __EOA__: Externally Owned Account
+* __SCA__: Smart Contract Account
+* __PDA__: Program Derived Account
+* __PA__: Program Account
+
+### EOSIO
+
+
 ## References
 * [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)
 * [Solidity contract development specification](https://www.programmersought.com/article/4362686832/)
