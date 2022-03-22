@@ -1385,6 +1385,7 @@ For more, refer to [Interview Q.s](https://github.com/abhi3700/sol-playground/bl
 * [How to Share Functions Between Facets of a Diamond](https://dev.to/mudgen/how-to-share-functions-between-facets-of-a-diamond-1njb)
 * [Ethereum Diamonds Solve These Problems](https://dev.to/mudgen/ethereum-diamonds-solve-these-problems-3fmp)
 * [Aavegotchi follows Diamond standard](https://github.com/aavegotchi/aavegotchi-contracts/tree/master/contracts/Aavegotchi)
+* [Solidity Cheatsheet](https://telegra.ph/Solidity-Cheatsheets-Pack-03-20)
 
 ### Gas optimization
 * [Awesome Solidity Gas Optimization](https://github.com/iskanderandrews/awesome-solidity-gas-optimization)
