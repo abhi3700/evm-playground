@@ -435,6 +435,10 @@ if (abi.encodePacked(balances[addr]).length > 0) {
 	- [blockchain-based puzzle game](https://github.com/upstateinteractive/blockchain-puzzle)
 		+ a blockchain-based puzzle game that manages user state and ETH payments to players using smart contracts
 * It is present in storage always, & passed by reference whenever called.
+* When using `mapping`, always remember to fire an event that shows the key-value pair. So that in the future, if one needs to check all the populated keys, they can refer to the event log (on etherscan).
+* We can store the keys into an array.
+
+> The issue with storing an array on-chain is that it will be extremely expensive, and if you needed to change one of the values you'd have to remember the index that you want to change. If you don't already know the value, you'd have to loop through the entire array to find it. You could return the array and loop through it off-chain then pass in the index, but that also leaves room for error if there's a lot of activity in the app since the position of the values in the array could change by then.
 
 #### Array
 * delete at an index using `delete myArray[3]`
