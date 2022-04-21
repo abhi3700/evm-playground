@@ -1218,6 +1218,16 @@ List of Warnings, Errors in Contract
 * _Cause_: an struct inside a contract has same name as that of contract.
 * _Solution_: Change struct or contract name. Rename them as different.
 
+#### 2. hit contract size limit
+
+* _Cause_: only 24 KB size limit
+* _Solution_: Use diamond standard
+
+#### 2. hit contract size limit even after diamond standard
+
+* _Cause_: only 24 KB size limit per facet
+* _Solution_: reduce the error message i.e. the string inside `require()` statement. replace with custom error code like "CF0" instead of "ALREADY_ALLOCATED" & document the error codes.
+
 ### Testing
 List of Warnings, Errors in Unit testing
 
