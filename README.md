@@ -13,6 +13,14 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 		+ [Ethereum](https://packagecontrol.io/packages/Ethereum)
                 + [Ethereum​Solidity​Snippets](https://packagecontrol.io/packages/EthereumSoliditySnippets)
 
+### Remix IDE
+
+* Write Solidity based contracts [here](https://remix.ethereum.org/).
+* Deploy, test as a user like an IDE using a local file
+  * Follow this [guide](https://remix-ide.readthedocs.io/en/latest/remixd.html)
+  * Install remixd using `npm install -g @remix-project/remixd` globally or `npm install @remix-project/remixd` locally.
+  * And then "Connect to localhost" in the Remix Website.
+
 ## Compile
 * Ethereum smart contracts are generally written in Solidity and then compiled into EVM bytecode and ABI via `solc`.
 
