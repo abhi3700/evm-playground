@@ -319,6 +319,8 @@ uint256 constant public ENTRANCE_FEE = 1 ether; // admission fee
 
 #### Event
 * Contracts can emit events on the Blockchain that Ethereum clients such as web applications can listen for without much cost. As soon as the event is emitted, the listener receives any arguments sent with it and can react accordingly.
+* It's also a way to print debug. Although this can also be done using `console.sol` using Hardhat.
+* Blockchain nodes can subscribe to events of a contract.
 * Syntax
 ```
 // create event
