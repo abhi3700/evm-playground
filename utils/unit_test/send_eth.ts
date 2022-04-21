@@ -1,3 +1,8 @@
+/* 
+    This is to send ETH to an address
+*/
+
+
 // deploy escrow contract
 const EscrowFactory = await ethers.getContractFactory("Escrow");
 escrowContract = await EscrowFactory.deploy();

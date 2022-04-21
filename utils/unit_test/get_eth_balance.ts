@@ -1,3 +1,8 @@
+/* 
+    This is to get ETH balance of an address in rinkeby testnet network
+*/
+
+
 // import {require} from "@types/node";
 
 const ethers = require('ethers')

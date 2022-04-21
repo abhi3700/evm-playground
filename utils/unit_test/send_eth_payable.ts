@@ -1,3 +1,13 @@
+/* 
+    This is a situation where a payer deposit some money to an escrow contract with info: payee, releaser.
+    Only assigned releaser can release the money to the payee.
+
+    So, in order to receive ETH from the payer, the function - `depositFor` is defined as payable.
+
+    This is the unit test for doing simulating this locally.
+*/
+
+
 // addr1 transfer 3 wei to contract
 // Here, `depositFor` is a payable function with these arguments: payee, releaser
 await expect(

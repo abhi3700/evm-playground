@@ -1,3 +1,8 @@
+/* 
+    This is to get timestamp based on a date
+*/
+
+
 const HOUR_TIMESTAMP = 3600;
 const DAY_TIMESTAMP = 24 * HOUR_TIMESTAMP;
 
