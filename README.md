@@ -1223,7 +1223,7 @@ List of Warnings, Errors in Contract
 * _Cause_: only 24 KB size limit
 * _Solution_: Use diamond standard
 
-#### 2. hit contract size limit even after diamond standard
+#### 3. hit contract size limit even after diamond standard
 
 * _Cause_: only 24 KB size limit per facet
 * _Solution_: reduce the error message i.e. the string inside `require()` statement. replace with custom error code like "CF0" instead of "ALREADY_ALLOCATED" & document the error codes.
