@@ -7,11 +7,16 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 ## Installation
 ### Editor
+
+* Visual Studio Code
+  * packages:
+    * [solidity](https://marketplace.visualstudio.com/items?itemName=juanblanco.solidity)
+    * [Slither](https://marketplace.visualstudio.com/items?itemName=trailofbits.slither-vscode)
 * Sublime Text 3
-	- packages
-		+ [Solidity Docstring Generator](https://packagecontrol.io/packages/Solidity%20Docstring%20Generator)
-		+ [Ethereum](https://packagecontrol.io/packages/Ethereum)
-                + [Ethereum​Solidity​Snippets](https://packagecontrol.io/packages/EthereumSoliditySnippets)
+  * packages
+    * [Solidity Docstring Generator](https://packagecontrol.io/packages/Solidity%20Docstring%20Generator)
+    * [Ethereum](https://packagecontrol.io/packages/Ethereum)
+    * [Ethereum​Solidity​Snippets](https://packagecontrol.io/packages/EthereumSoliditySnippets)
 
 ### Remix IDE
 
