@@ -1300,6 +1300,50 @@ const [stakedAmtAfterUnstaking, , unstakedAmtAfterUnstaking, , rewardAmtAfterUns
 const rewardAmtAfterUnstaking = await stakingContract.getUserRewardAmt(token.address, addr1.address);
 ```
 
+#### 7. Error: TypeError: balanceAddr2After.sub is not a function
+* _Cause_: `sub` is not defined for `BigNumber`.
+* *Solution*: As `sub` is defined for `BigNumber<promise>`, so add `await` to make the function being called as `promise` type.
+
+Before:
+```ts
+        // get the balance of addr2 before mint
+        const balanceAddr2Before: BigNumber =
+          erc20TokenContract.balanceOf(addr2.address);
+
+  ...
+  ...
+
+        // get the balance of addr2 after mint
+        const balanceAddr2After: BigNumber = erc20TokenContract.balanceOf(
+          addr2.address
+        );
+
+        await expect(balanceAddr2After.sub(balanceAddr2Before)).to.eq(
+          BigNumber.from(String(1))
+        );
+
+```
+
+After:
+```ts
+        // get the balance of addr2 before mint
+        const balanceAddr2Before: BigNumber =
+          await erc20TokenContract.balanceOf(addr2.address);
+
+		...
+		...
+
+        // get the balance of addr2 after mint
+        const balanceAddr2After: BigNumber = await erc20TokenContract.balanceOf(
+          addr2.address
+        );
+
+        await expect(balanceAddr2After.sub(balanceAddr2Before)).to.eq(
+          BigNumber.from(String(1))
+        );
+
+```
+
 
 ## Upgrading
 ### Methods
