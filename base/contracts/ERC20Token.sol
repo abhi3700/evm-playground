@@ -1,7 +1,10 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.6;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 import "hardhat/console.sol";
 
 /*
@@ -17,31 +20,53 @@ References:
     - https://solidity-by-example.org/app/erc20/
 */
 
-contract ERC20Token is ERC20{
-    address public admin;
+/// @title A ERC20 Token SC
+/// @author abhi3700
+/// @notice A ERC20 Token
+/// @dev A ERC20 token
+contract ERC20Token is Ownable, Pausable, ERC20 {
+    using SafeMath for uint256;
 
-    // M-1
-    constructor() ERC20("My Token", "MTN") {
-        _mint(msg.sender, 10_000_000_000 * (10 ** uint256(decimals())));
-        admin = msg.sender;
+    // ==========State variables====================================
+
+    // ==========Events=============================================
+    event TokenMinted(address indexed toAcct, uint256 amount);
+    event TokenBurnt(address indexed fromAcct, uint256 amount);
+
+    // ==========Constructor========================================
+    constructor(string memory _n, string memory _s) 
+            ERC20(_n, _s)
+            Ownable() {}
+
+    // ==========Functions==========================================
+    function mint(address _account, uint256 _amount) external onlyOwner whenNotPaused returns (bool) {
+        require(_amount > 0, "amount must be positive");
+        _mint(_account, _amount);
+
+        emit TokenMinted(_account, _amount);
+
+        return true;
     }
 
-    // M-2
-    // constructor(string memory n, string memory s ) ERC20(n, s) {
-    //     _name = n;
-    //     _symbol = s;
-    //     _mint(msg.sender, 10_000_000_000 * (10 ** uint256(decimals())));
-    //     admin = msg.sender;
-    // }
+    function burn(address _account, uint256 _amount) external whenNotPaused returns (bool) {
+        require(_amount > 0, "amount must be positive");
+        _burn(_account, _amount);
 
+        emit TokenBurnt(_account, _amount);
 
-    function mint(address to, uint256 amount) external {
-        require(msg.sender == admin, 'only admin');     // access control
-        _mint(to, amount);
+        return true;
     }
 
-    function burn(uint256 amount) external {
-        _burn(msg.sender, amount);
+    // ------------------------------------------------------------------------------------------
+    /// @notice Pause contract 
+    function pause() public onlyOwner whenNotPaused {
+        _pause();
     }
+
+    /// @notice Unpause contract
+    function unpause() public onlyOwner whenPaused {
+        _unpause();
+    }
+
 
 }
