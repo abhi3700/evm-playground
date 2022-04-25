@@ -1,5 +1,5 @@
 /* 
-    Read this: "../../base/Token/README.md#"
+    Read the usage: "https://github.com/abhi3700/evm_playground/blob/main/base/Token/README.md#erc20-token-sc-with-custom-decimal-for-multiple-tokens-it-can-be-used-in-unit-tests-for-defi-applications-like-this"
 
 */
 
