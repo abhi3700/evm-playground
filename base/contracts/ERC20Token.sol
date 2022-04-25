@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.6;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -7,26 +7,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "hardhat/console.sol";
 
-/*
-
-Watch Video for understanding:
-    - "https://youtu.be/xtDkat5f6Hs"
-    - "https://github.com/abhi3700/ethio_playground_videos/blob/main/erc20_pt1.m4v"
-    - "https://github.com/abhi3700/ethio_playground_videos/blob/main/erc20_pt2.m4v"
-
-References: 
-    - https://www.toptal.com/ethereum/create-erc20-token-tutorial
-    - https://www.wealdtech.com/articles/understanding-erc20-token-contracts/
-    - https://solidity-by-example.org/app/erc20/
-*/
-
 /// @title A ERC20 Token SC
 /// @author abhi3700
 /// @notice A ERC20 Token
 /// @dev A ERC20 token
-contract ERC20Token is Ownable, Pausable, ERC20 {
-    using SafeMath for uint256;
-
+contract ERC20Token is ERC20, Ownable, Pausable {
     // ==========State variables====================================
 
     // ==========Events=============================================
