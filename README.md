@@ -1349,6 +1349,54 @@ After:
 
 ```
 
+#### 8. AssertionError: expected 9863013698630136986 to be a number or a date
+
+* _Cause_: using arithmetic operation on `String`.
+* _Solution_: All the `promise` based functions output into `String`. So, convert to `number` using `parseInt`
+
+Before:
+
+```ts
+		const depositedAmt = await vaultContract
+          .connect(addr1)
+          .getDepositedAmt();
+
+        // get the pUSD balance of addr1 after withdraw pUSD
+        const balance1Pre = await pusdCoinContract.balanceOf(addr1.address);
+
+  ...
+  ...
+
+        // get the pUSD balance of addr1 after withdraw pUSD
+        const balance1Post = await pusdCoinContract.balanceOf(addr1.address);
+
+        expect(balance1Post.sub(balance1Pre)).to.be.lessThan(depositedAmt);
+
+```
+
+After:
+
+```ts
+  const depositedAmt = await vaultContract
+          .connect(addr1)
+          .getDepositedAmt();
+
+        // get the pUSD balance of addr1 after withdraw pUSD
+        const balance1Pre = await pusdCoinContract.balanceOf(addr1.address);
+
+  ...
+  ...
+
+        // get the pUSD balance of addr1 after withdraw pUSD
+        const balance1Post = await pusdCoinContract.balanceOf(addr1.address);
+
+         expect(parseInt(balance1Post.sub(balance1Pre))).to.be.lessThan(
+          parseInt(depositedAmt)
+        );
+
+```
+
+
 
 ## Upgrading
 ### Methods
