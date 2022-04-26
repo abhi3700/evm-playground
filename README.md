@@ -1396,7 +1396,10 @@ After:
 
 ```
 
-
+#### 9. reason: 'cannot estimate gas; transaction may fail or may require manual gas limit' code: 'UNPREDICTABLE_GAS_LIMIT',
+* *Cause*: There is some kind of ERC20 token being transferred to the contract using a function e.g. `allocatePC` for SC: `crowdfunding-sc`.
+* *Solution*: Mint PC to deployer & then interact with the contract's function - `allocatePC`
+> NOTE: `allocatePC` function accepts ERC20 token & then set some activity based on requirement.
 
 ## Upgrading
 ### Methods
