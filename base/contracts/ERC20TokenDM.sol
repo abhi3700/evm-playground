@@ -10,8 +10,7 @@ import "hardhat/console.sol";
 /// @title A ERC20 Token SC
 /// @author abhi3700
 /// @notice A ERC20 Token
-/// @dev A ERC20 token with custom decimal for a single token. For multiple tokens with different 
-///   decimals during unit testing, consider "./GenericERC20.sol" file.
+/// @dev A ERC20 token with custom decimal & pre-minted initial supply
 contract ERC20Token is ERC20, Ownable, Pausable {
     // ==========State variables====================================
     uint8 private decimal;
@@ -60,6 +59,6 @@ contract ERC20Token is ERC20, Ownable, Pausable {
     function unpause() public onlyOwner whenPaused {
         _unpause();
     }
-    
+
 
 }
