@@ -56,5 +56,8 @@
       throw new Error("Exit: 1");
   });
   ```
+  
   * #### [ERC20 Token SC pre-minted](../contracts/ERC20TokenM.sol)
     * Hence, doesn't need to write additional lines in scripts for minting token
+
+  * #### [ERC20 Token SC pre-minted with custom decimals](../contracts/ERC20TokenDM.sol)
