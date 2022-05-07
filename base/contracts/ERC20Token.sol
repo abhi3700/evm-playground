@@ -33,11 +33,11 @@ contract ERC20Token is ERC20, Ownable, Pausable {
         return true;
     }
 
-    function burn(address _account, uint256 _amount) external whenNotPaused returns (bool) {
+    function burn(uint256 _amount) external whenNotPaused returns (bool) {
         require(_amount > 0, "amount must be positive");
-        _burn(_account, _amount);
+        _burn(_msgSender(), _amount);
 
-        emit TokenBurnt(_account, _amount);
+        emit TokenBurnt(_msgSender(), _amount);
 
         return true;
     }
