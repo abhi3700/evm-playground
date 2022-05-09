@@ -993,6 +993,21 @@ function updateTotalReturn(uint256 timesteps) external {
 	- If we know how long an array should be, we specify a fixed size: `uint256[12] monthlyTransfers;`
 	- This same rule applies to strings. A `string` or `bytes` variable is dynamically sized; we should use a `bytes32` if our string is short enough to fit.
 	- If we absolutely need a dynamic array, it is best to structure our functions to be additive instead of subtractive. Extending an array costs constant gas whereas truncating an array costs linear gas.
+* In solidity version `^0.8.0`, use `unchecked` to skip the validation check i.e. overflow/underflow in order to save gas. So, the unnecessary checks are no more needed if we are sure about the variable. E.g:
+```c
+require(balance < value, "balance too high");
+unchecked {
+	balance += value;
+}
+
+// OR
+
+require(balance > value, "balance too low");
+unchecked {
+ balance -= value;
+}
+
+```
 
 #### EVM Storage:
 * [Refer](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
