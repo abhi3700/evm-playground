@@ -520,7 +520,20 @@ Campaign storage c = campaigns[campaignID];
 	- also iterate across keys
 
 #### Sending Ether to a smart contract (function payable keyword)
+
 * [example](./base/SendEthToCont/SendEthToCont.sol)
+
+* If your SC has a deposit function for native coin (like ETH), then use these functions in order to revert your transactions like:
+
+```c
+receive() external payable {
+	revert("Can NOT send native coin")
+}
+
+fallback() external payable {
+ revert("Can NOT send native coin")
+}
+```
 
 #### Sending Ether from a smart contract
 * [example](./base/SendEthfrmCont/SendEthfrmCont.sol)
