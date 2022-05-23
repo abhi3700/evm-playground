@@ -323,6 +323,7 @@ contract A is B, C, D {
 	- It is limited to 2300 gas when called by another function. It is so for as to make this function call as cheap as possible.
 
 * NOTE: Because they don't modify the state, view and pure functions do not have a gas cost - which is to say they are FREE!
+* Every function has a signature which is of 4 bytes like `fdacd576`. It is formed via hashing a contract's function with name & argument type like this `setCompleted(uint256)` [Source](https://www.youtube.com/watch?v=3kIYXBjsQT4).
 
 #### constant
 * Constant definitions are all usedcapitalEasy to distinguish from variables and function parameters, such as:
