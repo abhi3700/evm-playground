@@ -417,7 +417,9 @@ function doSomething() public  {
 ```
 
 ##### Calldata
-* Calldata is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, Calldata is the default location of parameters (not return parameters) of external (≤ `0.6.9` version) functions, but now all (≥ `0.7.0`) visibility functions.
+* `calldata` is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, `calldata` is the default location of parameters (not return parameters) of external (≤ `0.6.9` version) functions, but now all (≥ `0.7.0`) visibility functions.
+* So, use as a function parameters for a function of any visibility for solidity version ≥ `0.7.0`
+* Don't use for local variable to be used inside a function. Instead use memory.
 
 #### Mapping
 * Mappings act as hash tables which consist of key types and corresponding value type pairs.
