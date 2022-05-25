@@ -13,7 +13,7 @@ import "hardhat/console.sol";
 /// @dev A ERC20 token with custom decimal & pre-minted initial supply
 contract ERC20Token is ERC20, Ownable, Pausable {
     // ==========State variables====================================
-    uint8 private decimal;
+    uint8 private immutable decimal;
 
     // ==========Events=============================================
     event TokenMinted(address indexed toAcct, uint256 amount);

@@ -102,7 +102,7 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 
 * Creating contracts programmatically on Ethereum is best done via using the JavaScript API `web3.js`. It has a function called `web3.eth.Contract` to facilitate contract creation.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
-* When a contract is created, its constructor (a function declared with the constructor keyword) is executed once. All the values are immutable: they can only be set once during deploy.
+* When a contract is created, its constructor (a function declared with the constructor keyword) is executed once. All the values are `immutable`: they can only be set once during deploy.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
 * Constructor can't be called from inside another function
 * Inheritance:
@@ -384,7 +384,8 @@ function newPurchase()
 }
 ```
 
-#### Storage
+#### Data Location
+##### Storage
 ```
 // according to roomId => gameId => playerId => Player
 mapping (uint => mapping (uint => mapping (uint => Player))) public players;    
@@ -394,7 +395,7 @@ mapping (uint => mapping (uint => mapping (uint => Player))) public players;
 * State variables and Local Variables of structs, array, mapping are always stored in storage by default.
 * Storage on the other hand is persistent, each execution of the Smart contract has access to the data previously stored on the storage area.
 
-#### Memory
+##### Memory
 * Memory keyword in Solidity is analogous to Computer’s RAM. 
 * Much like RAM, Memory in Solidity is a temporary place to store data
 * The Solidity Smart Contract can use any amount of memory during the execution but once the execution stops, the Memory is completely wiped off for the next execution.
@@ -415,8 +416,8 @@ function doSomething() public  {
 } 
 ```
 
-#### Calldata
-* Calldata is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, Calldata is the default location of parameters (not return parameters) of external functions.
+##### Calldata
+* Calldata is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, Calldata is the default location of parameters (not return parameters) of external (≤ `0.6.9` version) functions, but now all (≥ `0.7.0`) visibility functions.
 
 #### Mapping
 * Mappings act as hash tables which consist of key types and corresponding value type pairs.

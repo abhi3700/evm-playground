@@ -13,8 +13,7 @@ import "hardhat/console.sol";
 /// @dev This contract is important for DeFi SC codebase, where during unit test multiple tokens with different decimals is needed.
 contract GenericERC20 is ERC20, Ownable, Pausable {
     // ==========State variables====================================
-    uint8 private decimal;
-    uint8 private counter;
+    uint8 private immutable decimal;
 
     // ==========Events=============================================
     event TokenMinted(address indexed toAcct, uint256 amount);
