@@ -124,6 +124,44 @@ contract BucketCrow {
 }
 ```
 
+---
+
+#### Verify Signature
+
+This is related to ECDSA. Inside SC, a message can be checked whether it was signed by the required address or not.
+
+Here, the process goes like this [Video](https://youtu.be/NP4db_UPVwc).
+
+**Theory**:
+
+1. Create a message
+2. Sign the message with your private key
+3. Send these to verifier/validator 
+   1. original message
+   2. signed message
+   3. signer address (can be public key like in EOSIO chains)
+4. Now, the validator use `ecrecover` method to check whether `signer address == address obtained from (original_msg, signed_msg)`.
+
+**Practical: The steps for usage (in coding) is as follows:**
+
+```c
+msg = "I am unwell"
+
+messageHash = keccak256(msg);
+
+signedMessageHash = keccak256(messageHash);
+
+ecrecover(signedMessageHash, _signature) ==_signer;
+```
+
+To use the actual solidity code, refer [this](https://github.com/OpenZeppelin/openzeppelin-sdk/blob/master/packages/lib/contracts/cryptography/ECDSA.sol).
+
+---
+
+#### EIP-712
+
+---
+
 #### Gasless
 
 Now, with EVM SC, the transactions can be gasless (meta-transactions) for users where the contract owner would pay the gas fee.
@@ -153,8 +191,14 @@ biconomy.onEvent(biconomy.READY, ()=> {
 
 Read [more](https://docs.openzeppelin.com/learn/sending-gasless-transactions).
 
+---
+
 #### [State Variable types](https://docs.soliditylang.org/en/develop/types.html#types)
+
+---
+
 #### Variable
+
 * constant variable can be defined like this:
 ```
 uint256 constant INITIAL_RATE = 2_474_410 * 10 ** 18 / WEEK;
