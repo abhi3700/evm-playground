@@ -10,3 +10,4 @@ artifacts/
 *.lock
 .env
 *deps/
+bin/
