@@ -1567,6 +1567,8 @@ bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.
 * Doing that might seem risky to you too. But it is not. Realize that this is how Solidity's [storage location mechanism works](https://solidity.readthedocs.io/en/v0.6.11/internals/layout_in_storage.html#mappings-and-dynamic-arrays) for maps and arrays. Solidity uses hashes of data for starting locations of data stored in contract storage. You can do it too.
 * <u>Diamond storage</u>: Since Solidity 0.6.4 it is possible to create pointers to structs in arbitrary places in contract storage. This enables diamonds and their facets to create their own storage layouts that are separate from each other and do not conflict with each other, but can still be shared between them.
 
+* Never explicitly define any state variable inside interface, library, facet, but only inside Diamond library which is to be 
+
 ## Other Blockchain Protocols
 ### Solana
 | EVM | Solana |
