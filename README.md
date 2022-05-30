@@ -162,9 +162,21 @@ To use the actual solidity code, refer [this](https://github.com/OpenZeppelin/op
 
 ---
 
-#### Gasless
+#### Gasless (Meta-transactions)
 
-Now, with EVM SC, the transactions can be gasless (meta-transactions) for users where the contract owner would pay the gas fee.
+
+We know that every (write) interaction on the Ethereum blockchain requires a small amount of ETH on the interacting address.
+
+This sounds really awful from a UX perspective for token holders, as users first need to acquire ETH via a centralized exchange and transfer it to the wallet address accordingly. But wait, isn’t it the case — very simplified — that at the most foundational blockchain level, it is simply a matter of verifying the signed payload, i.e. off-chain cryptography?
+
+Ah yes, that sounds right! So how about the wallet user simply signs the payload off-chain and someone else (e.g. an operator) broadcasts and pays for the transaction?
+
+There you go, we have the solution: **meta-transactions**.
+
+**Definition**:
+> A meta-transaction is a regular Ethereum transaction which contains another transaction, the actual transaction. The actual transaction is signed by a user and then sent to an operator or something similar; no gas and blockchain interaction required. The operator takes this signed transaction and submits it to the blockchain paying for the fees himself. The forwarding smart contract ensures there is a valid signature on the actual transaction and then executes it. [More](https://betterprogramming.pub/ethereum-erc-20-meta-transactions-4cacbb3630ee)
+
+Now, with EVM SC, the transactions can be gasless (meta-transactions) for users, where the contract owner would pay the gas fee.
 
 > This feature is accessed via off-chain method through cloud infrastructure setup by [Biconomy](https://www.biconomy.io/). So, access via setting up on their website. <br/>
 > Unlike EVM chains, this gasless feature is available on-chain with EOSIO chains where the SC developer can program so that the contract pays the gas (CPU, NET) instead of the caller (user).
@@ -172,10 +184,12 @@ Now, with EVM SC, the transactions can be gasless (meta-transactions) for users 
 Following are the steps: [Video](https://www.youtube.com/watch?v=hZjk4D6wxGA)
 
 1. Sign up on Biconomy with email address & then verify.
-2. Give a native coin value limit like ETH amount (for Ethereum) per DApp, per user, per API key.
-3. Add DApp: name, sc_address, sc_abi
-4. Go to "Manage API": add DApp by name (filter), then select the function for which this gasless feature (meta-transaction) has to be enabled.
-5. Use the generated API during Biconomy SDK installation inside the code (FE, BE) via `$ npm install @biconomy/mexa` & then add this code:
+1. Give a native coin value limit like ETH amount (for Ethereum) per DApp, per user, per API key.
+   * Here, Biconomy has deployed a `Forwarder.sol` SC for paying the gas-fee on behalf of the the contract deployer (who ensures native coin in the Biconomy setup page). So, Biconomy is the submitter (on behalf of SC owner/deployer) of the signed message by caller (user).
+
+1. Add DApp: name, sc_address, sc_abi
+1. Go to "Manage API": add DApp by name (filter), then select the function for which this gasless feature (meta-transaction) has to be enabled.
+1. Use the generated API during Biconomy SDK installation inside the code (FE, BE) via `$ npm install @biconomy/mexa` & then add this code:
 
 ```ts
 import {Biconomy} from "@biconomy/mexa";
