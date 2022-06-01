@@ -1550,6 +1550,8 @@ After:
 * In order to let your contracts get upgraded, create a proxy smart contract using OpenZeppelin by following [this](https://simpleaswater.com/upgradable-smart-contracts/).
 
 ##### Diamond standard
+
+* List of projects using Diamond standard: <https://eip2535diamonds.substack.com/p/list-of-projects-using-eip-2535-diamonds>
 * The [EIP-2535 Diamonds](https://github.com/ethereum/EIPs/issues/2535) is a way to organize your Solidity code and contracts to give them the right amount of modularity and cohesion for your system. In addition, flexible upgrade capability is a key part of it.
 * <u>Diamond</u>: A diamond is a contract that uses the external functions of other contracts as its own.
 * <u>Facet</u>: The contracts that a diamond uses for its external functions.
@@ -1581,7 +1583,22 @@ bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.
 * Doing that might seem risky to you too. But it is not. Realize that this is how Solidity's [storage location mechanism works](https://solidity.readthedocs.io/en/v0.6.11/internals/layout_in_storage.html#mappings-and-dynamic-arrays) for maps and arrays. Solidity uses hashes of data for starting locations of data stored in contract storage. You can do it too.
 * <u>Diamond storage</u>: Since Solidity 0.6.4 it is possible to create pointers to structs in arbitrary places in contract storage. This enables diamonds and their facets to create their own storage layouts that are separate from each other and do not conflict with each other, but can still be shared between them.
 
-* Never explicitly define any state variable inside interface, library, facet, but only inside Diamond library which is to be 
+* Never explicitly define any state variable inside interface, library, facet, but only inside Diamond library which shall be put inside the Diamond proxy contract. The state variables shall be made available at Diamond storage position.
+* To interact with any Logic Contract, you interact with the Diamond Proxy Contract which in turn does 3 things
+  * It searches for where your [function selector](https://solidity-by-example.org/function-selector/) is stored and retrieves the facet address.
+  * After retrieving the facet address where that function selector is implemented, it performs a [delegate call](https://solidity-by-example.org/delegatecall/) to that address in the context of * Diamond storage and returns any output to the caller(if any).
+  * To upgrade a diamond, you can either **Add**, **Remove** or **Replace** existing functions.
+* The Diamond templates all come with two pre-written facets that help to manage your diamond. [Source](https://medium.com/conflux-network/deploying-eip2535-diamond-proxy-contracts-on-conflux-6647dcf436f6)
+
+> **DiamondLoupeFacet**: A Lopue is a magnifying glass used to inspect diamonds. This facet contains functions to help inspect the current state of your diamond, providing data about the current state of facets and function selectors.
+>
+> **DiamondCutFacet**: A facet which allows you to make upgrade changes to your diamond.
+
+* Deploy sequence:To deploy a Diamond, you need to 
+  1. deploy the DiamodCutFacet then bind it to the Proxy Diamond contract(Diamond.sol). 
+  2. The diamond can now be upgraded with the other facets(DiamondcutFacet, DiamondToken and DiamondloupeFacet) using the DiamondcutFacet.
+
+To make things easier, a script is available to do this. [Reference](https://gist.github.com/Timidan/91dcc6d3c6829e785d3790bcef2dedc7#file-deploydiamond-ts)
 
 ## Other Blockchain Protocols
 ### Solana
