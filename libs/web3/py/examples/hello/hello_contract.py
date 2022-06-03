@@ -19,7 +19,7 @@ if w3.isConnected():
     # w3.eth.defaultAccount = w3.eth.accounts[0]        # only for local network
 
     # path to the compiled contract JSON file
-    compiled_contract_path = 'abi/Hello.json'
+    compiled_contract_path = '../../abi/Hello.json'
 
     # Deployed contract address
     deployed_contract_address = '0x349B7681e4AbBB7343D952e424fA0e8Ae893E68a'

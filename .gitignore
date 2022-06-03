@@ -11,3 +11,6 @@ artifacts/
 .env
 *deps/
 bin/
+
+# python
+*.ipynb_checkpoints/
