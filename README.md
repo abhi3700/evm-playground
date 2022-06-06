@@ -93,14 +93,15 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 * Contract and library names should also match their filenames.
 * If a contract file includes multiple contracts and/or libraries, then the filename should match the core contract.
 * Contracts consist of 2 main types:
-    - Persistent data kept in __state variables__
-    - Runnable __functions__ that can modify state variables
+  - Persistent data kept in __state variables__
+  - Runnable __functions__ that can modify state variables
 
-* Each contract can contain declarations of State Variables, Functions, Function Modifiers, Events, Errors, Struct Types and Enum Types. Furthermore, contracts can inherit from other contracts.
+* Each contract can contain declarations of State Variables, Functions, Function Modifiers, Events, Errors, Struct Types and Enum Types. 
+* Furthermore, contracts can inherit from other contracts.
 
-> NOTE: unlike in other languages, you don’t need to use the keyword this to access state variables.
+> NOTE: unlike in other languages, you don’t need to use the keyword `this` to access state variables.
 
-* Creating contracts programmatically on Ethereum is best done via using the JavaScript API `web3.js`. It has a function called `web3.eth.Contract` to facilitate contract creation.
+* Creating contracts programmatically on Ethereum is best done via using the web3 packages: `web3.js`, `ethers` (typescript). It has a function called `web3.eth.Contract` to facilitate contract creation.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
 * When a contract is created, its constructor (a function declared with the constructor keyword) is executed once. All the values are `immutable`: they can only be set once during deploy.
 * A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
@@ -124,7 +125,24 @@ contract BucketCrow {
 }
 ```
 
+* After build, a contract looks like this:
+
+![](img/contract_json.png)
+
+where, there is a bytecode.
+
 ---
+
+#### Interface
+
+* After build, Interface looks like this:
+![](img/interface_json.png)
+
+where, no bytecode.
+
+
+---
+
 
 #### Verify Signature
 
