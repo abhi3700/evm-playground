@@ -140,6 +140,7 @@ where, there is a bytecode.
 
 where, no bytecode.
 
+Read [more](https://docs.soliditylang.org/en/v0.8.14/contracts.html#interfaces)
 
 ---
 
@@ -154,7 +155,7 @@ Here, the process goes like this [Video](https://youtu.be/NP4db_UPVwc).
 
 1. Create a message
 2. Sign the message with your private key
-3. Send these to verifier/validator 
+3. Send these to verifier/validator
    1. original message
    2. signed message
    3. signer address (can be public key like in EOSIO chains)
@@ -1314,12 +1315,29 @@ require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 * `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168). `callcode` was until Homestead.
 
 ## EVM
-## Cons (when compared to EOSIO)
+### Cons (when compared to EOSIO)
 * __Payable__: Unlike EOSIO, function can't be triggered by sending other tokens, but only ETH.
 * __Storage__: Unlike EOSIO, there is no option to keep user's data onto their storage system. Because EOAs doesn't have any storage mechanism.
 * __Upgradeable__: Contracts are not upgradeable which prevents a lot of customization after deployment. And it's dangerous as well. What if there is a bug. That's why SC Audit is a must. But, if the company doesn't have sufficient budget, as the price is hefty. For info, the SC Auditor's salary is min. 250 k USD annually.
 
+## CCIP
+
+Cross Chain Interoperability Protocol
+
+### LayerZero
+
+Source: <https://layerzero.network/>
+
+### Axelar
+
+Source: <https://axelar.network/>
+
+### Chainlink
+
+Coming soon...
+
 ## Web3
+
 Interaction with Smart contracts using binding languages like Javascript, Typescript, Python
 
 * Using JS: Usually to interact with a smart contract on the Ethereum blockchain you use Web3js: you pass an ABI and an address, you call methods, and create transactions regarding the given smart contract.
@@ -1335,6 +1353,7 @@ Interaction with Smart contracts using binding languages like Javascript, Typesc
         + `$ npm install --save-dev typechain`
         + For ethers: `$ npm install --save-dev @typechain/ethers-v5` (requires TS 4.0 >=)
         + For web3: `$ npm install --save-dev @typechain/web3-v1`
+* Using Python: refer [this](./libs/web3/py)
 
 ## Debugging
 * In order to see any value inside Solidity just do this:
