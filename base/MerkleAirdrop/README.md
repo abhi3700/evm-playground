@@ -25,3 +25,4 @@
 * [Learn Solidity (0.5) - Merkle Tree](https://www.youtube.com/watch?v=n6nEPaE7KZ8)
 * [Dan's Intro to How Ethereum Works](https://www.youtube.com/watch?v=-SMliFtoPn8)
 * [Building an NFT Airdrop](https://www.youtube.com/watch?v=SF-XOwWIwRo)
+* [Verifyable Merkle Tree](https://github.com/vmtree/chainlink-vmt)
