@@ -773,6 +773,14 @@ contract Time {
 * It’s also worth remembering that block creators can influence the time a block is created and the order in which transactions are processed to their benefit, leading to a Front-Running attack, a known Ethereum protocol issue.
 * In conclusion, it would be prudent not to take non-trivial decisions based on the time provided by the blockchain. When comparing time instead of exact seconds, use greater than or less than, but not equal to.
 
+### EIP
+
+* ERC-20
+* ERC-712
+* ERC-721
+* ERC-1155
+* ERC-2535
+* ERC-3525
 
 ### Libraries
 * Libraries are contracts that do not have storage, they cannot hold ether.
