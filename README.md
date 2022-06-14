@@ -13,7 +13,7 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 - #### Visual Studio Code
   - [evm-boilerplate](https://github.com/abhi3700/evm_boilerplate)
-  - [formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+  - [formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) [YouTube](https://www.youtube.com/watch?v=PX6xb8sRlFc)
     - Open Settings
     - type 'save format' >> tick the "Editor: Format on Save"
     - type 'formatter' >> set the "Editor: Default Formatter" to Prettier (by esbenp....)
