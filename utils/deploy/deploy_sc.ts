@@ -23,16 +23,12 @@
 // // // We recommend this pattern to be able to use async/await everywhere
 // // // and properly handle errors.
 // main()
-//   .then(() => new Error("Exit: 0"))
+//   .then()
 //   .catch((error: Error) => {
 //     console.error(error);
 //     // process.exit(1);
 //     throw new Error("Exit: 1");
 //   });
-
-
-
-
 
 // ==================================== M-2: Using task ======================================
 // step-1
@@ -41,23 +37,23 @@ import { TaskArguments } from "hardhat/types";
 import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
 
 task("deploy:ERC20Token", "Deploy Escrow Contract").setAction(async function (
-    taskArguments: TaskArguments,
-    { ethers }
+  taskArguments: TaskArguments,
+  { ethers }
 ) {
-    // TODO: modify as per the SC written
-    // We get the erc20 token contract to deploy
-    const Erc20TokenFactory: ContractFactory = await ethers.getContractFactory(
-        "ERC20Token"
-    );
-    const erc20TokenContract: Contract = await Erc20TokenFactory.deploy(
-        "Health Token",
-        "HLT"
-    );
-    await erc20TokenContract.deployed();
-    console.log("ERC20 token SC deployed to: ", erc20TokenContract.address);
-    console.log(
-        `The transaction that was sent to the network to deploy the token contract: ${erc20TokenContract.deployTransaction.hash}`
-    );
+  // TODO: modify as per the SC written
+  // We get the erc20 token contract to deploy
+  const Erc20TokenFactory: ContractFactory = await ethers.getContractFactory(
+    "ERC20Token"
+  );
+  const erc20TokenContract: Contract = await Erc20TokenFactory.deploy(
+    "Health Token",
+    "HLT"
+  );
+  await erc20TokenContract.deployed();
+  console.log("ERC20 token SC deployed to: ", erc20TokenContract.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the token contract: ${erc20TokenContract.deployTransaction.hash}`
+  );
 });
 
 // step-2
