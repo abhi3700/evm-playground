@@ -248,6 +248,24 @@ Read [more](https://docs.openzeppelin.com/learn/sending-gasless-transactions).
 
 ---
 
+#### Reduce Contract size
+
+Q. Why Limit?
+
+A. This is to prevent **DoS** attacks. If a big contract is deployed on-chain, then during the call of SC, the node (which adds the transaction into block) has to do the computation (based on the optimizer run's value). So, **more** the **optimizer run's** value => **higher** is the **contract size** => **lesser** would be the **gas fees** (more optimized). Hence, it is advised to set the optimizer close to 200 optimum value. Hence, a programmer can write a long SC that is very **cheap** to call and can make the nodes do a lot of work, which may cause **blockage**.
+
+...
+
+These are some ways to reduce the contract size:
+
+- Directly call the variable. Don't define the variable, unless it's used multiple times in a function. [Source](https://soliditydeveloper.com/max-contract-size).
+- replace assertion message with error code.
+- Reducing Optimizer Run: Reducing the no. of runs in the optimizer decreases the contract size but then leads to high call cost. So, if your deployed SC is to be called a few times or you don't care about the user's pocket, you can reduce the runs or disable the optimizer. So, by default it should be set as 200 which is considered optimum value. Rest can be tuned as per your application.
+- In Diamond Standard (DS), separate out the function from a facet to a new facet. Anyways, the facets address are mapped to function signature.
+- wrap the code present in function modifier with a function (private, view) outside & just call the function inside the modifier. [Source](https://youtu.be/XDqD3X8DCiw).
+
+---
+
 #### [State Variable types](https://docs.soliditylang.org/en/develop/types.html#types)
 
 ---
