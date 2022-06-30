@@ -263,6 +263,14 @@ These are some ways to reduce the contract size:
 - Reducing Optimizer Run: Reducing the no. of runs in the optimizer decreases the contract size but then leads to high call cost. So, if your deployed SC is to be called a few times or you don't care about the user's pocket, you can reduce the runs or disable the optimizer. So, by default it should be set as 200 which is considered optimum value. Rest can be tuned as per your application.
 - In Diamond Standard (DS), separate out the function from a facet to a new facet. Anyways, the facets address are mapped to function signature.
 - wrap the code present in function modifier with a function (private, view) outside & just call the function inside the modifier. [Source](https://youtu.be/XDqD3X8DCiw).
+- Disable `yul` in hardhat ‘optimizer’ in `hardhat.config.ts` file. [Source](https://github.com/ethereum/solidity/issues/11638#issuecomment-878055215)
+  ![](img/yul_optimizer_disabled.png)
+- Manually found the function which caused this via "comment & compile" for each function in a Solidity (contract) file in the repo. When function is found, then check for 2 things:
+  - Change function local variables type from `calldata` to `memory`. [Source](https://forum.openzeppelin.com/t/stack-too-deep-when-compiling-inline-assembly/11391/5)
+  - Shorten the function size by cascading method. It could be that the function is using more than 16 (max.) local variables including input, output, inside arguments. Break down `f1` (responsible function) into `f1`, `f2`, `f3` & use inside of each other: `f1 <— f2 <— f3`
+- Although using Diamond Standard (DS), the chances of reaching the size limit is less. But, still it might be due to usage of `FacetCut[] memory _diamondCut` in the constructor. So, an alternative method is to try for another method. [Source](https://discord.com/channels/730508054143172710/730508054877175911/990971789024829470)
+  - Define the constructor like [this](https://github.com/mudgen/diamond-1-hardhat/blob/main/contracts/Diamond.sol),
+  - Also then modify the deployment script accordingly. Refer [this](https://github.com/mudgen/diamond-1-hardhat/blob/main/scripts/deploy.js)
 
 ---
 
