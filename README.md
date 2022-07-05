@@ -922,12 +922,14 @@ contract Time {
 
 ### EIP
 
-- ERC-20
-- ERC-712
-- ERC-721
-- ERC-1155
-- ERC-2535
-- ERC-3525
+- [EIP-20: Token Standard](https://eips.ethereum.org/EIPS/eip-20)
+- [EIP-165: Standard Interface Detection](https://eips.ethereum.org/EIPS/eip-165)
+- [EIP-712: Ethereum typed structured data hashing and signing](https://eips.ethereum.org/EIPS/eip-712)
+- [EIP-721: Non-Fungible Token Standard](https://eips.ethereum.org/EIPS/eip-721)
+- [EIP-1155: Multi Token Standard](https://eips.ethereum.org/EIPS/eip-1155)
+- [EIP-2535: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535)
+- [EIP-2771: Secure Protocol for Native Meta Transactions](https://eips.ethereum.org/EIPS/eip-2771)
+- [EIP-3525: Semi-Fungible Token Standard](https://eips.ethereum.org/EIPS/eip-3525)
 
 ### Libraries
 
