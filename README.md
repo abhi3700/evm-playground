@@ -271,8 +271,29 @@ These are some ways to reduce the contract size:
 - Although using Diamond Standard (DS), the chances of reaching the size limit is less. But, still it might be due to usage of `FacetCut[] memory _diamondCut` in the constructor. So, an alternative method is to try for another method. [Source](https://discord.com/channels/730508054143172710/730508054877175911/990971789024829470)
   - Define the constructor like [this](https://github.com/mudgen/diamond-1-hardhat/blob/main/contracts/Diamond.sol),
   - Also then modify the deployment script accordingly. Refer [this](https://github.com/mudgen/diamond-1-hardhat/blob/main/scripts/deploy.js)
+- Try to call the state variable directly rather than calling via `view`, `public` function like in this case:
 
----
+```solidity
+    function createCollectible(string memory _tokenURI)
+        external
+        returns (uint256)
+    {
+        uint256 _newTokenId = _tokenCounter;
+        _safeMint(msg.sender, _newTokenId);
+        _setTokenURI(_newTokenId, _tokenURI);
+        ++_tokenCounter;
+
+        emit CollectibleMinted(msg.sender, _newTokenId);
+
+        return _newTokenId;
+    }
+
+    function getNextTokenId() external view returns (uint256) {
+        return _tokenCounter;
+    }
+```
+
+> In this case, the function `getNextTokenId` is defined as `external` & in the line: `uint256 _newTokenId = _tokenCounter;` the state variable is called directly inside `createCollectible` function.
 
 #### [State Variable types](https://docs.soliditylang.org/en/develop/types.html#types)
 
