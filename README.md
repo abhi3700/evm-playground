@@ -1,4 +1,4 @@
-# evm_playground
+# EVM Playground
 
 Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Developers]
 
@@ -1531,6 +1531,42 @@ require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 - `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168). `callcode` was until Homestead.
 
 ## EVM
+
+### Compute Gas price
+
+```console
+Total gas fees = Gas Units x Gas Price
+```
+
+**GAS UNITS** : Gas units is a number that depends on the amount of computation required for a transaction. As complexity of transaction (action(s)) ⬆, gas units ⬆.
+
+E.g.
+
+```console
+Sending network's native token: `21,000` gas units (min. units required for a txn)
+Sending ERC20 token: `60,000` gas units
+Minting NFT token: `120,000` gas units
+```
+
+**GAS PRICE**: Gas price is determined by the demand for making transactions. As the traffic ⬆, the gas price ⬆. The unit normally is `Gwei` (also in `Ether`, smallest: `wei`).
+
+E.g. If the Gas price is `100 Gwei`, then 1 gas unit costs 100 Gwei.
+
+Hence, the total gas fees with Gas price assumed 100 Gwei:
+
+```console
+Sending network's native token: 21,000 * 100 Gwei = 2,100,000 Gwei aka 0.0021 Ether
+Sending ERC20 token: 60,000 * 100 Gwei = 6,000,000 Gwei aka 0.006 Ether
+Minting NFT token: 120,000 * 100 Gwei = 12,000,000 Gwei aka 0.012 Ether
+```
+
+The price can be computed in USD. Assume 1 ETH = 1200 USD.
+
+```console
+Sending network's native token: 21,000 * 100 Gwei = 2,100,000 Gwei aka 0.0021 Ether = 0.0021 * 1200 USD = 2.52 USD
+Sending ERC20 token: 60,000 * 100 Gwei = 6,000,000 Gwei aka 0.006 Ether = 0.006 * 1200 = 7.2 USD
+Minting NFT token: 120,000 * 100 Gwei = 12,000,000 Gwei aka 0.012 Ether = 0.012 * 1200 = 14.4 USD
+```
 
 ### Cons (when compared to EOSIO)
 
