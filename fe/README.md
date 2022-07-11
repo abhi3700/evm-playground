@@ -8,7 +8,7 @@ A NEW SC language for EVM Blockchains.
 
 ### Build from Source
 
-> Although this method is very naive, so it might throw error during the `cargo build ...`. So, download the binary instead ([shown](https://github.com/abhi3700/evm_playground/blob/main/fe/README.md#download-binary) below).
+> Although this method is very naive, so it might throw error during the `cargo build ...`. So, download the binary instead ([shown](https://github.com/abhi3700/evm_playground/blob/main/fe/README.md#download-binary-recommended) below).
 
 1. Create `fe` compiler
 
