@@ -1,0 +1,5 @@
+contract Hello {
+    pub fn say_hello() -> String<100> {
+        return "Hello!"
+    }
+}

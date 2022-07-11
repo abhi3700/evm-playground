@@ -1,0 +1,14 @@
+[
+  {
+    "type": "function",
+    "name": "say_hello",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "payable"
+  }
+]
