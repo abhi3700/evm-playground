@@ -8,7 +8,7 @@ A NEW SC language for EVM Blockchains.
 
 ### Build from Source
 
-> Although this method
+> Although this method is very naive, so it might throw error during the `cargo build ...`. So, download the binary instead ([shown](https://github.com/abhi3700/evm_playground/blob/main/fe/README.md#download-binary) below).
 
 1. Create `fe` compiler
 
@@ -44,7 +44,7 @@ Check `fe` is installed:
 fe 0.19.1-alpha
 ```
 
-### Download Binary
+### Download Binary [RECOMMENDED]
 
 Download the binary `fe_mac` from [here](https://github.com/ethereum/fe/releases) into home directory i.e. `~`.
 
