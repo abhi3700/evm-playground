@@ -1352,12 +1352,18 @@ unchecked {
   1. Use Slither to find smart contract vulnerabilities (if any)
   1. Use gas-reporter inside hardhat to prevent functions from failing due to touching gas limit.
 
+Use these libraries for gas-optimized & secure contracts:
+
+#### [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts)
+
+#### [Solmate](https://github.com/Rari-Capital/solmate)
+
 ### Reentrancy
 
 - One of the major dangers of calling external contracts is that they can take over the control flow. In the reentrancy attack (a.k.a. recursive call attack), a malicious contract calls back into the calling contract before the first invocation of the function is finished. This may cause the different invocations of the function to interact in undesirable ways.
 - It can be problematic because calling external contracts passes control flow to them. The called contract may take over the control flow and end up calling the smart contract function again in a recursive manner.
 
-```
+```solidity
 // INSECURE
 mapping (address => uint) private userBalances;
 
