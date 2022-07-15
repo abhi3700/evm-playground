@@ -155,6 +155,94 @@ where, there is a bytecode.
 
 ---
 
+#### Bytecode
+
+- The Solidity/Vyper/Fe (or any language) code can be converted into a binary (represented in hexadecimal format) understandable by the machine: EVM.
+- You can get bytecode from the source code which can then be compiled to bytecode or `.bin` format.
+- You can download the bytecode (which is normally uploaded by the contract author/owner).
+
+---
+
+#### ABI
+
+- The EVM bytecode above is nothing more than a sequence of EVM opcodes written in hexadecimals.
+- ABI is what creates the interaction link between a client (directly from an EOA or an interface) and a smart contract bytecode (the contract logic in EVM opcodes).
+- ABI defines clear specifications of how to encode and decode data and contract calls.
+- Therefore in Ethereum and any EVM based chain, the ABI is basically how contracts calls are encoded for the EVM (so that the EVM understands which instructions to run).
+- `ABI = specification for encoding + decoding`
+
+There are some standard (`abi.encode` for encoding data), non-standard/packed (`abi.encodePacked`) encoding functions associated with abi:
+
+```solidity
+---1---
+abi.encode("AbhijitRoy")
+>
+0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000a416268696a6974526f7900000000000000000000000000000000000000000000
+
+abi.encode("Abhijit Roy")
+> 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b416268696a697420526f79000000000000000000000000000000000000000000
+---2---
+abi.encodePacked("AbhijitRoy")
+> 0x416268696a6974526f79
+abi.encodePacked("Abhijit Roy")
+> 0x416268696a697420526f79
+---3---
+abi.encodePacked("Abhijit", "Roy")
+> 0x416268696a6974526f79
+abi.encodePacked("Abhijit", " Roy")
+> 0x416268696a6974526f79
+```
+
+- In `1`, if space occurs in input, the encoded output is different along with the offset.
+- In `2`, if space occurs in input, the encoded output is different without the offset.
+- In `3`, if space occurs in input, the encoded output is same without offset. So, it trims the spaces used for before & after `comma`.
+
+Here, `encodePacked` drops the offset when compared to `encode`.
+
+When calling SC, to encode function calls for external contract interaction, there are 2 functions:
+
+- `abi.encodeWithSignature(...)`
+
+```solidity
+function _safeTransfer(address token, address to, uint value) private {
+    (bool success, bytes memory data) = token.call(abi.encodeWithSignature("transfer(address,uint256)"), to, value);
+    ...
+}
+```
+
+- `abi.encodeWithSelector(...)`
+
+```solidity
+bytes4 SELECTOR = bytes4(keccak256(bytes("transfer(address,uint256)")));
+
+function _safeTransfer(address token, address to, uint value) private {
+    (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
+    ...
+}
+```
+
+These are the 2 functions which can be used in Solidity to prepare payloads in raw bytes for external contract calls. Such payloads can be passed as parameters to the low level Solidity `.call` ✅, `.delagateCall` ✅, `.staticCall` [❌Deprecated].
+
+Both are same functions implemented differently. Easy to use `abi.encodeWithSignature` [Personal preference though].
+
+```solidity
+abi.encodeWithSignature(string memory signature, ...) returns (bytes memory)
+```
+
+is equivalent to
+
+```solidity
+abi.encodeWithSelector(bytes4(keccak256(bytes(signature))), ...)
+```
+
+The Solidity variable types are converted into ABI as shown below:
+![](img/solidity_to_abi.png)
+
+These are the observations:
+
+- In a nutshell, a variable of type `address payable` or `contract` will be encoded/decoded under the hood by the ABI as a standard `address`.
+- `enum` is converted to the lowest uint i.e. 8 bits or 1 byte. `uint8` => max. 256 items can be held by an enum since `^0.8.0` Solidity version.
+
 #### Interface
 
 - After build, Interface looks like this:
