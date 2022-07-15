@@ -243,6 +243,8 @@ These are the observations:
 - In a nutshell, a variable of type `address payable` or `contract` will be encoded/decoded under the hood by the ABI as a standard `address`.
 - `enum` is converted to the lowest uint i.e. 8 bits or 1 byte. `uint8` => max. 256 items can be held by an enum since `^0.8.0` Solidity version.
 
+Read [more](https://coinsbench.com/solidity-tutorial-all-about-abi-46da8b517e7)
+
 #### Interface
 
 - After build, Interface looks like this:
