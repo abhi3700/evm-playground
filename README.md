@@ -170,6 +170,7 @@ where, there is a bytecode.
 - ABI defines clear specifications of how to encode and decode data and contract calls.
 - Therefore in Ethereum and any EVM based chain, the ABI is basically how contracts calls are encoded for the EVM (so that the EVM understands which instructions to run).
 - `ABI = specification for encoding + decoding`
+- [understand function signature](https://ethereum.stackexchange.com/a/76254/76168)
 
 There are some standard (`abi.encode` for encoding data), non-standard/packed (`abi.encodePacked`) encoding functions associated with abi:
 
