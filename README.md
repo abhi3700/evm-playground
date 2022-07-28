@@ -153,6 +153,13 @@ contract BucketCrow {
 
 where, there is a bytecode.
 
+> NOTE: When a transaction is sent to a block all it's actions are considered confirmed i.e.
+
+        based on which some values can be set like `id` here.
+        Either of the action if fails, the whole transaction is failed.
+
+> [Try this example](./sol/MyArray/TestArray.sol) on Remix.
+
 ---
 
 #### Bytecode
