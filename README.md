@@ -1766,6 +1766,11 @@ List of Warnings, Errors in Contract
 - _Cause_: only 24 KB size limit per facet
 - _Solution_: reduce the error message i.e. the string inside `require()` statement. replace with custom error code like "CF0" instead of "ALREADY_ALLOCATED" & document the error codes.
 
+#### 4. of Member push not found or not visible after argument-dependent lookup in address payable[] storage ref
+
+- _Cause_: `push` method is not available for dynamic array of type `address payable[]`. Another reason could be that the array is defined as fixed rather than dynamic in order to use `push` method.
+- _Solution_: just define w/o `payable`
+
 ### Testing
 
 List of Warnings, Errors in Unit testing
@@ -1941,6 +1946,11 @@ After:
 - _Cause_: There is some kind of ERC20 token being transferred to the contract using a function e.g. `allocatePC` for SC: `crowdfunding-sc`. So, the caller doesn't have enough ERC20 token. Hence, it is throwing error. This happens in proxy based architecture including architecture like diamond standard, openzeppelin proxy pattern.
 - _Solution_: Mint PC to deployer & then interact with the contract's function - `allocatePC`
   > NOTE: `allocatePC` function accepts ERC20 token & then set some activity based on requirement.
+
+#### 10. Error HH9: Error while loading Hardhat's configuration. You probably tried to import the "hardhat" module from your config or a file imported from it. This is not possible, as Hardhat can't be initialized while its config is being defined.
+
+- _Cause_: use of `require("hardhat")` inside `hardhat.config.*` directly or indirectly.
+- _Solution_: It could be that this line is being used in deployment scripts in order to read hardhat raw values. So, it's beter to comment the line calling `require("hardhat")` indirectly into config file. Although we can deploy scripts otherwise.
 
 ## Upgrading
 
