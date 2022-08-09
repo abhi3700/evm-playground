@@ -1952,6 +1952,31 @@ After:
 - _Cause_: use of `require("hardhat")` inside `hardhat.config.*` directly or indirectly.
 - _Solution_: It could be that this line is being used in deployment scripts in order to read hardhat raw values. So, it's beter to comment the line calling `require("hardhat")` indirectly into config file. Although we can deploy scripts otherwise.
 
+#### 11. TypeError: Cannot read properties of undefined (reading 'owner')
+
+- _Cause_: This happens when the contract variable is defined as `const`.
+- _Solution_: Just define as `let`
+
+Before:
+
+```ts
+const clipFactory: ContractFactory = await ethers.getContractFactory("Clip");
+const clipContract: Contract = await clipFactory.deploy(
+  usdcTokenContract.address
+);
+await clipContract.deployed();
+```
+
+After:
+
+```ts
+const clipFactory: ContractFactory = await ethers.getContractFactory("Clip");
+clipContract = await clipFactory.deploy(usdcTokenContract.address);
+await clipContract.deployed();
+```
+
+> declare `clipContract` in `beforeEach()` or outside.
+
 ## Upgrading
 
 ### Methods
