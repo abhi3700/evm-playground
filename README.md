@@ -1427,6 +1427,33 @@ unchecked {
 
 ```
 
+- For-loops can also be written like this using `unchecked` to save additional computation cost for checking overflow/underflow, if the array is of fixed size.
+
+  - Before:
+
+  ```solidity
+  for (uint i = 0; i < uw.length; ++i) {
+    Trove memory t = users[uw[i]];
+
+    // add reward to user's trove
+    users[uw[i]].rewardedAmt += _getUSDCReward(t.depositedAmt);
+  }
+  ```
+
+  - After:
+
+  ```solidity
+  for (uint i = 0; i < uw.length; ) {
+      Trove memory t = users[uw[i]];
+
+      // add reward to user's trove
+      users[uw[i]].rewardedAmt += _getUSDCReward(t.depositedAmt);
+      unchecked {
+          ++i;
+      }
+  }
+  ```
+
 #### EVM Storage:
 
 - [Refer](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
