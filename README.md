@@ -1454,6 +1454,20 @@ unchecked {
   }
   ```
 
+- Don't use `safe` methods for token transfer like `safeTransferFrom` when the contract is receiving the token. It saves additional gas.
+
+  - Before:
+
+  ```solidity
+  IERC20(USDCToken).safeTransferFrom(msg.sender, address(this), _amount);
+  ```
+
+  - After:
+
+  ```solidity
+  IERC20(USDCToken).transferFrom(msg.sender, address(this), _amount);
+  ```
+
 #### EVM Storage:
 
 - [Refer](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
