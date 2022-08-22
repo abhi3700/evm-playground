@@ -34,6 +34,14 @@ foundryup: installed - anvil 0.1.0 (92f8951 2022-08-06T00:05:51.822342Z)
 foundryup: done
 ```
 
+## Editor
+
+Use VSCode
+
+Additionally, set the `contracts` folder as `src/` & package dependencies as `lib/` for Foundry.
+
+![](../../img/set_folder_name_foundry.png)
+
 ## Getting Started
 
 Refer [this](https://book.getfoundry.sh/getting-started/first-steps)
@@ -53,6 +61,12 @@ forge init --template https://github.com/foundry-rs/forge-template <project-name
 
 - `out`: contains your contract artifact, such as the ABI
 - `cache`: contains info to help `forge` recompile what is necessary.
+
+## Commands
+
+- `$ forge install` to install the libs used in `foundry.toml`.
+- `$ forge build` to compile the contracts
+- `$ forge test .... -vvvv` to look into the traces.
 
 ## Troubleshoot
 
