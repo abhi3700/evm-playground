@@ -53,3 +53,10 @@ forge init --template https://github.com/foundry-rs/forge-template <project-name
 
 - `out`: contains your contract artifact, such as the ABI
 - `cache`: contains info to help `forge` recompile what is necessary.
+
+## Troubleshoot
+
+### 1. Error: "solc": No such file or directory (os error 2)
+
+- _Cause_: `solc` is set to false
+- _Solution_: set `auto_detect_solc` to `true` in `foundry.toml`
