@@ -262,6 +262,14 @@ where, no bytecode.
 
 Read [more](https://docs.soliditylang.org/en/v0.8.14/contracts.html#interfaces)
 
+We don't need to implement the `view` functions with the exact same name as public state variable. Like in this eg:
+
+![](img/interface_wo_implement_view_func.png)
+
+Here, `usdc` is defined as `public` state variable. That means we don't need to define a `usdc()` function. But, it can be added to contract's interface in order to access the `usdc` state variable inside another contract like this:
+
+![](img/interface_implemented_in_another_sc.png)
+
 ---
 
 #### Verify Signature
