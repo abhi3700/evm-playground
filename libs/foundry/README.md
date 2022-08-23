@@ -134,6 +134,31 @@ function testGetCount() public {
 }
 ```
 
+---
+
+In order to test the entire contract test file like `Pausable.t.sol` use like this:
+
+![](../../img/foundry_test_1_file.png)
+
+---
+
+In order to test the functions named (with REGEX pattern) use like this:
+
+![](../../img/foundry_test_multi_functions.png)
+
+One can test single function as well by providing the exact testfile's function name:
+
+```console
+❯ forge test -m testNonOwner
+[⠆] Compiling...
+No files changed, compilation skipped
+
+Running 2 tests for test/Pausable.t.sol:PausableTest
+[PASS] testNonOwnerPauseWhenUnpaused() (gas: 13346)
+[PASS] testNonOwnerUnpauseWhenPaused() (gas: 18730)
+Test result: ok. 2 passed; 0 failed; finished in 3.72ms
+```
+
 ## Deployment
 
 Run a local node via `$ anvil`:
