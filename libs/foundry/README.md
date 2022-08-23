@@ -52,6 +52,10 @@ Additionally, set the `contracts` folder as `src/` & package dependencies as `li
 
 Refer [this](https://book.getfoundry.sh/getting-started/first-steps)
 
+## Repositories
+
+I have maintained the work [here](https://github.com/abhi3700/evm_contracts_foundry_1).
+
 ## Create Project
 
 - Create project folder with all dependency & config files.
@@ -418,3 +422,7 @@ function testNonOwnerPauseWhenUnpaused(address testAddress) public {
   vm.stopPrank();
 }
 ```
+
+## References
+
+- [Smart Contract Development with Foundry | Nader Dabit](https://www.youtube.com/watch?v=uelA2U9TbgM)
