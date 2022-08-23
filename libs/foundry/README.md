@@ -159,6 +159,37 @@ Running 2 tests for test/Pausable.t.sol:PausableTest
 Test result: ok. 2 passed; 0 failed; finished in 3.72ms
 ```
 
+### Fuzzy
+
+Fuzz test basically means it'll randomly choose addresses and run the test 256 times by default.
+
+if you want to make it run more than 256, you can change `fuzz_runs` on `foundry.toml` to any number you want like 1000, 5000 or even 50k, but it'll change for all the fuzz tests, not for a particular test file/function.
+
+E.g:
+
+**Before**:
+
+```solidity
+function testNonOwnerPauseWhenUnpaused() public {
+  vm.startPrank(alice);
+  vm.expectRevert("onlyOwner");
+  vault.pause();
+  vm.stopPrank();
+}
+```
+
+**After**:
+
+```solidity
+function testNonOwnerPauseWhenUnpaused(address testAddress) public {
+  vm.assume((testAddress != address(0)) && (testAddress != vault.owner()));
+  vm.startPrank(testAddress);
+  vm.expectRevert("onlyOwner");
+  vault.pause();
+  vm.stopPrank();
+}
+```
+
 ## Deployment
 
 Run a local node via `$ anvil`:
@@ -354,3 +385,36 @@ type
 
 - _Cause_: `solc` is set to false
 - _Solution_: set `auto_detect_solc` to `true` in `foundry.toml`
+
+### 2. FAIL. Reason: Call did not revert as expected Counterexample: calldata=
+
+![](../../img/foundry_test_fuzzy_failure.png)
+
+- _Cause_: so what that means is, basically, on the 150th run, the fuzzer chose the test contract's address itself.
+- _Solution_: since that's the owner, it actually didn't revert back. so you can add another assumption and mention `vm.assume(testAddress != address(this))`;
+
+Before:
+
+```solidity
+function testNonOwnerPauseWhenUnpaused(address testAddress) public {
+  vm.assume(testAddress != address(0));
+
+  vm.startPrank(testAddress);
+  vm.expectRevert("onlyOwner");
+  vault.pause();
+  vm.stopPrank();
+}
+```
+
+After:
+
+```solidity
+function testNonOwnerPauseWhenUnpaused(address testAddress) public {
+  vm.assume((testAddress != address(0)) && (testAddress != vault.owner()));
+
+  vm.startPrank(testAddress);
+  vm.expectRevert("onlyOwner");
+  vault.pause();
+  vm.stopPrank();
+}
+```
