@@ -48,6 +48,10 @@ Additionally, set the `contracts` folder as `src/` & package dependencies as `li
 
 ![](../../img/set_folder_name_foundry.png)
 
+---
+
+Format the Solidity files using `$ forge fmt`.
+
 ## Getting Started
 
 Refer [this](https://book.getfoundry.sh/getting-started/first-steps)
