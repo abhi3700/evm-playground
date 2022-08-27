@@ -2115,6 +2115,8 @@ bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.
 
 To make things easier, a script is available to do this. [Reference](https://gist.github.com/Timidan/91dcc6d3c6829e785d3790bcef2dedc7#file-deploydiamond-ts)
 
+[Idiots Guide to Using an EIP-2535 Diamond Proxy](https://andrewedwards.substack.com/p/coming-soon)
+
 ## Other Blockchain Protocols
 
 ### Solana
