@@ -9,14 +9,14 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 /// @author abhi3700
 /// @notice A ERC20 Token
 /// @dev A ERC20 token with metadata: name, symbol, decimals
-contract Token is ERC20, IERC20Metadata {
+contract Token is ERC20 {
     uint8 private immutable customDecimals;
 
     constructor(
         string memory _erc20Name,
         string memory _erc20Symbol,
         uint8 _decimals
-    ) public ERC20(_erc20Name, _erc20Symbol) {
+    ) ERC20(_erc20Name, _erc20Symbol) {
         customDecimals = _decimals;
     }
 

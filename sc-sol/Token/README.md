@@ -65,3 +65,4 @@
   - #### [ERC20 Token SC pre-minted with custom decimals](../contracts/ERC20TokenDM.sol)
   - #### [ERC20 Token SC capped, pre-mint addresses with custom decimals](../contracts/ERC20TokenCapD.sol)
   - #### [ERC20 Token SC with metadata, custom decimals](../contracts/ERC20TokenMeta.sol)
+  - #### [Upgradeable ERC20 Token](../contracts/ERC20TokenUpgradeable.sol)
