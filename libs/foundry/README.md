@@ -15,7 +15,7 @@ Following are the steps:
 ```console
 ❯ curl -L https://foundry.paradigm.xyz | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
+                                Dload  Upload   Total   Spent    Left  Speed
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
 100  1765  100  1765    0     0   2236      0 --:--:-- --:--:-- --:--:--  2236
 Installing foundryup...
@@ -37,6 +37,21 @@ foundryup: downloading manpages
 foundryup: installed - forge 0.2.0 (92f8951 2022-08-06T00:05:51.433929Z)
 foundryup: installed - cast 0.2.0 (92f8951 2022-08-06T00:05:51.433929Z)
 foundryup: installed - anvil 0.1.0 (92f8951 2022-08-06T00:05:51.822342Z)
+foundryup: done
+```
+
+3. Update tools
+
+```console
+❯ foundryup
+foundryup: installing foundry (version nightly, tag nightly-fb1f0aa3d6dcb285cc6132cde8d885a20eee2174)
+foundryup: downloading latest forge, cast and anvil
+####################################################################################################################################################################### 100.0%
+foundryup: downloading manpages
+####################################################################################################################################################################### 100.0%
+foundryup: installed - forge 0.2.0 (fb1f0aa 2022-08-30T00:04:46.258526Z)
+foundryup: installed - cast 0.2.0 (fb1f0aa 2022-08-30T00:04:46.258526Z)
+foundryup: installed - anvil 0.1.0 (fb1f0aa 2022-08-30T00:04:46.392511Z)
 foundryup: done
 ```
 
