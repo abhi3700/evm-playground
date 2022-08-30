@@ -97,6 +97,18 @@ forge init --template https://github.com/foundry-rs/forge-template <project-name
 - `$ forge build` to compile the contracts
 - `$ forge test .... -vvvv` to look into the traces.
 
+## Dependencies
+
+In order to add more dependency lib, use like this:
+
+```console
+forge install OpenZeppelin/openzeppelin-contracts-upgradeable
+```
+
+> Just copy {owner/repo_name} from the actual repo url: https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
+
+Also add as submodule in `.gitmodules`
+
 ## Testing
 
 While importing the files, no need to use `../src` as the path is measured from root of the project like this:
@@ -441,6 +453,14 @@ function testNonOwnerPauseWhenUnpaused(address testAddress) public {
   vm.stopPrank();
 }
 ```
+
+### 3. Blank `solc error:` during `$ forge build`
+
+- _Solution_:
+
+1. `$ rm -rf ~/.svm`
+2. `$ brew install z3`
+3. `$ forge build`
 
 ## References
 
