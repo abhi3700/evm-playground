@@ -13,6 +13,55 @@
 - Ensure installation of nvm, npm, nodejs
 - `$ npm install --save-dev hardhat` inside a project directory
 
+## Hardhat Console
+
+This is to play with the contract on localhost on CLI.
+
+Open CLI on a localhost: `$ npx hardhat node --network localhost`
+
+> Prior to this step, local node must be running in another terminal via `$ npx hardhat node`
+
+![](../../img/hardhat_console_terminal_w_main.png)
+
+### Functionality
+
+All the commands are written on CLI.
+
+> Shown for a contract named - `Num` with a constructor with input parameter of a number.
+
+- Define a contract factory:
+  > Done to call the ABI (typechain in case of typescript)
+
+```ts
+> const numFactory = await ethers.getContractFactory("Num");
+```
+
+- Define/Deploy a new contract:
+
+```ts
+> const numContract = await numFactory.deploy(10);
+```
+
+- Attach a deployed contract to a variable":
+
+> the deployed contract address: `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`
+
+```ts
+> await num1 = numFactory.attach("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512");
+```
+
+- Now, call the function of deployed contract at this address:
+
+```ts
+> await num1.num()
+```
+
+Use `update` function.
+
+```ts
+> await num1.update(30)
+```
+
 ## Architecture
 
 - Hardhat is designed around the concepts of tasks and plugins. The bulk of Hardhat's functionality comes from plugins, which as a developer you're free to choose the ones you want to use.
