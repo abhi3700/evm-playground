@@ -176,7 +176,7 @@ module.exports = {};
 1. To first get a quick sense of what's available and what's going on, run `$ npx hardhat` in your project folder.
 1. Next add the line `require('@nomiclabs/hardhat-waffle');` in file `hardhat.config.js`
 
-> We're only requiring hardhat-waffle here because it depends on hardhat-ethers so adding both isn't necessary.
+   > We're only requiring hardhat-waffle here because it depends on hardhat-ethers so adding both isn't necessary.
 
 1. If you take a look at the `hardhat.config.js` file, you will find the definition of the task `accounts`. Now, list down the accounts `$ npx hardhat accounts`
 1. Now, to compile use `$ npx hardhat compile`
@@ -185,34 +185,35 @@ module.exports = {};
    - Enforce a recompilation using `npx hardhat compile --force`
 1. Now, for testing use `$ npx hardhat test` after creating a file `test/test.js` (filename doesn't matter.). Here, the contract(s) have been tested w/o deployment.
 
-> 3 main concepts: `Signer`, `ContractFactory` and `Contract` are explained here.
+   > 3 main concepts: `Signer`, `ContractFactory` and `Contract` are explained here.
 
 1. To deploy the contract, [source](https://hardhat.org/tutorial/debugging-with-hardhat-network.html) after creating the `scripts/deploy.js`:
+
    - **Hardhat network**: use `$ npx hardhat run scripts/deploy.js`
    - **local network**: use `$ npx hardhat run scripts/deploy.js --network local` using Ganache local chain & to see rich contract data, compile using truffle. View the contract in Ganache.
 
-```console
-$ npx hardhat run scripts/deploy.js --network local
-Deploying contracts with the account: 0xef92fAA501c2B7F84763066fE382DfC455A2Bf82
-Account balance: 99558873620000000000
-Token address: 0xBC9b6a9Ba4C0C83F4A8BE90D32419365ACeB10B9
-```
+   ```console
+   $ npx hardhat run scripts/deploy.js --network local
+   Deploying contracts with the account: 0xef92fAA501c2B7F84763066fE382DfC455A2Bf82
+   Account balance: 99558873620000000000
+   Token address: 0xBC9b6a9Ba4C0C83F4A8BE90D32419365ACeB10B9
+   ```
 
-    	+ Add the `network` in config file `hardhat.config.js`:
+   - Add the `network` in config file `hardhat.config.js`:
 
-```
-module.exports = {
-  solidity: "0.8.6",
-  networks: {
-    local: {
-      url: 'http://127.0.0.1:7545/',
-      accounts: ['0xe0db4b3fa4af41d065eb3c2e5df3dfbed18203607e59ec428e225e7b2d23c194'],
-    },
-  },
-};
-```
+   ```
+   module.exports = {
+     solidity: "0.8.6",
+     networks: {
+       local: {
+         url: 'http://127.0.0.1:7545/',
+         accounts: ['0xe0db4b3fa4af41d065eb3c2e5df3dfbed18203607e59ec428e225e7b2d23c194'],
+       },
+     },
+   };
+   ```
 
-    - __Rinkeby network__: use `$ npx hardhat run scripts/deploy.js --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
+   - **Rinkeby network**: use `$ npx hardhat run scripts/deploy.js --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
 
 ### TypeScript
 
@@ -223,22 +224,22 @@ module.exports = {
 1. `$ npx hardhat` >> Choose "Create an empty hardhat.config.js". Now, config file created
 1. Now, convert JS to TS
 
-```bash
-$ npm install --save-dev ts-node typescript
-$ npm install --save-dev chai @types/node @types/mocha @types/chai
-$ mv hardhat.config.js hardhat.config.ts
-```
+   ```bash
+   $ npm install --save-dev ts-node typescript
+   $ npm install --save-dev chai @types/node @types/mocha @types/chai
+   $ mv hardhat.config.js hardhat.config.ts
+   ```
 
 1. Dependency packages like `hardhat-waffle`, `hardhat-ethers`. If missed, install using
 
-```bash
-$ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/hardhat @typechain/ethers-v5 dotenv
-```
+   ```bash
+   $ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers hardhat-gas-reporter @openzeppelin/contracts typechain @typechain/hardhat @typechain/ethers-v5 dotenv
+   ```
 
 1. To first get a quick sense of what's available and what's going on, run `$ npx hardhat` in your project folder.
 1. Next add the line `import '@nomiclabs/hardhat-waffle';` in file `hardhat.config.ts`
 
-> We're only requiring hardhat-waffle here because it depends on hardhat-ethers so adding both isn't necessary.
+   > We're only requiring hardhat-waffle here because it depends on hardhat-ethers so adding both isn't necessary.
 
 1. If you take a look at the `hardhat.config.ts` file, you will find the definition of the task `accounts`. Now, list down the accounts `$ npx hardhat accounts`
 1. Now, to compile use `$ npx hardhat compile`
@@ -247,34 +248,35 @@ $ npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomicla
    - Enforce a recompilation using `npx hardhat compile --force`
 1. Now, for testing use `$ npx hardhat test` after creating a file `test/test.ts` (filename doesn't matter.). Here, the contract(s) have been tested locally w/o deployment.
 
-> 3 main concepts: `Signer`, `ContractFactory` and `Contract` are explained here.
+   > 3 main concepts: `Signer`, `ContractFactory` and `Contract` are explained here.
 
 1. To deploy the contract, [source](https://hardhat.org/tutorial/debugging-with-hardhat-network.html) after creating the `scripts/deploy.ts`:
+
    - **Hardhat network**: use `$ npx hardhat run scripts/deploy.ts`
    - **local network**: use `$ npx hardhat run scripts/deploy.ts --network local` using Ganache local chain & to see rich contract data, compile using truffle. View the contract in Ganache.
 
-```console
-$ npx hardhat run scripts/deploy.ts --network local
-Deploying contracts with the account: 0xef92fAA501c2B7F84763066fE382DfC455A2Bf82
-Account balance: 99558873620000000000
-Token address: 0xBC9b6a9Ba4C0C83F4A8BE90D32419365ACeB10B9
-```
+   ```console
+   $ npx hardhat run scripts/deploy.ts --network local
+   Deploying contracts with the account: 0xef92fAA501c2B7F84763066fE382DfC455A2Bf82
+   Account balance: 99558873620000000000
+   Token address: 0xBC9b6a9Ba4C0C83F4A8BE90D32419365ACeB10B9
+   ```
 
-    	+ Add the `network` in config file `hardhat.config.ts`:
+   - Add the `network` in config file `hardhat.config.ts`:
 
-```
-const config: HardhatUserConfig = {
-  solidity: "0.8.6",
-  networks: {
-    local: {
-      url: 'http://127.0.0.1:7545/',
-      accounts: ['0xe0db4b3fa4af41d065eb3c2e5df3dfbed18203607e59ec428e225e7b2d23c194'],
-    },
-  },
-};
-```
+   ```
+   const config: HardhatUserConfig = {
+     solidity: "0.8.6",
+     networks: {
+       local: {
+         url: 'http://127.0.0.1:7545/',
+         accounts: ['0xe0db4b3fa4af41d065eb3c2e5df3dfbed18203607e59ec428e225e7b2d23c194'],
+       },
+     },
+   };
+   ```
 
-    - __Rinkeby network__: use `$ npx hardhat run scripts/deploy.ts --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
+   - **Rinkeby network**: use `$ npx hardhat run scripts/deploy.ts --network rinkeby`. View the contract - https://rinkeby.etherscan.io/address/<contract_address>
 
 #### Points to Ponder
 
@@ -324,60 +326,63 @@ await deploy("MyToken_1", {
 });
 ```
 
-- 2 methods to write deploy script:
+- 3 methods to write deploy script:
+
   - M-1: traditional method using etherjs, web3js lib [link](https://github.com/amanusk/hardhat-template/blob/main/scripts/deploy.ts)
   - M-2: using hardhat-deploy [link](https://github.com/kalouo/hardhat-deployer/blob/master/deploy/00_deploy_test.ts)
 
-```ts
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployFunction } from "hardhat-deploy/types";
+    ```ts
+    import { HardhatRuntimeEnvironment } from "hardhat/types";
+    import { DeployFunction } from "hardhat-deploy/types";
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {
-    deployments: { deploy },
-    getNamedAccounts,
-  } = hre;
-  const { deployer } = await getNamedAccounts();
+    const func: DeployFunction = async function (
+      hre: HardhatRuntimeEnvironment
+    ) {
+      const {
+        deployments: { deploy },
+        getNamedAccounts,
+      } = hre;
+      const { deployer } = await getNamedAccounts();
 
-  await deploy("MyToken", {
-    from: deployer,
-    args: ["Medium", "MDM"],
-    log: true,
-  });
-};
+      await deploy("MyToken", {
+        from: deployer,
+        args: ["Medium", "MDM"],
+        log: true,
+      });
+    };
 
-export default func;
-func.tags = ["MyToken"];
-```
+    export default func;
+    func.tags = ["MyToken"];
+    ```
 
-    - M-3: using deployContract, deployContractwithLibraries [link](https://github.com/bootfinance/boot-customswap.git)
+  - M-3: using deployContract, deployContractwithLibraries [link](https://github.com/bootfinance/boot-customswap.git)
 
-```ts
-async function deploySwap(): Promise<void> {
-  const [deployer]: SignerWithAddress[] = await ethers.getSigners();
-  console.log(`Deploying with ${deployer.address}`);
+    ```ts
+    async function deploySwap(): Promise<void> {
+      const [deployer]: SignerWithAddress[] = await ethers.getSigners();
+      console.log(`Deploying with ${deployer.address}`);
 
-  // Deploy FRAX token
-  const fraxToken = (await deployContract(deployer, GenericERC20Artifact, [
-    "Frax",
-    "FRAX",
-    "18",
-  ])) as GenericERC20;
-  await fraxToken.deployed();
-  console.log(`FRAX token address: ${fraxToken.address}`);
+      // Deploy FRAX token
+      const fraxToken = (await deployContract(deployer, GenericERC20Artifact, [
+        "Frax",
+        "FRAX",
+        "18",
+      ])) as GenericERC20;
+      await fraxToken.deployed();
+      console.log(`FRAX token address: ${fraxToken.address}`);
 
-  // Deploy SwapUtils with MathUtils library
-  const swapUtils = (await deployContractWithLibraries(
-    deployer,
-    SwapUtilsArtifact,
-    {
-      MathUtils: mathUtils.address,
+      // Deploy SwapUtils with MathUtils library
+      const swapUtils = (await deployContractWithLibraries(
+        deployer,
+        SwapUtilsArtifact,
+        {
+          MathUtils: mathUtils.address,
+        }
+      )) as SwapUtils;
+      await swapUtils.deployed();
+      console.log(`swapUtils address: ${swapUtils.address}`);
     }
-  )) as SwapUtils;
-  await swapUtils.deployed();
-  console.log(`swapUtils address: ${swapUtils.address}`);
-}
-```
+    ```
 
 ## Commands
 
@@ -393,12 +398,6 @@ async function deploySwap(): Promise<void> {
 - `$ npx hardhat deploy --network <NETWORK> --tags <SOLIDITY_CONTRACT>`: `NETWORK` must be defined in the `hardhat.config.ts`. E.g. `$ npx hardhat deploy --network rinkeby --tags MyToken`
 - `$ npx hardhat console --network <NETWORK>`: Run a console for the localhost network. E.g. `$ npx hardhat console --network localhost`.
   > Here, the generated contract address can be attached to a Contract factory based variable & then run the functions available inside. To access the state variables, just call by their name with `()` suffixed as if it's a function inside SC.
-
-Here are the steps:
-
-```md
-
-```
 
 ### OpenZeppelin plugin
 
@@ -690,11 +689,18 @@ async function main(): Promise<void> {
   // ==============================================================================
   // We get the contract to deploy
   const numFactory: ContractFactory = await ethers.getContractFactory("Num");
-  const numContract: Contract = await upgrades.deployProxy(numFactory, [10]);
-  await numContract.deployed();
-  console.log("SC deployed to: ", numContract.address);
+  const proxyContract: Contract = await upgrades.deployProxy(numFactory, [10]);
+  await proxyContract.deployed();
+  const proxyAdminAddress: String = await upgrades.erc1967.getAdminAddress(
+    proxyContract.address
+  );
+  const numContractAddress: string =
+    await upgrades.erc1967.getImplementationAddress(proxyContract.address);
+  console.log("Proxy SC deployed to: ", proxyContract.address);
+  console.log("Proxy Admin deployed to: ", proxyAdminAddress);
+  console.log("Implementation SC deployed to: ", numContractAddress);
   console.log(
-    `The transaction that was sent to the network to deploy the contract: ${numContract.deployTransaction.hash}`
+    `The transaction that was sent to the network to deploy the contract: ${proxyContract.deployTransaction.hash}`
   );
 }
 
@@ -731,6 +737,7 @@ function initialize(uint256 _num) external initializer {
 - Like in Eg-0:M-2, 3 transactions occurred. The contract address which is shown in the right terminal is `proxy contract` address, not the `Num` (implementation SC) one.
 - The latest transaction hash is shown in the right terminal. This also contains the proxy contract address.
 - In comparison to Eg-1, the deploy script is modified with `upgrades.deployProxy(numFactory, [10])`.
+- All the logic is present in the Implementation/Logic Contract. And all the states are maintained in the Proxy Contract.
 
 ---
 
@@ -802,15 +809,24 @@ dotenvConfig({ path: resolve(__dirname, "./.env") });
 async function main(): Promise<void> {
   // ==============================================================================
   // We get the contract to deploy
-  const num2Factory: ContractFactory = await ethers.getContractFactory("NumV2");
-  const numContract2: Contract = await upgrades.upgradeProxy(
-    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    num2Factory
+  const numV2Factory: ContractFactory = await ethers.getContractFactory(
+    "NumV2"
   );
-  //   await numContract2.deployed();
-  //   console.log("SC deployed to: ", numContract2.address);
+  const proxyContract: Contract = await upgrades.upgradeProxy(
+    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    numV2Factory
+  );
+  await proxyContract.deployed();
+  const proxyAdminAddress: String = await upgrades.erc1967.getAdminAddress(
+    proxyContract.address
+  );
+  const numContractAddress: string =
+    await upgrades.erc1967.getImplementationAddress(proxyContract.address);
+  console.log("Proxy SC deployed to: ", proxyContract.address);
+  console.log("Proxy Admin deployed to: ", proxyAdminAddress);
+  console.log("Implementation SC deployed to: ", numContractAddress);
   console.log(
-    `The transaction that was sent to the network to deploy the contract: ${numContract2.deployTransaction.hash}`
+    `The transaction that was sent to the network to deploy the contract: ${proxyContract.deployTransaction.hash}`
   );
 }
 
@@ -830,7 +846,11 @@ main()
 
 **LESSONS**:
 
+- The proxy SC address remains same as in **Example-2** i.e. `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0`.
+- Here, the proxy Admin SC address remains same as in **Example-2** i.e.`0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`.
 - Now, while upgrading, 2 transactions occurred.
+  1. `NumV2` implementation contract address got generated.
+  2. `ProxyAdmin` SC called by caller to set the new address into `ProxySC`.
 
 ## Troubleshooting
 
