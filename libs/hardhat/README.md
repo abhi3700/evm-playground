@@ -675,7 +675,6 @@ contract Num is Initializable {
         num = _num;
     }
 }
-
 ```
 
 **Deploy Script**:
@@ -711,12 +710,7 @@ main()
 
 **CLI**: ✅
 
-```console
-❯ npx hardhat run scripts/num-deploy.ts --network localhost                            ⏎
-No need to generate any newer typings.
-SC deployed to:  0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
-The transaction that was sent to the network to deploy the contract: 0x74251e067a84253252d8105e9bc768fc873ffdfc67596ebf9722304efee3d0d8
-```
+![](../../img/hardhat_w_initialize_input_param.png)
 
 **LESSONS**:
 
@@ -734,7 +728,109 @@ function initialize(uint256 _num) external initializer {
 }
 ```
 
+- Like in Eg-0:M-2, 3 transactions occurred. The contract address which is shown in the right terminal is `proxy contract` address, not the `Num` (implementation SC) one.
+- The latest transaction hash is shown in the right terminal. This also contains the proxy contract address.
 - In comparison to Eg-1, the deploy script is modified with `upgrades.deployProxy(numFactory, [10])`.
+
+---
+
+#### Example 3
+
+An upgradeable contract (v2) with `initialize` (in place of `constructor`) function.
+
+> This is the continuation of **Example-2**.
+
+**Contract**:
+
+v1:
+
+```solidity
+//SPDX-License-Identifier: MIT
+pragma solidity 0.8.6;
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "hardhat/console.sol";
+
+contract Num is Initializable {
+    uint256 public num;
+
+    function initialize(uint256 _num) external initializer {
+        num = _num;
+    }
+
+    function update(uint256 _num) external {
+        num = _num;
+    }
+}
+```
+
+v2:
+
+```solidity
+//SPDX-License-Identifier: MIT
+pragma solidity 0.8.6;
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "hardhat/console.sol";
+
+contract NumV2 is Initializable {
+    uint256 public num;
+
+    function initialize(uint256 _num) external initializer {
+        num = _num;
+    }
+
+    function update(uint256 _num) external {
+        num = _num;
+    }
+
+    function increment() external {
+        ++num;
+    }
+}
+```
+
+**Upgrade Script**:
+
+```ts
+import { ethers, upgrades } from "hardhat";
+import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
+
+async function main(): Promise<void> {
+  // ==============================================================================
+  // We get the contract to deploy
+  const num2Factory: ContractFactory = await ethers.getContractFactory("NumV2");
+  const numContract2: Contract = await upgrades.upgradeProxy(
+    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    num2Factory
+  );
+  //   await numContract2.deployed();
+  //   console.log("SC deployed to: ", numContract2.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the contract: ${numContract2.deployTransaction.hash}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then()
+  .catch((error: Error) => {
+    console.error(error);
+    throw new Error("Exit: 1");
+  });
+```
+
+**CLI**: ✅
+
+![](../../img/hardhat_w_v2_upgrade.png)
+
+**LESSONS**:
+
+- Now, while upgrading, 2 transactions occurred.
 
 ## Troubleshooting
 
