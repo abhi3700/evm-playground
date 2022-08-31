@@ -454,14 +454,296 @@ import "@openzeppelin/hardhat-upgrades";
 
 Watch [this](https://www.youtube.com/watch?v=uqzM_KAMvEw) video.
 
+---
+
+#### Example 0
+
+A non-upgradeable contract without `constructor` function.
+
+**Contract**:
+
+```solidity
+//SPDX-License-Identifier: MIT
+pragma solidity 0.8.6;
+
+import "hardhat/console.sol";
+
+contract Num {
+    uint256 public num;
+
+    function update(uint256 _num) external {
+        num = _num;
+    }
+}
+```
+
+**Deploy Script**:
+
+```ts
+import { ethers, upgrades } from "hardhat";
+import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
+
+async function main(): Promise<void> {
+  // ==============================================================================
+  // We get the contract to deploy
+  const numFactory: ContractFactory = await ethers.getContractFactory("Num");
+
+  // M-1
+  const numContract: Contract = await numFactory.deploy();
+  // OR
+  // M-2
+  // const numContract: Contract = await upgrades.deployProxy(numFactory);
+
+  await numContract.deployed();
+  console.log("SC deployed to: ", numContract.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the contract: ${numContract.deployTransaction.hash}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then()
+  .catch((error: Error) => {
+    console.error(error);
+    throw new Error("Exit: 1");
+  });
+```
+
+**CLI**: ✅
+
+M-1:
+
+```console
+❯ npx hardhat run scripts/num-deploy.ts --network localhost
+No need to generate any newer typings.
+SC deployed to:  0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+The transaction that was sent to the network to deploy the contract: 0x549b48e61c07465367bec1c8c2234069023b14a2e961f2158f9cad97ffdff593
+```
+
+M-2:
+![](../../img/hardhat_wo_construc_upgrades_deployProxy.png)
+
+**LESSONS**:
+
+- As usual, in M-1, only 1 transaction occurred.
+- But, in M-2, 3 transactions occurred to generate 3 contract addresses:
+  1. Implementation Contract (logic i.e. Num)
+  2. Proxy Admin
+  3. Proxy Contract
+
+---
+
+#### Example 1
+
+A non-upgradeable contract with `constructor` function.
+
+**Contract**:
+
+```solidity
+//SPDX-License-Identifier: MIT
+pragma solidity 0.8.6;
+
+import "hardhat/console.sol";
+
+contract Num {
+    uint256 public num;
+
+    constructor(uint256 _num) {
+        num = _num;
+    }
+
+    function update(uint256 _num) external {
+        num = _num;
+    }
+}
+```
+
+**Deploy Script**:
+
+Wrong way ❌:
+
+```ts
+import { ethers, upgrades } from "hardhat";
+import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
+
+async function main(): Promise<void> {
+  // ==============================================================================
+  // We get the contract to deploy
+  const numFactory: ContractFactory = await ethers.getContractFactory("Num");
+  const numContract: Contract = await upgrades.deployProxy(numFactory);
+  await numContract.deployed();
+  console.log("SC deployed to: ", numContract.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the contract: ${numContract.deployTransaction.hash}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then()
+  .catch((error: Error) => {
+    console.error(error);
+    throw new Error("Exit: 1");
+  });
+```
+
+Correct way ✅:
+
+```ts
+...
+...
+  const numContract: Contract = await numFactory.deploy(10);
+...
+...
+```
+
+**CLI**:
+
+Wrong way ❌
+
+```console
+❯ npx hardhat run scripts/num-deploy.ts --network localhost
+No need to generate any newer typings.
+Error: types/values length mismatch (count={"types":1,"values":0}, value={"types":[{"name":"_num","type":"uint256","indexed":null,"components":null,"arrayLength":null,"arrayChildren":null,"baseType":"uint256","_isParamType":true}],"values":[]}, code=INVALID_ARGUMENT, version=abi/5.7.0)
+    ...
+    ...
+    at async main (/Users/abhi3700/F/coding/github_repos/evm_playground/sc-sol/scripts/num-deploy.ts:11:33) {
+  reason: 'types/values length mismatch',
+  code: 'INVALID_ARGUMENT',
+  count: { types: 1, values: 0 },
+  value: { types: [ [ParamType] ], values: [] }
+}
+Error: Exit: 1
+    at /Users/abhi3700/F/coding/github_repos/evm_playground/sc-sol/scripts/num-deploy.ts:25:11
+```
+
+Correct way ✅:
+
+```console
+❯ npx hardhat run scripts/num-deploy.ts --network localhost
+No need to generate any newer typings.
+SC deployed to:  0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+The transaction that was sent to the network to deploy the contract: 0x549b48e61c07465367bec1c8c2234069023b14a2e961f2158f9cad97ffdff593
+```
+
+**LESSONS**:
+
+- **Failure REASON: For a Upgradeable SC, we can't use `constructor` function with `upgrades.deployProxy(numFactory)` in script so as to deploy. We are also not able to feed an input param like this**:
+
+```ts
+const numContract: Contract = await upgrades.deployProxy(numFactory, 10);
+
+// OR
+
+const numContract: Contract = await upgrades.deployProxy(numFactory, [10]);
+```
+
+- For an non-upgradeable contract, we can't use `upgrades.` available within `@openzeppelin/hardhat-upgrades`.
+
+---
+
+#### Example 2
+
+An upgradeable contract (v1) with `initialize` (in place of `constructor`) function.
+
+**Contract**:
+
+```solidity
+//SPDX-License-Identifier: MIT
+pragma solidity 0.8.6;
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "hardhat/console.sol";
+
+contract Num is Initializable {
+    uint256 public num;
+
+    function initialize(uint256 _num) external initializer {
+        num = _num;
+    }
+
+    function update(uint256 _num) external {
+        num = _num;
+    }
+}
+
+```
+
+**Deploy Script**:
+
+```ts
+import { ethers, upgrades } from "hardhat";
+import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
+
+async function main(): Promise<void> {
+  // ==============================================================================
+  // We get the contract to deploy
+  const numFactory: ContractFactory = await ethers.getContractFactory("Num");
+  const numContract: Contract = await upgrades.deployProxy(numFactory, [10]);
+  await numContract.deployed();
+  console.log("SC deployed to: ", numContract.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the contract: ${numContract.deployTransaction.hash}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then()
+  .catch((error: Error) => {
+    console.error(error);
+    throw new Error("Exit: 1");
+  });
+```
+
+**CLI**: ✅
+
+```console
+❯ npx hardhat run scripts/num-deploy.ts --network localhost                            ⏎
+No need to generate any newer typings.
+SC deployed to:  0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
+The transaction that was sent to the network to deploy the contract: 0x74251e067a84253252d8105e9bc768fc873ffdfc67596ebf9722304efee3d0d8
+```
+
+**LESSONS**:
+
+- The `constructor` function is replaced with `initialize` function now:
+
+```solidity
+// removed so as to make the contract upgradeable
+// constructor(uint256 _num) {
+//     num = _num;
+// }
+
+// replaced with this, so as to make the contract upgradeable
+function initialize(uint256 _num) external initializer {
+    num = _num;
+}
+```
+
+- In comparison to Eg-1, the deploy script is modified with `upgrades.deployProxy(numFactory, [10])`.
+
 ## Troubleshooting
 
-### Nothing to compile
+### 1. Nothing to compile
 
 - _Cause_: This gets displayed, when there is an already existing `artifacts/` folder.
 - _Solution_: delete the folder & then `$ npx hardhat compiled`
 
-### TypeError: Cannot read property 'address' of undefined
+### 2. TypeError: Cannot read property 'address' of undefined
 
 - _Solution_: remove the `const` from this line:
 
@@ -473,9 +755,86 @@ To
 [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 ```
 
-### Console.log Support error
+### 3. Console.log Support error
 
 - _Solution_: Check the type of variables parsed. Ensure it's of these supported types: Integer, String, Bool, address
+
+### 4. Error: Contract at 0x5F..... doesn't look like an ERC 1967 proxy with a logic contract address
+
+- _Problem_:
+  ![](../../img/hardhat_deploy_upgrade.png)
+
+- _Cause_: The v1 contract address fed was deployed using `.deploy()` function when deployed 1st time.
+
+- _Solution_: Use `upgrades.deployProxy()` function here to deploy for v1 (1st time). Feed the address which is a proxy contract address. And that address can be obtained directly via `upgrades.deployProxy()`.
+
+Before:
+
+```ts
+// num-deploy.ts
+import { ethers } from "hardhat";
+import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
+
+async function main(): Promise<void> {
+  // ==============================================================================
+  // We get the contract to deploy
+  const numFactory: ContractFactory = await ethers.getContractFactory("Num");
+  const numContract: Contract = await numFactory.deploy();
+  await numContract.deployed();
+  console.log("SC deployed to: ", numContract.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the contract: ${numContract.deployTransaction.hash}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then()
+  .catch((error: Error) => {
+    console.error(error);
+    throw new Error("Exit: 1");
+  });
+```
+
+After:
+
+> In order to use the following code with `upgrades.deployProxy()`, the contract (logic/implementation) shouldn't have any constructor. Instead, the contract can have an external `initialize()` function inherited from `Initializable.sol` in OZ's `contracts-upgradeable` repo. Otherwise, if deployed with constructor, it will throw error like this:
+
+``
+
+```ts
+// num-deploy.ts
+import { ethers, upgrades } from "hardhat";
+import { Contract, ContractFactory /* , BigNumber */ } from "ethers";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
+
+async function main(): Promise<void> {
+  // ==============================================================================
+  // We get the contract to deploy
+  const numFactory: ContractFactory = await ethers.getContractFactory("Num");
+  const numContract: Contract = await upgrades.deployProxy(numFactory);
+  await numContract.deployed();
+  console.log("SC deployed to: ", numContract.address);
+  console.log(
+    `The transaction that was sent to the network to deploy the contract: ${numContract.deployTransaction.hash}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main()
+  .then()
+  .catch((error: Error) => {
+    console.error(error);
+    throw new Error("Exit: 1");
+  });
+```
 
 ## TODO
 
