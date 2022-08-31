@@ -8,6 +8,7 @@ import { HardhatUserConfig /* , NetworkUserConfig */ } from "hardhat/types";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
+import "@openzeppelin/hardhat-upgrades";
 
 import "hardhat-gas-reporter";
 import "solidity-coverage";

@@ -7,9 +7,13 @@ dotenvConfig({ path: resolve(__dirname, "./.env") });
 async function main(): Promise<void> {
   // ==============================================================================
   // We get the contract to deploy
-  const numFactory: ContractFactory = await ethers.getContractFactory("Num");
-  // const numContract: Contract = await numFactory.deploy();
-  const proxyContract: Contract = await upgrades.deployProxy(numFactory, [10]);
+  const numV2Factory: ContractFactory = await ethers.getContractFactory(
+    "NumV2"
+  );
+  const proxyContract: Contract = await upgrades.upgradeProxy(
+    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    numV2Factory
+  );
   await proxyContract.deployed();
   const proxyAdminAddress: String = await upgrades.erc1967.getAdminAddress(
     proxyContract.address

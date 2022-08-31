@@ -734,10 +734,13 @@ function initialize(uint256 _num) external initializer {
 }
 ```
 
+- Just like `constructor`, the `initialize` function is automatically called during 1st time deployment.
 - Like in Eg-0:M-2, 3 transactions occurred. The contract address which is shown in the right terminal is `proxy contract` address, not the `Num` (implementation SC) one.
 - The latest transaction hash is shown in the right terminal. This also contains the proxy contract address.
 - In comparison to Eg-1, the deploy script is modified with `upgrades.deployProxy(numFactory, [10])`.
-- All the logic is present in the Implementation/Logic Contract. And all the states are maintained in the Proxy Contract.
+- All the logic is present in the **Implementation/Logic Contract**. And all the states are maintained in the **Proxy Contract**.
+- We are following OpenZeppelin Transparent Proxy pattern.
+- All the proxy related info is available in a folder named `.openzeppelin/`.
 
 ---
 
@@ -952,9 +955,12 @@ main()
   });
 ```
 
-## TODO
+**Source code**:
 
-- call the solidity functions using CLI
+- [Num V1](../../sc-sol/contracts/Num.sol)
+- [Num V2](../../sc-sol/contracts/NumV2.sol)
+- [Deploy Script](../../sc-sol/scripts/num-deploy.ts)
+- [Upgrade Script](../../sc-sol/scripts/num-upgrade.ts)
 
 ## References
 
@@ -973,3 +979,4 @@ main()
 - [Introducing TypeChain — Typescript bindings for Ethereum smart contracts](https://blog.neufund.org/introducing-typechain-typescript-bindings-for-ethereum-smart-contracts-839fc2becf22)
 - Get your network chain id from [here](https://chainlist.org/).
 - Combines Hardhat, TypeChain, Ethers, Waffle, Solhint, Solcover and Prettier - https://github.com/paulrberg/solidity-template
+- [Upgrading Smart Contract | Proxy Smart Contract | Code Eater - Blockchain | Hindi](https://www.youtube.com/watch?v=uqzM_KAMvEw)
