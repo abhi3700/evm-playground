@@ -13,6 +13,21 @@
 - Ensure installation of nvm, npm, nodejs
 - `$ npm install --save-dev hardhat` inside a project directory
 
+## Config
+
+Parameters inside `hardhat.config.ts`.
+
+### Paths
+
+```ts
+    paths: {
+        sources: "./src",
+        artifacts: "./build/artifacts",
+        cache: "./cache_hardhat",
+        tests: "./test",
+    },
+```
+
 ## Hardhat Console
 
 This is to play with the contract on localhost on CLI.
@@ -855,6 +870,15 @@ main()
   1. `NumV2` implementation contract address got generated.
   2. `ProxyAdmin` SC called by caller to set the new address into `ProxySC`.
 
+---
+
+**Source code**:
+
+- [Num V1](../../sc-sol/contracts/Num.sol)
+- [Num V2](../../sc-sol/contracts/NumV2.sol)
+- [Deploy Script](../../sc-sol/scripts/num-deploy.ts)
+- [Upgrade Script](../../sc-sol/scripts/num-upgrade.ts)
+
 ## Troubleshooting
 
 ### 1. Nothing to compile
@@ -954,13 +978,6 @@ main()
     throw new Error("Exit: 1");
   });
 ```
-
-**Source code**:
-
-- [Num V1](../../sc-sol/contracts/Num.sol)
-- [Num V2](../../sc-sol/contracts/NumV2.sol)
-- [Deploy Script](../../sc-sol/scripts/num-deploy.ts)
-- [Upgrade Script](../../sc-sol/scripts/num-upgrade.ts)
 
 ## References
 
