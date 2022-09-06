@@ -414,6 +414,10 @@ transactionIndex        0
 type
 ```
 
+## Code snippets
+
+More can be found [here](../../utils/foundry/)
+
 ## Troubleshoot
 
 ### 1. Error: "solc": No such file or directory (os error 2)
