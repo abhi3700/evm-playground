@@ -28,6 +28,18 @@ Parameters inside `hardhat.config.ts`.
     },
 ```
 
+## Deployment
+
+During deployment, when we want to load the artifact from a path, this is the way:
+
+```ts
+const StfxFactory: ContractFactory = await ethers.getContractFactory(
+  "src/perp/Stfx.sol:Stfx"
+);
+```
+
+[Source](https://ethereum.stackexchange.com/questions/135052/call-contract-artifacts-with-same-names-from-different-path-in-hardhat/135065#135065)
+
 ## Hardhat Console
 
 This is to play with the contract on localhost on CLI.
