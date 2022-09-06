@@ -480,6 +480,8 @@ import "@openzeppelin/hardhat-upgrades";
 
 Watch [this](https://www.youtube.com/watch?v=uqzM_KAMvEw) video.
 
+To upgrade a contract use `upgrades.upgradeProxy` or [`upgrades.forceImport`](https://github.com/OpenZeppelin/openzeppelin-upgrades/pull/517/files#diff-1bd6f3698e46f4306cd847743d1cbc63bc905e0e7ff90a9557c3387de5054707R42).
+
 ---
 
 #### Example 0
@@ -989,6 +991,54 @@ main()
     console.error(error);
     throw new Error("Exit: 1");
   });
+```
+
+### 5. Error: Deployment at address 0xfDf2E8257d5E3667Cb744348362AeE1ECFF24125 is not registered
+
+> If you want to prepare an upgrade for a proxy at that address, register it by ...
+
+- _Cause_: During deployment
+- _Solution_: Use `forceImport`
+
+Before:
+
+```ts
+const proxyContract: Contract = await upgrades.upgradeProxy(
+  VAULT_PROXY_SC_ADDRESS_OPKOVAN,
+  StfxVaultV2Factory
+);
+```
+
+After:
+
+```ts
+const proxyContract: Contract = await upgrades.forceImport(
+  VAULT_PROXY_SC_ADDRESS_OPKOVAN,
+  StfxVaultV2Factory
+);
+```
+
+### 6. Error: The following deployment clashes with an existing one at 0x95fdad1737406C02622aBD0ED8b4c60D45e1c7FB
+
+- _Cause_: During deployment
+- _Solution_: Use `upgradeProxy`
+
+Before:
+
+```ts
+const proxyContract: Contract = await upgrades.forceImport(
+  VAULT_PROXY_SC_ADDRESS_OPKOVAN,
+  StfxVaultV2Factory
+);
+```
+
+After:
+
+```ts
+const proxyContract: Contract = await upgrades.upgradeProxy(
+  VAULT_PROXY_SC_ADDRESS_OPKOVAN,
+  StfxVaultV2Factory
+);
 ```
 
 ## References
