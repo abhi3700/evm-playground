@@ -466,6 +466,30 @@ function testNonOwnerPauseWhenUnpaused(address testAddress) public {
 2. `$ brew install z3`
 3. `$ forge build`
 
+### 4. Compilation error related to `ds-test` lib installation while running hardhat into Foundry project
+
+- _Cause_: `ds-test` lib is missing
+
+Error:
+
+```console
+❯ yarn compile
+yarn run v1.22.17
+warning ../../../../../package.json: No license field
+$ hardhat compile
+Error HH411: The library ds-test, imported from lib/forge-std/src/Test.sol, is not installed. Try installing it using npm.
+
+For more info go to https://hardhat.org/HH411 or run Hardhat with --show-stack-traces
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+```
+
+- _Solution_: Just add this line into `remappings.txt` file
+
+```
+ds-test/=lib/forge-std/lib/ds-test/src/
+```
+
 ## References
 
 - [Smart Contract Development with Foundry | Nader Dabit](https://www.youtube.com/watch?v=uelA2U9TbgM)
