@@ -75,6 +75,8 @@ Refer [this](https://book.getfoundry.sh/getting-started/first-steps)
 
 I have maintained the work [here](https://github.com/abhi3700/evm_contracts_foundry_1).
 
+- https://github.com/EricForgy/foundry-hardhat-sample
+
 ## Create Project
 
 - Create project folder with all dependency & config files.
