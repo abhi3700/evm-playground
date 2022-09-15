@@ -492,6 +492,11 @@ info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this comm
 ds-test/=lib/forge-std/lib/ds-test/src/
 ```
 
+### 5. Assertion failure with `assertApproxEqAbs`
+
+- _Cause_: It's going to fail most of the times.
+- _Solution_: Leave the code as is. Or try changing the delta by increasing or decreasing.
+
 ## References
 
 - [Smart Contract Development with Foundry | Nader Dabit](https://www.youtube.com/watch?v=uelA2U9TbgM)

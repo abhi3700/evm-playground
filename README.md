@@ -2065,6 +2065,8 @@ await clipContract.deployed();
 
 ![](img/diamond_standard_structure.png)
 
+Watch this [video](https://www.youtube.com/watch?v=9-MYz75FA8o).
+
 - List of projects using Diamond standard: <https://eip2535diamonds.substack.com/p/list-of-projects-using-eip-2535-diamonds>
 - The [EIP-2535 Diamonds](https://github.com/ethereum/EIPs/issues/2535) is a way to organize your Solidity code and contracts to give them the right amount of modularity and cohesion for your system. In addition, flexible upgrade capability is a key part of it.
 - <u>Diamond</u>: A diamond is a contract that uses the external functions of other contracts as its own.
