@@ -1329,6 +1329,19 @@ require(mapAddressBool[addr] == 0, "the address is not blocked");
 
 ### Gas Optimization
 
+- Using 2 `require` statements is less costly than 1 `require` statement with `&&`.
+
+```solidity
+require(_stf.fundraisingPeriod >= 15 minutes, "Fundraising should be >= 15 mins");
+require(_stf.fundraisingPeriod <= maxFundraisingPeriod, "Fundraising should be <= a week");
+```
+
+is better than
+
+```solidity
+require((_stf.fundraisingPeriod >= 15 minutes) && (_stf.fundraisingPeriod <= maxFundraisingPeriod), "Fundraising should be b/w 15 mins to a week");
+```
+
 - Variable packing:
   - Solidity stores data in 256-bit memory slots. Variables less than 256 bits will be stored in a single slot, Data that does not fit in a single slot is spread over several slots.
   - Each storage slot costs gas, packing the variables helps you optimize your gas usage by reducing the number of slots our contract requires.
