@@ -1,0 +1,12 @@
+{
+  "name": "verify_sign",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "abhi3700",
+  "license": "MIT",
+  "devDependencies": {
+    "dotenv": "^16.0.1",
+    "ethers": "^5.6.9",
+    "@ethersproject/hash": "^5.6.9"
+  }
+}
