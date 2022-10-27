@@ -160,6 +160,23 @@ where, there is a bytecode.
 
 > [Try this example](./sol/MyArray/TestArray.sol) on Remix.
 
+#### Constructor
+
+- A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
+- A constructor is executed when the contract is created.
+- A constructor can't be called from inside another function.
+- A constructor can't be called directly.
+- A constructor can't be inherited.
+- During inheritance of abstract, contract the constructor gets run by default. E.g.:
+
+```solidity
+contract AuctionRepository is Ownable, Pausable, CheckContract {
+
+}
+```
+
+Here, the constructor of `Ownable`, `Pausable`, `CheckContract` will be called, if available.
+
 ---
 
 #### Bytecode
