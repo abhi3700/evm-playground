@@ -23,16 +23,12 @@ contract GenericERC20 is ERC20, Ownable, Pausable {
     /**
      * @notice Deploy this contract with given name, symbol, and decimals
      * @dev the caller of this constructor will become the owner of this contract
-     * @param name_ name of this token
-     * @param symbol_ symbol of this token
-     * @param decimals_ number of decimals this token will be based on
+     * @param _n name of this token
+     * @param _s symbol of this token
+     * @param _d number of decimals this token will be based on
      */
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        uint8 decimals_
-    ) ERC20(name_, symbol_) {
-        _setupDecimals(decimals_);
+    constructor(string memory _n, string memory _s, uint8 _d) ERC20(_n, _s) {
+        _setupDecimals(_d);
     }
 
     // ==========Modifiers==========================================
@@ -64,5 +60,16 @@ contract GenericERC20 is ERC20, Ownable, Pausable {
         emit TokenBurnt(_msgSender(), _amount);
 
         return true;
+    }
+
+    // ------------------------------------------------------------------------------------------
+    /// @notice Pause contract
+    function pause() public onlyOwner whenNotPaused {
+        _pause();
+    }
+
+    /// @notice Unpause contract
+    function unpause() public onlyOwner whenPaused {
+        _unpause();
     }
 }
