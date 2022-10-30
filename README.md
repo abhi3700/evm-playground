@@ -5,13 +5,14 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 ## Introduction
 
 - The contract code can't be updated (by default), but all the state variables can be updated.
-- The contract code can be updated via proxy method using technique proposed by Openzeppelin.
+- The contract code can be updated via proxy method using technique proposed by Openzeppelin (Transparent, UUPS), Diamond standard (more robust, modular).
 
 ## Installation
 
 ### Editor
 
-- #### Visual Studio Code
+- #### Visual Studio Code [Recommended]
+
   - [evm-boilerplate](https://github.com/abhi3700/evm_boilerplate)
   - [formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) [YouTube](https://www.youtube.com/watch?v=PX6xb8sRlFc)
     - Open Settings
@@ -22,7 +23,9 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
   - packages:
     - [solidity](https://marketplace.visualstudio.com/items?itemName=juanblanco.solidity)
     - [Slither](https://marketplace.visualstudio.com/items?itemName=trailofbits.slither-vscode)
+
 - #### Sublime Text 3
+
   - packages
     - [Solidity Docstring Generator](https://packagecontrol.io/packages/Solidity%20Docstring%20Generator)
     - [Ethereum](https://packagecontrol.io/packages/Ethereum)
@@ -32,9 +35,12 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 - Write Solidity based contracts [here](https://remix.ethereum.org/).
 - Deploy, test as a user like an IDE using a local file
+
   - Follow this [guide](https://remix-ide.readthedocs.io/en/latest/remixd.html)
   - Install remixd using `npm install -g @remix-project/remixd` globally or `npm install @remix-project/remixd` locally.
   - And then "Connect to localhost" in the Remix Website.
+
+- Use inside a project dir like this: `$ remixd -s <project_dir> --remix-ide https://remix.ethereum.org`. E.g. `$ remixd -s ./contracts --remix-ide https://remix.ethereum.org` or `$ remixd -s . --remix-ide https://remix.ethereum.org`
 
 ## Compile
 
@@ -52,7 +58,7 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 - The EVM bytecode is further converted into OPCODE which looks like this:
 
-```
+```bytecode
 PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH3 0x11 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x40 MLOAD PUSH3 0xB7A CODESIZE SUB DUP1 PUSH3 0xB7A DUP4 CODECOPY DUP2 DUP2 ADD PUSH1 0x40 MSTORE DUP2 ADD SWAP1 PUSH3 0x37 SWAP2 SWAP1 PUSH3 0x1E4 JUMP JUMPDEST CALLER PUSH1 0x0 DUP1 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP DUP2 PUSH1 0x1 SWAP1 DUP1
 ```
 
@@ -64,10 +70,15 @@ PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH3 0x11 JUMPI PUSH1 0x0 DU
 ## Deploy
 
 - The address of the contract account (not external account) is automatically generated at deployment time, and the contract can never be changed once deployed.
-- In ETH, gas fee is analogous to EOS's RAM (for contract storage), CPU, NET (follow staked or powerup model). `EOSIO's CPU & NET` <-> `ETH's gas fee`
+- In EVM chains, gas fee is analogous to EOS's CPU, NET (follow staked or pay-per-use model). `EOSIO's CPU & NET` <-> `ETH's gas fee`
+- In EVM chains, the contract data storage is unlimited unlike EOSIO's RAM (follow staked or pay-per-use model). `EOSIO's RAM` <-> `ETH's unlimited storage`.
+  > But, the contract code is limited to 24KB in EVM chains.
+- The EVM has a 256-bit address space, which is 2^256 addresses. The first 20 bytes of the address are the address of the contract, and the last 12 bytes are the address of the account that created the contract. So, each slot of stack in machine is of `uint256` type.
 - In ETH, an object is created based on ABI in the `geth` console and then calls the `new()` method to initiate a contract creation txn (parameters contain bytecode), whereas in EOSIO's `cleos` tool, `set()` method is used to specify the bytecode and the directory where the ABI is located.
+  > In EOSIO, the contract account name is not generated automatically, but it has to be created manually/automatically by the user i.e. RAM, CPU, NET has to be provided. The contract account name is the same as the contract name in terms of rules.
 - [Remix](https://remix-ide.readthedocs.io/en/latest/run.html)
   - [Environments](https://remix-ide.readthedocs.io/en/latest/run.html#environment)
+    > For seeing the contract data, function details, Remix IDE is the best tool for EVM contracts.
 
 ```
 JavaScript VM: All the transactions will be executed in a sandbox blockchain in the browser. This means nothing will be persisted when you reload the page. The JsVM is its own blockchain and on each reload it will start a new blockchain, the old one will not be saved.
@@ -160,6 +171,41 @@ where, there is a bytecode.
 
 > [Try this example](./sol/MyArray/TestArray.sol) on Remix.
 
+- Each of the action/operation is executed provided all are successful. E.g.
+
+```solidity
+    function createAuction(address _asset, uint256 _startsAt, uint256 _endsAt)
+        external
+        whenNotPaused
+        nonReentrant
+        returns (address auction)
+    {
+        ...
+        ...
+
+        bytes memory bytecode = type(Auction).creationCode;
+        bytes32 salt = keccak256(abi.encodePacked(_asset, _startsAt, _endsAt));
+        assembly {
+            auction := create2(0, add(bytecode, 32), mload(bytecode), salt)
+        }
+        // console.log("Auction created: %s", auction);
+        IAuction(auction).initialize(owner(), msg.sender, _asset, _startsAt, _endsAt);
+
+        ...
+        ...
+
+        // transfer ownership of the auction to the Auction contract created
+        bool success = IGenericERC20(_asset).transferFromOwnership(auction);
+        require(success, "transferFromOwnership failed");
+    }
+```
+
+In the above code snippet, there are 3 actions:
+
+- `create2` action
+- `initialize` action
+- `transferFromOwnership` action
+
 #### Constructor
 
 - A constructor is optional. Only one constructor is allowed, which means overloading is not supported.
@@ -181,7 +227,7 @@ Here, the constructor of `Ownable`, `Pausable`, `CheckContract` will be called, 
 
 #### Bytecode
 
-- The Solidity/Vyper/Fe (or any language) code can be converted into a binary (represented in hexadecimal format) understandable by the machine: EVM.
+- The **Solidity**/**Vyper**/**Fe** (or any language) code can be converted into a binary (represented in hexadecimal format) understandable by the machine: EVM i.e. Bytecode
 - You can get bytecode from the source code which can then be compiled to bytecode or `.bin` format.
 - You can download the bytecode (which is normally uploaded by the contract author/owner).
 
@@ -201,8 +247,7 @@ There are some standard (`abi.encode` for encoding data), non-standard/packed (`
 ```solidity
 ---1---
 abi.encode("AbhijitRoy")
->
-0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000a416268696a6974526f7900000000000000000000000000000000000000000000
+> 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000a416268696a6974526f7900000000000000000000000000000000000000000000
 
 abi.encode("Abhijit Roy")
 > 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000b416268696a697420526f79000000000000000000000000000000000000000000
@@ -217,6 +262,8 @@ abi.encodePacked("Abhijit", "Roy")
 abi.encodePacked("Abhijit", " Roy")
 > 0x416268696a6974526f79
 ```
+
+> In EOSIO, all the account names are encoded into a 64-bit integer. This is done by taking the first 12 characters of the account name and converting them to a base-32 number. The remaining characters are ignored. This is done to save space on the blockchain.
 
 - In `1`, if space occurs in input, the encoded output is different along with the offset.
 - In `2`, if space occurs in input, the encoded output is different without the offset.
