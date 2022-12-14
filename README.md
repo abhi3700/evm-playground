@@ -117,7 +117,8 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 
 ### Contract
 
-- max size: **`24 KB`**
+- max code size: **`24 KB`**
+- max storage size: `2^261` i.e. `3.7 x 10^69 GB`.
 - Contracts and libraries should be named using the CapWords style. Examples: SimpleToken, SmartBank, CertificateHashRepository, Player, Congress, Owned.
 - Contract and library names should also match their filenames.
 - If a contract file includes multiple contracts and/or libraries, then the filename should match the core contract.
@@ -777,6 +778,13 @@ mapping (uint => mapping (uint => mapping (uint => Player))) public players;
 - State variables and Local Variables of structs, array, mapping are always stored in storage by default.
 - Storage on the other hand is persistent, each execution of the Smart contract has access to the data previously stored on the storage area.
 
+For more, read these
+
+- [official guide](https://docs.soliditylang.org/en/v0.8.6/internals/layout_in_storage.html).
+- [Good examples](https://enderspub.kubertu.com/understand-solidity-storage-in-depth)
+
+> In case of selection between `gas optimization`, `contract size`. Put this as priority: `gas optimization` > `contract size`.
+
 ##### Memory
 
 - Memory keyword in Solidity is analogous to Computer’s RAM.
@@ -1100,6 +1108,7 @@ contract Time {
 - [EIP-2535: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535)
 - [EIP-2771: Secure Protocol for Native Meta Transactions](https://eips.ethereum.org/EIPS/eip-2771)
 - [EIP-3525: Semi-Fungible Token Standard](https://eips.ethereum.org/EIPS/eip-3525)
+- [EIP-4675: Multi-Fractional Non-Fungible Tokens](https://eips.ethereum.org/EIPS/eip-4675)
 
 ### Libraries
 
