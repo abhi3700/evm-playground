@@ -425,12 +425,24 @@ Q. Why Limit?
 
 A. This is to prevent **DoS** attacks. If a big contract is deployed on-chain, then during the call of SC, the node (which adds the transaction into block) has to do the computation (based on the optimizer run's value). So, **more** the **optimizer run's** value => **higher** is the **contract size** => **lesser** would be the **gas fees** (more optimized). Hence, it is advised to set the optimizer close to 200 optimum value. Hence, a programmer can write a long SC that is very **cheap** to call and can make the nodes do a lot of work, which may cause **blockage**.
 
-...
+---
 
 These are some ways to reduce the contract size:
 
 - Directly call the variable. Don't define the variable, unless it's used multiple times in a function. [Source](https://soliditydeveloper.com/max-contract-size).
-- replace assertion message with error code.
+- replace assertion message with error code like this:
+
+```solidity
+function stake() {
+    require(msg.sender == owner, "Only owner can stake");
+}
+
+// ERR1: Only owner can stake
+function stake() {
+    require(msg.sender == owner, "ERR1");
+}
+```
+
 - Reducing Optimizer Run: Reducing the no. of runs in the optimizer decreases the contract size but then leads to high call cost. So, if your deployed SC is to be called a few times or you don't care about the user's pocket, you can reduce the runs or disable the optimizer. So, by default it should be set as 200 which is considered optimum value. Rest can be tuned as per your application.
 - In Diamond Standard (DS), separate out the function from a facet to a new facet. Anyways, the facets address are mapped to function signature.
 - wrap the code present in function modifier with a function (private, view) outside & just call the function inside the modifier. [Source](https://youtu.be/XDqD3X8DCiw).
@@ -466,6 +478,37 @@ These are some ways to reduce the contract size:
 
 > In this case, the function `getNextTokenId` is defined as `external` & in the line: `uint256 _newTokenId = _tokenCounter;` the state variable is called directly inside `createCollectible` function.
 
+- Use `pragma experimental ABIEncoderV2;` to reduce the size of the contract. [Source](https://ethereum.stackexchange.com/questions/100551/stack-too-deep-when-compiling-inline-assembly)
+- Avoid using additional variables in the function like this:
+
+❌
+
+```solidity
+function get(uint id) returns (address,address) {
+    MyStruct memory myStruct = myStructs[id];
+    return (myStruct.addr1, myStruct.addr2);
+}
+```
+
+✅
+
+```solidity
+function get(uint id) returns (address,address) {
+    return (myStructs[id].addr1, myStructs[id].addr2);
+}
+```
+
+Size got reduced by `0.28 KB` in this case.
+
+---
+
+There is a dilemma b/w contract size & gas cost. So, we need to find the optimum value of the optimizer. The following table shows the relationship between the **optimizer value** & **contract size** & **gas cost**.
+
+```text
+optimizer value ⬇️ => contract size ⬇️
+optimizer value ⬇️ => gas cost ⬆️
+```
+
 #### [State Variable types](https://docs.soliditylang.org/en/develop/types.html#types)
 
 ---
@@ -474,8 +517,8 @@ These are some ways to reduce the contract size:
 
 - constant variable can be defined like this:
 
-```
-uint256 constant INITIAL_RATE = 2_474_410 * 10 ** 18 / WEEK;
+```solidity
+uint256 constant INITIAL_RATE = 2_474_410 \* 10 \*\* 18 / WEEK;
 ```
 
 - By default, the variables are private (i.e. not accessed from external).
@@ -484,38 +527,42 @@ uint256 constant INITIAL_RATE = 2_474_410 * 10 ** 18 / WEEK;
 
 - For array variable declarations, the parentheses in types and arrays cannot have spaces directly.
 
-```
-The way to standardize:
+```solidity
 
+// The way to standardize:
 uint[] x;
 
- ❌ Unregulated way:
+// ❌ Unregulated way:
 
 uint [] x;
 ```
 
 - There must be a space on both sides of the assignment operator
 
-```
-The way to standardize:
+```solidity
+
+// The way to standardize:
 
 x = 3;x = 100 / 10;x += 3 + 4;x |= y && z;
 
- ❌ Unregulated way:
+// ❌ Unregulated way:
 
 x=3;x = 100/10;x += 3+4;x |= y&&z;
+
 ```
 
 - In order to display priority, there must be spaces between the precedence operator and the low priority operator, which is also to improve the readability of complex declarations. The number of spaces on either side of the operator must be the same.
 
-```
-The way to standardize:
+```solidity
 
-x = 2**3 + 5;x = 2***y + 3*z;x = (a+b) * (a-**b);
+// The way to standardize:
 
- ❌ Unregulated way:
+x = 2**3 + 5;x = 2\***y + 3*z;x = (a+b) * (a-\*\*b);
 
-x = 2** 3 + 5;x = y+z;x +=1;
+// ❌ Unregulated way:
+
+x = 2\*\* 3 + 5;x = y+z;x +=1;
+
 ```
 
 - Visibility: private, public, internal
@@ -525,15 +572,17 @@ x = 2** 3 + 5;x = y+z;x +=1;
 
 - Statement initialscapital, define the first letter of the enum enumeration variablelower case,Such as:
 
-```
+```solidity
+
 // Game status
 enum GameState {
-                 GameStart, // Game starts
-                 InGaming, // In game
-                 GameOver // Game is over
+  GameStart, // Game starts
+  InGaming, // In game
+  GameOver // Game is over
 }
 
- GameState public gameState; // The state of the current game
+GameState public gameState; // The state of the current game
+
 ```
 
 #### Constructor
@@ -542,23 +591,25 @@ enum GameState {
 - Syntax
 
 ```
+
 constructor() <functionModifiers> {}
-    // Code
+  // Code
 }
+
 ```
 
 - A constructor can only use the public or internal function modifiers.
 
 #### [Function](https://docs.soliditylang.org/en/develop/types.html#enums)
 
-```
+```solidity
 function <function name> (<parameter types>)
-        [internal | external | public | private]
-        [pure | constant | view | payable]
-        [modifiers]
-        [returns (<return types>)]
+[internal | external | public | private]
+[pure | constant | view | payable]
+[modifiers]
+[returns (<return types>)]
 {
-                <body>
+<body>
 }
 ```
 
@@ -577,6 +628,7 @@ public - all can access
 external - Cannot be accessed internally, only externally
 internal - only this contract and contracts deriving from it can access
 private - can be accessed only from this contract
+
 ```
 
 - In private access, the function is defined by prefixing underscore `_`. E.g. `function _getValue() returns(uint) { }`. Also, the function is no more visible in the IDE (e.g. Try in Remix)
@@ -596,7 +648,9 @@ function getValue2() external pure returns(uint sum, uint product) {
         sum = v1 + v2;
         product = v1 * v2;
         return (sum, product);
+
 }
+
 ```
 
 - For function declarations with more parameters, all parameters can be displayed line by line and remain the same indentation. The right parenthesis of the function declaration is placed on the same line as the left parenthesis of the function body, and remains the same indentation as the function declaration.
@@ -662,7 +716,7 @@ contract A is B, C, D {
 
 }
 
- ❌ Unregulated way:
+❌ Unregulated way:
 
 contract A is B, C, D {
 
@@ -702,7 +756,7 @@ contract A is B, C, D {
 
 - Constant definitions are all usedcapitalEasy to distinguish from variables and function parameters, such as:
 
-```
+```solidity
 uint256 constant public ENTRANCE_FEE = 1 ether; // admission fee
 ```
 
@@ -866,7 +920,7 @@ if (abi.encodePacked(balances[addr]).length > 0) {
 - If you start with an array [A,B,C,D,E,F,G] and you delete "D", then you will have an array [A,B,C,nothing,E,F,G]. It's no shorter than before.
 - Get all elements
 
-```
+```solidity
 function getAllElement() public view returns (uint[]) {
         return arr;
 }
@@ -874,18 +928,19 @@ function getAllElement() public view returns (uint[]) {
 
 - test array variable
 
-```
+```solidity
 assert(a[6] == 9);
 ```
 
 - pop element
 
-```
+```solidity
 function popElement() public returns (uint []){
-        delete arr[arr.length-1];
-        arr.length--;
-        return arr;
- }
+  delete arr[arr.length-1];
+  arr.length--;
+  return arr;
+}
+
 ```
 
 - get size/length of array using `arr.length`
@@ -897,17 +952,17 @@ function popElement() public returns (uint []){
 - [Example](./base/MyStruct/MyStruct.sol)
 - definition
 
-```
+```solidity
 struct User {
-        address addr;
-        uint score;
-        string name;
+  address addr;
+  uint score;
+  string name;
 }
 
 // here, memory/storage can be used as per the requirement. `memory` is used here as it is not required to be stored & computation happening within the function itself.
-function foo(string calldata _name) external {
-        User memory u1 = User(msg.sender, 0, _name);
-        User memory u2 = User({name: _name, score: 0, addr: msg.sender})    // Pros: no need to remember the order. Cons: write little more variables
+function foo(string calldata \_name) external {
+User memory u1 = User(msg.sender, 0, \_name);
+User memory u2 = User({name: \_name, score: 0, addr: msg.sender}) // Pros: no need to remember the order. Cons: write little more variables
 
         // access the variables
         u1.addr;
@@ -917,13 +972,15 @@ function foo(string calldata _name) external {
 
         // delete
         delete u1;
+
 }
+
 ```
 
 - It is present in storage always, & passed by reference whenever called.
 - It creates a pointer 'c' referencing a variable in storage.
 
-```
+```solidity
 // Campaign is a struct
 // campaigns is an array
 Campaign storage c = campaigns[campaignID];
@@ -966,36 +1023,32 @@ fallback() external payable {
 - [Example](./base/MyModifier/MyModifier.sol)
 - Modifier definition useHump ​​nomenclature,Initialslower case,Such as:
 
-```
+```solidity
 modifier onlyOwner {
-        require (msg.sender == owner, "OnlyOwner methods called by non-owner.");
-        _;
+  require (msg.sender == owner, "OnlyOwner methods called by non-owner.");
+  _;
 }
 ```
 
 - The default modifier should be placed before other custom modifiers.
 
-```
+```solidity
 The way to standardize:
 
 function kill() public onlyowner {
-
-        selfdestruct(owner);
-
+  selfdestruct(owner);
 }
 
  ❌ Unregulated way:
 
 function kill() onlyowner public {
-
-        selfdestruct(owner);
-
+  selfdestruct(owner);
 }
 ```
 
 - Example:
 
-```
+```solidity
 modifier modi() {
     prolog();
     _;
@@ -1009,7 +1062,7 @@ function func() modi() {
 
 is equivalent to
 
-```
+```solidity
 function func() {
     prolog();
     stuff();
@@ -1064,7 +1117,7 @@ require(<logicalCheck>, <optionalErrorMessage>);
   - call, delegatecall
 - calling a contract function with multiple arguments:
 
-```
+```solidity
 // w/o gas limit
 x.call(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,address)")), myUIntVal, myStringVal, myAddressVal));
 
@@ -1077,7 +1130,7 @@ x.call.value(1000)(abi.encodePacked(bytes4(keccak256("setNum(uint256,string,addr
 - While the clock on a computer ticks at least once a millisecond, the clock on a blockchain only ticks as often as blocks are added to the chain.
 - In the following code, the time attribute would be the same for all events emitted by this function as it is set by block.timestamp.
 
-```
+```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
