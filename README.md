@@ -1824,6 +1824,8 @@ require(_counters[account] != Counter(address(0)));			// as per v0.8.6
 
 ## EVM
 
+Checkout this fantastic [tool](https://www.evm.codes/) to understand EVM Opcodes.
+
 ### Compute Gas price
 
 ```console
