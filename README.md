@@ -500,6 +500,18 @@ function get(uint id) returns (address,address) {
 
 Size got reduced by `0.28 KB` in this case.
 
+- Use `error` keyword instead of string message in `revert` statement like this:
+
+```solidity
+error InsufficientBalance;
+// error InsufficientBalance(uint requested, uint available);
+
+if balance < amount {
+    revert InsufficientBalance;
+    // revert InsufficientBalance(amount, balance);
+}
+```
+
 ---
 
 There is a dilemma b/w contract size & gas cost. So, we need to find the optimum value of the optimizer. The following table shows the relationship between the **optimizer value** & **contract size** & **gas cost**.
