@@ -2265,10 +2265,16 @@ bytes32 constant DIAMOND_STORAGE_POSITION = keccak256("diamond.standard.diamond.
 > **DiamondCutFacet**: A facet which allows you to make upgrade changes to your diamond.
 
 - Deploy sequence:To deploy a Diamond, you need to
+
   1. deploy the DiamodCutFacet then bind it to the Proxy Diamond contract(Diamond.sol).
   2. The diamond can now be upgraded with the other facets(DiamondcutFacet, DiamondToken and DiamondloupeFacet) using the DiamondcutFacet.
 
-To make things easier, a script is available to do this. [Reference](https://gist.github.com/Timidan/91dcc6d3c6829e785d3790bcef2dedc7#file-deploydiamond-ts)
+  To make things easier, a script is available to do this. [Reference](https://gist.github.com/Timidan/91dcc6d3c6829e785d3790bcef2dedc7#file-deploydiamond-ts)
+
+- Understanding library usage in a diamond for facet:
+  - During deployment, the lib's internal functions that are used in a facet gets added into facet's (written with `contract` keyword) bytecode as well. Hence, the lib's internal functions are not independently deployed unlike its external functions counterpart in a library file.
+  - The external functions defined in a library are not added to the facet's bytecode, rather has to be pre-deployed and then added to the diamond.
+  - When we flatten a facet, it considers the internal & external functions of the lib irrespective of its usage.
 
 [Idiots Guide to Using an EIP-2535 Diamond Proxy](https://andrewedwards.substack.com/p/coming-soon)
 
