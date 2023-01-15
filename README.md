@@ -40,7 +40,30 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
   - Install remixd using `npm install -g @remix-project/remixd` globally or `npm install @remix-project/remixd` locally.
   - And then "Connect to localhost" in the Remix Website.
 
-- Use inside a project dir like this: `$ remixd -s <project_dir> --remix-ide https://remix.ethereum.org`. E.g. `$ remixd -s ./contracts --remix-ide https://remix.ethereum.org` or `$ remixd -s . --remix-ide https://remix.ethereum.org`
+- Getting Started with Remix IDE CLI:
+
+  - Just run `remixd -s .` in the integrated terminal opened at [`sc-sol/`](./sc-sol/) folder. It will open the Remix IDE in the browser. And then one can access the OZ or `node_modules/` folder altogether.
+
+    - 3 ports opened: 65520, 65522, 65523 generally
+
+    ```bash
+    [INFO] Sun Jan 15 2023 16:50:41 GMT+0530 (India Standard Time) remixd is listening on 127.0.0.1:65520
+    [INFO] Sun Jan 15 2023 16:50:41 GMT+0530 (India Standard Time) slither is listening on 127.0.0.1:65523
+    [INFO] Sun Jan 15 2023 16:50:41 GMT+0530 (India Standard Time) hardhat is listening on 127.0.0.1:65522
+    ```
+
+- <kbd>ctrl+c</kbd> to shutdown the node.
+
+- Use inside a project dir like this: `$ remixd -s <project_dir> --remix-ide https://remix.ethereum.org`. E.g. `$ remixd -s ./contracts --remix-ide https://remix.ethereum.org` or `$ remixd -s . --remix-ide https://remix.ethereum.org` or `$ remixd -s .`
+
+---
+
+**Install** `remixd` globally using npm: `$ npm install -g @remix-project/remixd`
+
+**Upgrade** `remixd` globally:
+
+1. `$ npm uninstall -g @remix-project/remixd`
+2. `$ npm install -g @remix-project/remixd`
 
 ## Compile
 
@@ -1172,6 +1195,7 @@ contract Time {
 - [EIP-1155: Multi Token Standard](https://eips.ethereum.org/EIPS/eip-1155)
 - [EIP-2535: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535)
 - [EIP-2771: Secure Protocol for Native Meta Transactions](https://eips.ethereum.org/EIPS/eip-2771)
+- [EIP-3156: Flash Loans](https://eips.ethereum.org/EIPS/eip-3156)
 - [EIP-3525: Semi-Fungible Token Standard](https://eips.ethereum.org/EIPS/eip-3525)
 - [EIP-4675: Multi-Fractional Non-Fungible Tokens](https://eips.ethereum.org/EIPS/eip-4675)
 
