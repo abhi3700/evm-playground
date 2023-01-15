@@ -52,7 +52,7 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
     [INFO] Sun Jan 15 2023 16:50:41 GMT+0530 (India Standard Time) hardhat is listening on 127.0.0.1:65522
     ```
 
-- <kbd>ctrl+c</kbd> to shutdown the node.
+  - <kbd>ctrl+c</kbd> to shutdown the node.
 
 - Use inside a project dir like this: `$ remixd -s <project_dir> --remix-ide https://remix.ethereum.org`. E.g. `$ remixd -s ./contracts --remix-ide https://remix.ethereum.org` or `$ remixd -s . --remix-ide https://remix.ethereum.org` or `$ remixd -s .`
 
@@ -64,6 +64,34 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 1. `$ npm uninstall -g @remix-project/remixd`
 2. `$ npm install -g @remix-project/remixd`
+
+---
+
+Usage:
+
+Also, get to see the `console.log()` statements in the Remix IDE terminal in the browser.
+
+```bash
+CALL
+[call]from: 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4to: Greeter.greet()data: 0xcfa...e3217
+transact to Greeter.setGreeting pending ...
+[vm]from: 0x5B3...eddC4to: Greeter.setGreeting(string) 0xd8b...33fa8value: 0 weidata: 0xa41...00000logs: 0hash: 0x3c3...8b9b2
+console.log:
+Changing greeting from 'Happy Army Day' to 'Happy Bday'
+```
+
+for a solidity code like this:
+
+```solidity
+contract Greeter {
+    // state variables
+
+    function setGreeting(string memory _greeting) public {
+        console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
+        greeting = _greeting;
+    }
+}
+```
 
 ## Compile
 
