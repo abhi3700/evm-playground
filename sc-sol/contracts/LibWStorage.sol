@@ -1,4 +1,14 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+// SPDX-License-Identifier: MIT LICENSE
+
+/* 
+    - This code defines a library and contract in the Solidity programming language. 
+    - The library, Lib1, contains functions that allow users to store and retrieve data from a storage slot. 
+    - The contract, LibWStorage, provides an interface for users to interact with the functions in Lib1. 
+    - Specifically, setState() allows users to store an address and string in the storage slot, 
+        while getState() allows them to retrieve the address and string stored in the storage slot. 
+    - Finally, getPosition() returns the position of the storage slot.
+*/
+
 pragma solidity 0.8.13;
 
 library Lib1 {
