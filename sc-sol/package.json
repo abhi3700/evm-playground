@@ -1,18 +1,19 @@
 {
   "name": "evm-playground-contracts",
   "version": "0.0.1",
-  "description": "Small SC for practice",
+  "description": "SC templates",
   "main": "index.js",
   "scripts": {
     "clean": "hardhat clean",
-    "compile": "hardhat compile",
+    "build": "hardhat compile",
     "coverage": "hardhat coverage --solcoverjs ./.solcover.js --temp build --network hardhat",
     "lint": "yarn run lint:sol && yarn run lint:ts && yarn run prettier && yarn run prettier:list-different",
     "lint:sol": "yarn solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\" --fix",
     "lint:ts": "yarn eslint --config .eslintrc.js --ignore-path ./.eslintignore --ext .js,.ts . --fix",
     "prettier": "prettier --config .prettierrc.json --write \"**/*.{js,json,md,sol,ts}\"",
     "prettier:list-different": "prettier --config .prettierrc.json --list-different \"**/*.{js,json,md,sol,ts}\"",
-    "test": "hardhat test --network hardhat",
+    "test:erc20token": "hardhat test --network hardhat test/erc20token.test.ts",
+    "test:libwstorage": "hardhat test --network hardhat test/libwstorage.test.ts",
     "typechain": "hardhat typechain",
     "verify": "hardhat verify --network"
   },

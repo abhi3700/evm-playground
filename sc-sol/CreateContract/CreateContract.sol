@@ -24,16 +24,16 @@ contract LoanFactory {
 
     function createLoan() external {
         Loan loan = new Loan(100);
-        loan.push(loan);
+        loans.push(loan);
         // address(this);   // this can be stored in an array
 
-        loan.reimburse();       // loan is a pointer to the below contract 'Loan'
+        Loan.reimburse(); // loan is a pointer to the below contract 'Loan'
     }
 
-    // this has to be defined, otherwise the withdraw function can't be 
+    // this has to be defined, otherwise the withdraw function can't be
     // called because the contract is the admin now.
     function withdraw() external {
-        loan.withdraw();
+        Loan.withdraw();
     }
 }
 
@@ -42,17 +42,12 @@ contract Loan {
     uint256 public amount;
     address admin;
 
-    constructor() public {
+    constructor(uint256 _amount) public {
         amount = _amount;
-        admin = msg.sender;         // admin will be the 'LoanFactory' address
+        admin = msg.sender; // admin will be the 'LoanFactory' address
     }
 
-    function withdraw() external {
+    function withdraw() external {}
 
-    }
-
-    function reimburse() external {
-
-    }
-
+    function reimburse() external {}
 }
