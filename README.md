@@ -1696,99 +1696,124 @@ unchecked {
 ## Smart Contract Security
 
 - The attacks & preventions are:
-  1. Reentrancy attack.
-  1. Use SafeMath to prevent variable overflow
-  1. add all the pre-requisites in the modifier for every function
-  1. Use Slither to find smart contract vulnerabilities (if any)
-  1. Use gas-reporter inside hardhat to prevent functions from failing due to touching gas limit.
+
+  1. **Reentrancy attack**:
+
+     - <u>Definition</u>:
+       - One of the major dangers of calling external contracts is that they can take over the control flow. In the reentrancy attack (a.k.a. recursive call attack), a malicious contract calls back into the contract (callee) before the first invocation of the function is finished. This may cause the different invocations of the function to interact in undesirable ways.
+       - It can be problematic because calling external contracts passes control flow to them (caller). The contract (caller) may take over the control flow and keep calling the SC’s function in a recursive manner. E.g. draining the contract’s token balance via recursive call.
+     - <u>Prevention</u>:
+
+       1. **Checks-Effects-Interactions pattern**: the state changes has to be done prior to any callee to a contract call.
+       2. **ReentrancyGuard**: apply a ReentrancyGuard as provided by OpenZeppelin, ensuring that all state changes are executed before making any external calls.
+
+     - <u>Examples</u>:
+
+       ```solidity
+       // INSECURE
+       mapping (address => uint) private userBalances;
+
+       function withdrawBalance() public {
+           uint amountToWithdraw = userBalances[msg.sender];
+           require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call withdrawBalance again
+           userBalances[msg.sender] = 0;
+       }
+       ```
+
+       ```solidity
+       // SECURE
+       mapping (address => uint) private userBalances;
+
+       function withdrawBalance() public {
+           uint amountToWithdraw = userBalances[msg.sender];
+           userBalances[msg.sender] = 0;
+           require(msg.sender.call.value(amountToWithdraw)()); // The user's balance is already 0, so future invocations won't withdraw anything
+       }
+       ```
+
+       - [example-1](http://lswcregistry.io/docs/SWC-107#modifier_reentrancysol) & its [fix](https://swcregistry.io/docs/SWC-107#modifier_reentrancy_fixedsol)
+       - [example-2](https://swcregistry.io/docs/SWC-107#simple_daosol) & its [fix](https://swcregistry.io/docs/SWC-107#simple_dao_fixedsol)
+
+       - In this case, the attacker can call transfer() when their code is executed on the external call in withdrawBalance. Since their balance has not yet been set to 0, they are able to transfer the tokens even though they already received the withdrawal. This vulnerability was also used in the DAO attack.
+
+         ```solidity
+         // INSECURE
+         mapping (address => uint256) private userBalances;
+
+         function transfer(address to, uint256 amount) {
+             if (userBalances[msg.sender] >= amount) {
+               userBalances[to] += amount;
+               userBalances[msg.sender] -= amount;
+             }
+         }
+
+         function withdrawBalance() public {
+             uint256 amountToWithdraw = userBalances[msg.sender];
+             require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call `transfer()`
+             userBalances[msg.sender] = 0;
+         }
+         ```
+
+         ```solidity
+         // SECURE
+         mapping (address => uint256) private userBalances;
+
+         function transfer(address to, uint256 amount) {
+             if (userBalances[msg.sender] >= amount) {
+               userBalances[to] += amount;
+               userBalances[msg.sender] -= amount;
+             }
+         }
+
+         function withdrawBalance() public {
+             uint256 amountToWithdraw = userBalances[msg.sender];
+             userBalances[msg.sender] = 0;
+             require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call `transfer()` after the user balance state change
+         }
+         ```
+
+         - Instead of writing 1st code snippet, 2nd code snippet is preferred. This vulnerability is detected by Slither.
+
+           ```solidity
+                   // Inside a function
+                   ...
+                   vestingToken.transferFrom(msg.sender, address(this), _amount);
+
+                   emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
+                   ...
+           ```
+
+           ```solidity
+                   // Inside a function
+                   ...
+                   bool success = vestingToken.transferFrom(msg.sender, address(this), _amount);
+                   if(success) {
+                       emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
+                   } else {
+                       emit VestTransferFromFailed(_amount);
+                       revert("vestingToken.transferFrom function failed");
+                   }
+                   ...
+           ```
+
+     - <u>Resources</u>:
+       - Watch this [video](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
+       - [Reentrancy by SWC](https://swcregistry.io/docs/SWC-107)
+       - [Reentrancy by OpenZeppelin](https://blog.openzeppelin.com/reentrancy-after-istanbul/)
+
+  2. **Arithmetic Overflow/Underflow**: Use SafeMath to prevent variable overflow in solidity compiler < `0.8.0`
+
+  3. **Input Sanitation**: The constructor or function arguments' values have to be sanitized before applying to state changes.
+  4. Take the help of security tools to find smart contract vulnerabilities.
+  5. Take a look at the **gas-reporter**’s report generated (in form of table in terminal) during unit tests (run via CLI) using Hardhat tool, to prevent functions from failing due to touching gas limit.
+  6. Contracts' size have to be kept as small as possible to prevent the contract from exceeding the contract size limit i.e. `24.5 KB`.
+
+---
 
 Use these libraries for gas-optimized & secure contracts:
 
-#### [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts)
-
-#### [Solmate](https://github.com/Rari-Capital/solmate)
-
-### Reentrancy
-
-- One of the major dangers of calling external contracts is that they can take over the control flow. In the reentrancy attack (a.k.a. recursive call attack), a malicious contract calls back into the calling contract before the first invocation of the function is finished. This may cause the different invocations of the function to interact in undesirable ways.
-- It can be problematic because calling external contracts passes control flow to them. The called contract may take over the control flow and end up calling the smart contract function again in a recursive manner.
-
-```solidity
-// INSECURE
-mapping (address => uint) private userBalances;
-
-function withdrawBalance() public {
-    uint amountToWithdraw = userBalances[msg.sender];
-    require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call withdrawBalance again
-    userBalances[msg.sender] = 0;
-}
-```
-
-- If you can’t remove the external call, the next simplest way to prevent this attack is to do the internal work before making the external function call.
-
-```
-// SECURE
-mapping (address => uint) private userBalances;
-
-function withdrawBalance() public {
-    uint amountToWithdraw = userBalances[msg.sender];
-    userBalances[msg.sender] = 0;
-    require(msg.sender.call.value(amountToWithdraw)()); // The user's balance is already 0, so future invocations won't withdraw anything
-}
-```
-
-- In this case, the attacker can call transfer() when their code is executed on the external call in withdrawBalance. Since their balance has not yet been set to 0, they are able to transfer the tokens even though they already received the withdrawal. This vulnerability was also used in the DAO attack.
-
-```
-// INSECURE
-mapping (address => uint) private userBalances;
-
-function transfer(address to, uint amount) {
-    if (userBalances[msg.sender] >= amount) {
-       userBalances[to] += amount;
-       userBalances[msg.sender] -= amount;
-    }
-}
-
-function withdrawBalance() public {
-    uint amountToWithdraw = userBalances[msg.sender];
-    require(msg.sender.call.value(amountToWithdraw)()); // At this point, the caller's code is executed, and can call transfer()
-    userBalances[msg.sender] = 0;
-}
-```
-
-- Remediation: It is generally a good idea to handle your internal contract state changes before calling external contracts, such as in the withdrawal design pattern. Use battle tested design patterns and learn from other people’s mistakes and heed their advice.
-- [example-1](http://lswcregistry.io/docs/SWC-107#modifier_reentrancysol) & its [fix](https://swcregistry.io/docs/SWC-107#modifier_reentrancy_fixedsol)
-- [example-2](https://swcregistry.io/docs/SWC-107#simple_daosol) & its [fix](https://swcregistry.io/docs/SWC-107#simple_dao_fixedsol)
-- The best practices to avoid Reentrancy weaknesses are:
-  - Make sure all internal state changes are performed before the call is executed. This is known as the Checks-Effects-Interactions pattern
-  - Use a reentrancy lock (ie. OpenZeppelin's ReentrancyGuard.
-- [Watch this](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
-- [Reentrancy by SWC](https://swcregistry.io/docs/SWC-107)
-- [Reentrancy by OpenZeppelin](https://blog.openzeppelin.com/reentrancy-after-istanbul/)
-- Instead of writing 1st code snippet, 2nd code snippet is preferred. This vulnerability is detected by Slither.
-
-```sol
-        // Inside a function
-        ...
-        vestingToken.transferFrom(msg.sender, address(this), _amount);
-
-        emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
-        ...
-```
-
-```sol
-        // Inside a function
-        ...
-        bool success = vestingToken.transferFrom(msg.sender, address(this), _amount);
-        if(success) {
-            emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
-        } else {
-            emit VestTransferFromFailed(_amount);
-            revert("vestingToken.transferFrom function failed");
-        }
-        ...
-```
+- [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts)
+- [Solmate](https://github.com/Rari-Capital/solmate)
 
 ### Write Professional code
 
@@ -1821,7 +1846,7 @@ instead of
 ```language
 struct Price {
     uint256 currentPrice;   // current price at a timestamp
-    uint256 timestamp;		// timestamp for current price
+    uint256 timestamp;      // timestamp for current price
 }
 
 // mapping of token address & Price struct
@@ -1840,10 +1865,10 @@ mapping( address => Price ) public mapTstampPrice;
 - Use multiple checks to avoid for security.
 - Don't use redundant event firing when transactions reverted i.e. Don't use this:
 
-```
+```solidity
 if(false) {
     revert("failed due to transfer");
-    emit TransferFailed(_msgSender(), amountWei);
+    emit TransferFailed(_msgSender(), amountWei); // it can be put before `revert()`
 }
 ```
 
