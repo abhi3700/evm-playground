@@ -2407,6 +2407,9 @@ For more, refer to [Interview Q.s](https://github.com/abhi3700/sol-playground/bl
 - [Solidity Cheatsheet](https://telegra.ph/Solidity-Cheatsheets-Pack-03-20)
 - [List of SC Auditing companies](https://matricksdecoder.medium.com/a-z-list-smart-contract-auditing-companies-804db9157a8f)
 - [EVM written in Rust](https://github.com/rust-blockchain/evm)
+- [A collection of EVM opcodes puzzles that helps you learn in-depth details about EVM Opcodes by solving them](https://github.com/zaryab2000/decipher_EVM_Puzzles)
+- [An Ethereum Virtual Machine Opcodes Interactive Reference](https://www.evm.codes/)
+- [Ethereum Virtual Machine Opcodes](https://ethervm.io/)
 
 ### Gas optimization
 
