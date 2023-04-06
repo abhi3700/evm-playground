@@ -1872,6 +1872,10 @@ if(false) {
 }
 ```
 
+---
+
+List of errors/warnings to avoid: [doc](https://github.com/abhi3700/priv/blob/main/repos/evm-playground/BLOCK-SlitherErrorAnalysis-060423-0723.pdf)
+
 ### More
 
 - [By Solidity Official](https://docs.soliditylang.org/en/latest/security-considerations.html)
