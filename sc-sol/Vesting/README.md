@@ -13,28 +13,45 @@
 
 Two components that has to be considered while implementing vesting:
 
-1. **Amount calculation**. The following two types are w.r.t the **same** or **different** token amount distribution for a user in a category throughout the vesting period.
+1.  **Amount calculation**. The following two types are w.r.t the **same** or **different** token amount distribution for a user in a category throughout the vesting period i.e. same amount every release or different amount every release.
 
-   1. **Uniform distribution** [RECOMMENDED]: Same amount for each release. E.g. For a user, the amount released at each interval is same i.e. week-1: 1000, week-2: 1000, ....
+    1.  **Uniform distribution** [RECOMMENDED]: Same amount for each release. E.g. For a user, the amount released at each interval is same i.e. week-1: 1000, week-2: 1000, ....
 
-      > Only in case of **airdrop**, the amounts can be same/different for all users i.e. E.g-1 (same). user-1: 1000, user-2: 1000, user-3: 1000. E.g-2 (different): user-1: 1000, user-2: 1500, user-3: 3000
+        > Only in case of **airdrop**, the amounts can be same/different for all users i.e. E.g-1 (same). user-1: 1000, user-2: 1000, user-3: 1000. E.g-2 (different): user-1: 1000, user-2: 1500, user-3: 3000
 
-      - The data required for the calculation of `total released amount` for a user (in a category) is:
-        - `vesting_period`
-        - `start_time`
-        - `release_frequency`
-        - `cliff` (optional)
-        - `amount_per_release`
+        - In case of vesting, the metadata required for the calculation of `total_released_amount` (to date) for a user (in a category) is:
+          - `vesting_period`
+          - `start_time`
+          - `release_frequency`
+          - `cliff` (optional)
+          - `amount_per_release`
 
-      Here, we can calculate the `total released amount` for a user (in a category) by using the formula: `total released amount = vesting_period * release_frequency * amount_per_release`. And also need `start_time` to figure out if the vesting period is elapsed when a user is trying to claim the tokens.
+        Here, we can calculate the `total_released_amount` for a user (in a category) by using the formula: `total_released_amount = vesting_period * release_frequency * amount_per_release`. And also need `start_time` to figure out if the vesting period is elapsed when a user is trying to claim the tokens i.e. status of a vesting - `vesting_status` (active, expired, terminated, etc.)
 
-      > For the calculation of `total_released_amount` to date, has to be checked for gas_consumption following a long vesting period. Lot of sums to be done if the vesting period is long for a user.
+        > For the calculation of `total_released_amount` to date, has to be checked for gas_consumption following a long vesting period (VP: 5 years, RF: 1 week). For a user, lot of computation has to be done on-chain, if the vesting period is long & the token release is frequent.
+        >
+        > NOTE: We need the `total_vested_amount` to be put into the `claim` function as a parameter. This is to ensure that the user is not claiming more than what he/she is entitled to. Here, need to ensure that the `total_vested_amount` would be a part of MT, which would ensure no other amount is entered by the user in the `claim` function. We store the `total_vested_amount` on the cloud DB for each user as key-value pair. Basically, in the cloud DB, we store these:
 
-   2. **Non-uniform distribution** [EXCEPTION]: Different/Arbitrary amount of tokens are released at different intervals based on release frequency. E.g. for a user, 1000 tokens are released in the first month, 2000 tokens are released in the second month, 2010 tokens are released in the third month, 2100 tokens are released in the fourth month, 5000 tokens are released in the fifth month, 6000 tokens are released in the sixth month. Here, the CSV file (format) is available for the release schedule data for each category.
+        A dictionary or ordered_map with user address as key & `total_vested_amount` as value like this:
 
-      - The calculation for `total released amount` for a user (in a category) can be done only outside the SC. This means for a very long period, the amount has to be saved into the cloud DB & the summation has to be performed outside the SC. Following this, we get the `total released amount` for a user (in a category).
+        ```json
+        {
+          "0xa1": 1000,
+          "0xa2": 1500
+        }
+        ```
 
-2. **Address validation**
+        Based on the order of key, we can generate the MT root hash & the MT proof for each user by concatenating the key & value as leaf node.
+
+        From this DB, the user would be able to view the `total_vested_amount` for himself/herself. And the `total_vested_amount` would be used in the `claim` function as parameter in order to eventually verify the amount that the user is claiming (if more than once like in case of vesting).
+
+        > Using the `total_vested_amount` (parsed in `claim()` func) & `total_released_amount` (calculated for a user in a category), we can calculate the `claimable_amount` for a user (in a category). Did a project (token distribution platform) on this at Rapid Innovation. Codebase available locally.
+
+    2.  **Non-uniform distribution** [EXCEPTION]: Different/Arbitrary amount of tokens are released at different intervals based on release frequency. E.g. for a user, 1000 tokens are released in the first month, 2000 tokens are released in the second month, 2010 tokens are released in the third month, 2100 tokens are released in the fourth month, 5000 tokens are released in the fifth month, 6000 tokens are released in the sixth month. Here, the detailed CSV file (format) is available for the release schedule data for each category with users in it.
+
+        - The calculation for `total_released_amount` for a user (in a category) can be done only outside the SC. This means for a very long period & more frequent release, the amount has to be saved into the cloud DB & the summation has to be performed outside the SC. Following this, we get the `total_released_amount` for a user (in a category).
+
+2.  **Address validation**
 
 The implementation depends on the type of vesting. It can be done via either:
 
@@ -75,7 +92,10 @@ Here, the airdrop has to implement **merkle tree**. And the claimable amounts ha
 
 But, if we want to do so, we can use vesting & the implementation would be like this:
 
-1. amount calculation (for Uniform token distribution along the vesting): has to be done from inside the SC. Need to be concerned about gas_cost in case of long vesting period.
+1. amount calculation (for Uniform token distribution along the vesting): has to be done from inside the SC. Need to be concerned about gas_cost in case of long vesting period. `claim()` function needs to have these params:
+   1. claimer_address (as `msg.sender`)
+   2. `total_vested_amount` (fetched from cloud DB)
+   3. `merkle_proof` (fetched from cloud DB list of addresses (order matters))
 2. address validation i.e. whether the claimer is a part of the category or not has to be done from inside the SC, provided we have the `address list` stored in cloud DB. From where we would calculate the `merkle proof` off chain for the claimer `address`.
 
 ## References
