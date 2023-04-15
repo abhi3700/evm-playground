@@ -11,25 +11,19 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 ### Editor
 
-- #### Visual Studio Code [Recommended]
+#### Visual Studio Code [Recommended]
 
-  - [evm-boilerplate](https://github.com/abhi3700/evm_boilerplate)
-  - [formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) [YouTube](https://www.youtube.com/watch?v=PX6xb8sRlFc)
-    - Open Settings
-    - type 'save format' >> tick the "Editor: Format on Save"
-    - type 'formatter' >> set the "Editor: Default Formatter" to Prettier (by esbenp....)
-    - type 'solidity formatter' >> set the "Solidity: Formatter" from `none` to `prettier`
-    - Now, on saving any solidity (`*.sol`) file, it will automatically format.
-  - packages:
-    - [solidity](https://marketplace.visualstudio.com/items?itemName=juanblanco.solidity)
-    - [Slither](https://marketplace.visualstudio.com/items?itemName=trailofbits.slither-vscode)
-
-- #### Sublime Text 3
-
-  - packages
-    - [Solidity Docstring Generator](https://packagecontrol.io/packages/Solidity%20Docstring%20Generator)
-    - [Ethereum](https://packagecontrol.io/packages/Ethereum)
-    - [Ethereum​Solidity​Snippets](https://packagecontrol.io/packages/EthereumSoliditySnippets)
+- [evm-boilerplate](https://github.com/abhi3700/evm_boilerplate)
+- [formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) [YouTube](https://www.youtube.com/watch?v=PX6xb8sRlFc)
+  - Open Settings
+  - type 'save format' >> tick the "Editor: Format on Save"
+  - type 'formatter' >> set the "Editor: Default Formatter" to Prettier (by esbenp....)
+  - type 'solidity formatter' >> set the "Solidity: Formatter" from `none` to `prettier`
+  - Now, on saving any solidity (`*.sol`) file, it will automatically format.
+- **packages**:
+  - [solidity](https://marketplace.visualstudio.com/items?itemName=juanblanco.solidity)
+  - [Slither](https://marketplace.visualstudio.com/items?itemName=trailofbits.slither-vscode)
+  - More might be there as of now.
 
 ### Remix IDE
 
@@ -691,7 +685,6 @@ public - all can access
 external - Cannot be accessed internally, only externally
 internal - only this contract and contracts deriving from it can access
 private - can be accessed only from this contract
-
 ```
 
 - In private access, the function is defined by prefixing underscore `_`. E.g. `function _getValue() returns(uint) { }`. Also, the function is no more visible in the IDE (e.g. Try in Remix)
@@ -797,27 +790,43 @@ contract A is B, C, D {
 - [More style guides](https://docs.soliditylang.org/en/v0.8.6/style-guide.html#function-declaration)
 - Fallback functions
 
-```
-        // This fallback function
-        // will keep all the Ether
-        function() public payable
-        {
-                balance[msg.sender] += msg.value;
-        }
-```
+  ```solidity
+  // This fallback function
+  // will keep all the Ether
+  function() public payable
+  {
+      balance[msg.sender] += msg.value;
+  }
+  ```
 
-    - The solidity fallback function is executed if none of the other functions match the function identifier or no data was provided with the function call.
-    - contracts can have one unnamed function
-    - Can not return anything.
-    - It is mandatory to mark it external.
-    - It is limited to 2300 gas when called by another function. It is so for as to make this function call as cheap as possible.
+  - The solidity fallback function is executed if none of the other functions match the function identifier or no data was provided with the function call.
+  - contracts can have one unnamed function
+  - Can not return anything.
+  - It is mandatory to mark it external.
+  - It is limited to `2300` gas when called by another function. It is so for as to make this function call as cheap as possible.
 
 - NOTE: Because they don't modify the state, view and pure functions do not have a gas cost - which is to say they are FREE!
-- Every function has a signature which is of 4 bytes like `fdacd576`. It is formed via hashing a contract's function with name & argument type like this `setCompleted(uint256)` [Source](https://www.youtube.com/watch?v=3kIYXBjsQT4).
+- Function signature: E.g. `setCompleted(uint256)`
+- Function selector: E.g. 0x`fdacd576` i.e. keccak256("setCompleted(uint256)")[:4]
+- Every function has a signature whose 1st 4 bytes are considered as "**function selector**" like 0x`fdacd576`. It is formed via hashing a contract's function with name & argument type like this `setCompleted(uint256)` [Source](https://www.youtube.com/watch?v=3kIYXBjsQT4).
+- Using `foundry` tool, we can generate function selector for a function.
+
+```console
+$ cast sig "transfer(address,uint256)"
+```
+
+- 2 functions having same code logic i.e. same bytecode may end up having different gas cost. This is because of their position/index in the contract. The function with lower index will have lower gas cost. [Source](https://ethereum.stackexchange.com/questions/100/why-do-functions-with-the-same-code-have-different-gas-costs). This is the way the functions are stored in the contract. The function with lower index will be stored first and the function with higher index will be stored later. So, the function with lower index will have lower gas cost.
+
+  ```console
+  func1
+  func2
+  ```
+
+  > Here, same code logic. But, `func1` will have lower gas cost because in order to query `func1`, we need to query the first 4 bytes of the contract. So, it will be cheaper to query `func1`.
 
 #### constant
 
-- Constant definitions are all usedcapitalEasy to distinguish from variables and function parameters, such as:
+- Constant definitions are all used capitalEasy to distinguish from variables and function parameters, such as:
 
 ```solidity
 uint256 constant public ENTRANCE_FEE = 1 ether; // admission fee

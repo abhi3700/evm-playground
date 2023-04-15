@@ -25,7 +25,7 @@ Detected your preferred shell is zsh and added foundryup to PATH. Run 'source /U
 Then, simply run 'foundryup' to install Foundry.
 ```
 
-2. Install `foundryup` tools: `forge`, `cast` and `anvil`
+2. Install `foundryup` tools: `forge`, `cast` and `anvil`, `chisel`
 
 ```console
 ❯ foundryup
@@ -40,18 +40,19 @@ foundryup: installed - anvil 0.1.0 (92f8951 2022-08-06T00:05:51.822342Z)
 foundryup: done
 ```
 
-3. Update tools
+3. Update tools (if already installed)
 
 ```console
 ❯ foundryup
-foundryup: installing foundry (version nightly, tag nightly-fb1f0aa3d6dcb285cc6132cde8d885a20eee2174)
-foundryup: downloading latest forge, cast and anvil
-####################################################################################################################################################################### 100.0%
+foundryup: installing foundry (version nightly, tag nightly-4a0c8dc4bb068839def6d230ebc38e0354fe7112)
+foundryup: downloading latest forge, cast, anvil, and chisel
+######################################################################### 100.0%
 foundryup: downloading manpages
-####################################################################################################################################################################### 100.0%
-foundryup: installed - forge 0.2.0 (fb1f0aa 2022-08-30T00:04:46.258526Z)
-foundryup: installed - cast 0.2.0 (fb1f0aa 2022-08-30T00:04:46.258526Z)
-foundryup: installed - anvil 0.1.0 (fb1f0aa 2022-08-30T00:04:46.392511Z)
+######################################################################### 100.0%
+foundryup: installed - forge 0.2.0 (4a0c8dc 2023-04-15T00:04:40.457382000Z)
+foundryup: installed - cast 0.2.0 (4a0c8dc 2023-04-15T00:04:40.457382000Z)
+foundryup: installed - anvil 0.1.0 (4a0c8dc 2023-04-15T00:04:41.416294000Z)
+foundryup: installed - chisel 0.1.1 (4a0c8dc 2023-04-15T00:04:41.578991000Z)
 foundryup: done
 ```
 
