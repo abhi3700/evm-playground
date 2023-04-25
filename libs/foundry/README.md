@@ -282,6 +282,90 @@ optimizer_runs = 200
 
 Then, build using `$ forge build`.
 
+## Remapping, Lib, Dependencies, Imports
+
+Import Solidity libraries like **Solmate** and **Openzeppelin** into your Foundry project.
+
+Error when installing lib using `$ forge install` because there were untracked/modified files in the project. So, ensure we have a clean slate i.e. `$ git status` should be clean:
+
+![](../../img/foundry_remapping_error.png)
+
+---
+
+Success when the `git status` is clean:
+
+![](../../img/foundry_remapping_success.png)
+
+Also, the `solmate` folder is created inside `lib/` folder:
+
+![](../../img/foundry_remapping_solmate_folder.png)
+
+---
+
+Then, we can import the `ERC20.sol` file from the Solmate library like this into our `Imports.sol` contract:
+
+![](../../img/foundry_remapping_import.png)
+
+And then we can build the project using `$ forge build`
+
+---
+
+In order to see what dependencies (as libs) are being used in the project, use `$ forge remappings`:
+
+![](../../img/foundry_remapping_list.png)
+
+---
+
+- `$ forge update`: update all dependencies.
+- `$ forge update <lib_path>`: update a specific dependency.
+  - `$ forge update lib/solmate`: update the `solmate` lib.
+  - `$ forge update lib/forge-std`: update the `forge-std` lib.
+  - `ds-test` gets updated as soon as the `lib/forge-std` gets updated.
+- `$ forge remove solmate`: remove the `solmate` lib.
+
+---
+
+After removing the `solmate` lib, the `Imports.sol` build would fail:
+
+![](../../img/foundry_remapping_remove_lib.png)
+
+In order to fix this, we can reinstall the `solmate` lib using `$ forge install solmate`.
+
+> Keep the `git status` clean before installing the lib.
+
+And then, rebuild using `$ forge build`.
+
+---
+
+Next, we want to import a file from Openzeppelin contracts repo. So, we can install that using `$ npm i @openzeppelin/contracts`:
+![](../../img/foundry_remapping_openzeppelin-1.png)
+
+And then, we can import `Ownable.sol` file from the Openzeppelin contracts like this into our `Imports.sol` contract:
+
+```solidity
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract TestOz is Ownable {}
+```
+
+And then create a `remappings.txt` file & add this line:
+
+```txt
+@openzeppelin/=node_modules/@openzeppelin/
+```
+
+And then build using `$ forge build`.
+
+Now, we can view the cumulative dependencies in the project using `$ forge remappings`:
+
+```console
+❯ forge remappings
+@openzeppelin/=node_modules/@openzeppelin/
+ds-test/=lib/forge-std/lib/ds-test/src/
+forge-std/=lib/forge-std/src/
+solmate/=lib/solmate/src/
+```
+
 ## Deployment
 
 Run a local node via `$ anvil`:
@@ -551,6 +635,11 @@ ds-test/=lib/forge-std/lib/ds-test/src/
 
 - _Cause_: It's going to fail most of the times.
 - _Solution_: Leave the code as is. Or try changing the delta by increasing or decreasing.
+
+### 6. Dependency installation error
+
+- _Cause_: the `git status` is not clean i.e. need to commit the changes.
+- _Solution_: commit the changes and then run `$ forge install <package-name-as-in-github>` like `$ forge install rari-capital/solmate`
 
 ## References
 
