@@ -118,6 +118,12 @@ While importing the files, no need to use `../src` as the path is measured from 
 
 ![](../../img/no_src_in_sc_filepath.png)
 
+There are different ways to view the details/traces during test (found via `$ forge help test` or `$ forge test --help`):
+
+![](../../img/forge_test_traces_info.png)
+
+> Ideally 3 to 4 levels of verbosity is enough.
+
 ---
 
 `$ forge test -vv`
@@ -174,7 +180,7 @@ function testGetCount() public {
 
 ---
 
-In order to test the entire contract test file like `Pausable.t.sol` use like this:
+In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test --match-contract Pausable`:
 
 ![](../../img/foundry_test_1_file.png)
 
@@ -183,6 +189,8 @@ In order to test the entire contract test file like `Pausable.t.sol` use like th
 In order to test the functions named (with REGEX pattern) use like this:
 
 ![](../../img/foundry_test_multi_functions.png)
+
+---
 
 One can test single function as well by providing the exact testfile's function name:
 
@@ -196,6 +204,12 @@ Running 2 tests for test/Pausable.t.sol:PausableTest
 [PASS] testNonOwnerUnpauseWhenPaused() (gas: 18730)
 Test result: ok. 2 passed; 0 failed; finished in 3.72ms
 ```
+
+---
+
+Run a particular test file like `$ forge test --match-path test/HelloWorld.t.sol -vvv`
+
+![](../../img/foundry_test_1_file_out_of_all.png)
 
 ### Fuzzy
 
@@ -227,6 +241,46 @@ function testNonOwnerPauseWhenUnpaused(address testAddress) public {
   vm.stopPrank();
 }
 ```
+
+## Gas report
+
+Just use the flag `--gas-report` for respective test functions (using `-m`, `--match-path`, `--match-contract`):
+
+```console
+$ forge test --match-path test/HelloWorld.t.sol -vvv --gas-report
+```
+
+![](../../img/foundry_test_gas_report.png)
+
+## Solidity compiler version
+
+Set the solidity compiler version for your contracts in project.
+
+```toml
+# just need to add this line in foundry.toml
+solc_version = "0.8.17"
+```
+
+![](../../img/foundry_solidity_compiler_version_build_success.png)
+
+---
+
+It is failing here because 1 of the contracts is using `0.8.17` and the other one is using `0.8.19`:
+
+> All the contracts have to use the same version of solidity compiler as set in `foundry.toml` file.
+
+![](../../img/foundry_solidity_compiler_version.png)
+
+## Optimizer
+
+Set optimizer for your contracts in project.
+
+```toml
+optimizer = true
+optimizer_runs = 200
+```
+
+Then, build using `$ forge build`.
 
 ## Deployment
 
