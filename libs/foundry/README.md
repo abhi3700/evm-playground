@@ -2,9 +2,12 @@
 
 ## About
 
-- `forge`: CLI tool to tests, builds, and deploys your smart contracts.
-- `cast`: to interact with the EVM chain & performing Ethereum RPC calls
-- `anvil`: to run a local node like Truffle's Ganache, Hardhat localnode.
+Components:
+
+- [`forge`](https://github.com/foundry-rs/foundry/tree/master/forge): CLI tool to tests, builds, and deploys your smart contracts.
+- [`cast`](https://github.com/foundry-rs/foundry/tree/master/cast): to interact with the EVM chain & performing Ethereum RPC calls
+- [`anvil`](https://github.com/foundry-rs/foundry/tree/master/anvil): to run a local node like Truffle's Ganache, Hardhat localnode.
+- [`chisel`](https://github.com/foundry-rs/foundry/tree/master/chisel): REPL for Solidity. It allows to open a console and interact with the EVM chain (simulated) like `$ npx hardhat console`
 
 ## Installation
 
@@ -114,6 +117,15 @@ Also add as submodule in `.gitmodules`
 
 ## Testing
 
+### CLI via `forge`
+
+Here is the color code in terminal for `forge` command:
+
+```text
+green: the function runs properly
+red: the function fails
+```
+
 While importing the files, no need to use `../src` as the path is measured from root of the project like this:
 
 ![](../../img/no_src_in_sc_filepath.png)
@@ -210,6 +222,32 @@ Test result: ok. 2 passed; 0 failed; finished in 3.72ms
 Run a particular test file like `$ forge test --match-path test/HelloWorld.t.sol -vvv`
 
 ![](../../img/foundry_test_1_file_out_of_all.png)
+
+### Test Function Naming
+
+The function naming (a choice) in foundry is different than the usual way of naming in other frameworks like Hardhat, Truffle, Brownie, etc.
+
+There are 2 ways to name the functions in foundry:
+
+**M-1**:
+
+Here, in order to create a test function that fails, **we need to use `testFail`** prefix & also ensure that the function fails, otherwise we get `AssertionError` like this:
+
+![](../../img/foundry_test_fail_function_error.png)
+
+And then when applied correct logic inside that function, there is no assertion error as shown below:
+
+![](../../img/foundry_test_fail_function_noerror.png)
+
+> Please note that `vm.expectRevert()` is not used here, otherwise there would be assertion error in console.
+
+---
+
+**M-2**:
+
+Here, in order to create a test function that fails, **we don't need** to follow any naming pattern. But, we have to then use `vm.expectRevert()` just before the function call which is going to fail.
+
+![](../../img/foundry_test_m2.png)
 
 ### Fuzzy
 
@@ -365,6 +403,53 @@ ds-test/=lib/forge-std/lib/ds-test/src/
 forge-std/=lib/forge-std/src/
 solmate/=lib/solmate/src/
 ```
+
+## Formatting
+
+- M-1: Format your Solidity code using `$ forge format`.
+- M-2: In my editor (VSC), I have the solidity extensions installed. So, my code gets auto-formatted on save.
+  - For this, all the used extensions can be synced as & when I login into my VSC account via Github.
+
+> To save the code without formatting, use `cmd+k` + `cmd+s` (on Mac).
+
+## Debuggging
+
+In order to use `console.log()`, import this into your solidity file (contract, test, deploy scripts):
+
+> Normally, `logInt()`, `logUint()` doesn't support 256 bit in `console.sol`, instead import `console.sol` for foundry only project. And for hardhat + foundry projects, use `forge-std/console.sol`.
+
+```solidity
+import "forge-std/console.sol";
+```
+
+Then, we get to test the file using `$ forge test --match-path test/Counter.t.sol -vv`:
+
+![](../../img/foundry_debugging-1.png)
+
+---
+
+We can do this for test file as well. For example, in `Counter.t.sol`.
+
+---
+
+Before deployment, ensure that all the console logs related code are removed from the contracts (may exist in the test files).
+
+---
+
+console log functions (most commonly used):
+
+For more, refer this file: `forge-std/console.sol`
+
+- `log(string memory message)`: log a message.
+  ```solidity
+  console.log("Hello World");
+  console.log("Hello ", "World");
+  console.log("Hello times ", 1);
+  ```
+- `logInt(int)`: log int value.
+  ```solidity
+  console.log(1);
+  ```
 
 ## Deployment
 
