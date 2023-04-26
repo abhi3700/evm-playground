@@ -227,6 +227,8 @@ Run a particular test file like `$ forge test --match-path test/HelloWorld.t.sol
 
 The function naming (a choice) in foundry is different than the usual way of naming in other frameworks like Hardhat, Truffle, Brownie, etc.
 
+> It's a good practice to name your function starting with `test`. This is to isolate the test functions in a foundry project as the entire repo would be in solidity language.
+
 There are 2 ways to name the functions in foundry:
 
 **M-1**:
