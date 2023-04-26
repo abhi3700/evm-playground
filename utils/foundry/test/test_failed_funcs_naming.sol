@@ -22,7 +22,8 @@ contract AuthTest is Test {
     function testSetOwnerbyNonOwner() public {
         vm.prank(address(1));
         wallet.setOwner(address(1));
-        vm.expectRevert("You are not allowed");
+        vm.expectRevert(); // w/o error message
+        // vm.expectRevert(bytes("You are not allowed")); // with an error message
         wallet.setOwner(address(1));
     }
 

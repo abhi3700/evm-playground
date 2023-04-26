@@ -126,6 +126,12 @@ green: the function runs properly
 red: the function fails
 ```
 
+---
+
+By default during testing, the function caller would be the testing contract itself i.e. `address(this)` i.e. `msg.sender`. So, in order to set an address, use `vm.prank(address(1))` for next immediate call & for next successive calls, use `vm.startPrank(address(1))` & then need to stop using `vm.stopPrank()`. This is useful when we want to test the contract with different addresses as caller (alice, bob, charlie, etc).
+
+---
+
 While importing the files, no need to use `../src` as the path is measured from root of the project like this:
 
 ![](../../img/no_src_in_sc_filepath.png)
@@ -250,6 +256,131 @@ And then when applied correct logic inside that function, there is no assertion 
 Here, in order to create a test function that fails, **we don't need** to follow any naming pattern. But, we have to then use `vm.expectRevert()` just before the function call which is going to fail.
 
 ![](../../img/foundry_test_m2.png)
+
+### Revert
+
+For a contract function like this:
+
+```solidity
+function throwError() external pure {
+    require(false, "not authorized");
+}
+```
+
+we can use the revert function (in foundry) for **M-2** (described above) as shown below:
+
+- `vm.expectRevert()` is used to check if the function call is going to revert or not.
+- `vm.expectRevert(bytes("onlyOwner"))` is used to check if the function call is going to revert with the exact revert message or not.
+
+```solidity
+function testRevert() public {
+    vm.expectRevert();  // NOTE
+    error.throwError();
+}
+
+function testRequireMessage() public {
+    vm.expectRevert(bytes("not authorized")); // NOTE
+    error.throwError();
+}
+```
+
+---
+
+Similarly, for a contract function with custom error defined using `error` keyword like this:
+
+```solidity
+error NotAuthorized();
+
+function throwCustomError() external pure {
+
+    revert NotAuthorized();
+
+}
+```
+
+we can use the revert function (in foundry) for **M-2** (described above) as shown below:
+
+```solidity
+function testCustomError() public {
+    vm.expectRevert(Error.NotAuthorized.selector);  // NOTE
+    error.throwCustomError();
+}
+```
+
+---
+
+In order to consider testing arithmetic overflow/underflow, use like this:
+
+```solidity
+function testDecUnderflow() public {
+    vm.expectRevert(stdError.arithmeticError);    // NOTE
+    counter.dec();
+}
+```
+
+---
+
+**Assertion Error labels** are defined when the console error is not able to give more details:
+
+**Before**:
+
+`Contract.t.sol`:
+
+```solidity
+function testErrorLabel() public {
+    assertEq(uint256(1), uint256(1));
+    assertEq(uint256(1), uint256(1));
+    assertEq(uint256(1), uint256(1));
+    assertEq(uint256(1), uint256(2)); // suppose to fail
+    assertEq(uint256(1), uint256(1));
+}
+```
+
+![](../../img/foundry_test_error_label_before.png)
+
+used `-vvvv` for more info here. But, still not clear. Here, not able to detect which line is failing, as it's shown only Assertion Error.
+
+**After**:
+
+`Contract.t.sol`:
+
+```solidity
+function testErrorLabel() public {
+    assertEq(uint256(1), uint256(1), "test 1");
+    assertEq(uint256(1), uint256(1), "test 2");
+    assertEq(uint256(1), uint256(1), "test 3");
+    assertEq(uint256(1), uint256(2), "test 4"); // suppose to fail
+    assertEq(uint256(1), uint256(1), "test 5");
+}
+```
+
+![](../../img/foundry_test_error_label_after.png)
+
+used `-vvvv` for more info here. Now, it's clear which line is failing i.e. the line with "test 4" error label.
+
+### Event
+
+We have 3 steps to follow:
+
+```solidity
+function testEmitTransferEvent() public {
+    // 1. tell foundry which data to check for
+    // (index_check, index_check, index_check, rest_data_check)
+    vm.expectEmit(true, true, false, true);
+
+    // 2. emit the expected event
+    emit Transfer(address(1), address(2), 100, bytes32("fun"));
+
+    // 3. call the function that should emit the actual event
+    e.transfer(address(1), address(2), 100, bytes32("fun"));
+}
+```
+
+We also have the freedom to check the params independently the params & ignore the rest of the params.
+
+For detailed example, refer [this](../../utils/foundry/test/Event.t.sol) for [contract](../../utils/foundry/src/Event.sol).
+
+[Source](https://www.youtube.com/playlist?list=PLO5VPQH6OWdUrKEWPF07CSuVm3T99DQki)
 
 ### Fuzzy
 
