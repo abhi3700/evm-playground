@@ -1281,9 +1281,101 @@ tx.origin (address): sender of the transaction (full call chain)
 
 ## Miscellaneous
 
+### Arithmetic Operation
+
+The arithmetic operation is very tricky (in terms of precision handling especially in DeFi applications) in Solidity. The following code will give an idea of precision.
+
+> In Solidity, the order of the arithmetic operations is not clearly defined b/w same levels like multiplication and division. So, it is always better to use parentheses to avoid any precision loss (eventually) & clarify the operation, in addition to following multiply first and then divide.
+
+```solidity
+// bracketing `accruedInterestOfprevDepositedAmt / scalingFactor` is optional
+vaults[msg.sender] = _lastDepositBalanceOf + (accruedInterestOfprevDepositedAmt / scalingFactor) + _amount;
+```
+
+> Always check the arithmetic operations (at testing level) by altering the operands and operators using Foundry.
+
+[Order of precedence](https://docs.soliditylang.org/en/v0.8.17/types.html#order)
+
+![](img/arithmetic-operations-order-of-precedence.png)
+
+[ArithmeticOperations.sol](./sc-sol/contracts/ArithmeticOperations.sol)
+
+```solidity
+contract Fee {
+    /// @dev precision loss. division first
+    function caculateLowFee() public pure returns (uint256) {
+        uint256 coins = 2;
+        uint256 Total_coins = 10;
+        uint256 fee = 15;
+        return ((coins / Total_coins) * fee);
+    }
+
+    /// @dev no precision loss. multiplication first
+    function caculateHighFee() public pure returns (uint256) {
+        uint256 coins = 2;
+        uint256 Total_coins = 10;
+        uint256 fee = 15;
+        return ((coins * fee) / Total_coins);
+    }
+}
+```
+
+---
+
+**Key lessons**:
+
+- Multiply first and then divide. This will avoid precision loss as the numerator would be very big enough to be divided especially when the divisor is a big number (than numerator). This is possible when the divisor type is `uint256` and the numerator type is `uint128`. `larger-bit/smaller-bit` ....is good than `smaller-bit/larger-bit` (it would be zero) in solidity.
+
+- E.g.
+
+  ```
+  uint256 / uint32 👍
+  uint32 / uint256 👎
+  ```
+
+- Similarly, b/w addition & subtraction, addition first and then subtraction in order to avoid negative (`-`) value as result.
+- The calculated result for division and multiplication can be stored in an integer with more bits, but the operands must also be integers of the same size. There can be cases like in autocompounding case, there were multiple times alteration in order to use `PPFS` at the numerator or denominator in different situations. The solution is for each use, consider a numerator & denominator pair (don't use any pre-calculated value from a dependent function). This will avoid precision loss.
+  E.g. `x * (1 + x/y)`. should not be treated like numerator as `(x * (y + x))` and denominator as `y`. This might lead to arithmetic overflow/underflow, division by zero, etc.
+
+- In autocompound vault example, during `receiptAmt` calculation, tried with `num/denom` approach, but failed with arithmetic error. Code that failed is:
+
+  ```solidity
+  uint256 numerator = _amount * 1e18 * yieldDuration * scalingFactor * totalShares();
+  uint256 denominator = _totalDeposited * 1e18
+      * (yieldDuration * scalingFactor + (block.timestamp - lastDepositedTimestamp) * yieldPercentage);
+  uint256 receiptAmt = numerator / denominator;
+  ```
+
+  > LESSON: `x + y/z` can't be treated as `(z+y)/z`. We need to choose b/w multiplication (1st) vs division (2nd). Don't complicate with '+', '-'.
+
+  Finally, went ahead with the following code:
+
+  ```solidity
+  uint256 receiptAmt = _amount * 1e18 / getPPFS(); // more precision
+  // uint256 receiptAmt = _amount / (ppfs / 1e18); // less precision
+  ```
+
+  Read [more](https://consensys.github.io/smart-contract-best-practices/development-recommendations/solidity-specific/integer-division/)
+
+- How to ensure we have max. decimal places. In order to do that we have to set the `scaling_factor` carefully. Suppose, we want to use yield percentage as `0.000001`, then take the `scaling_factor` as `1000000` (consider bare min. possible, don't use `1e18` as might lead to precision loss) and then multiply the yield percentage with `scaling_factor` which results to `1` value and then use it.
+
+  ```solidity
+  // For `yield_percentage`, consider this: 0.000001% to 100% value when multiplied with
+  // scaling_factor....for setting the data type - uint32/uint64/uint128/uint256
+
+  uint32 public yield_percentage;
+  uint32 public yield_duration; // in seconds
+  uint32 public constant scaling_factor = 1000000;
+  ```
+
+  Now, when we want to calculate the accrued interest on staked amount, then we have to divide the accrued interest with `scaling_factor` to get the actual value i.e. `(amount * yield_percentage) / scaling_factor`.
+
+- The operands for the exponentiation function must be unsigned integers. Unsigned Integers with lower bits can be calculated and stored as unsigned integers with higher bits.
+- To apply an arithmetic operation to all of the operands, they must all have the same data type; otherwise, the operation will not be performed.
+
 ### Don'ts
 
-- Avoid parentheses, brackets, and spaces after curly braces
+- Formatting | Avoid parentheses, brackets, and spaces after curly braces
 
 ```
 The way to standardize:
@@ -1295,7 +1387,7 @@ spam(ham[1], Coin({name: “ham”}));
 spam( ham[ 1 ], Coin( { name: “ham” } ) );
 ```
 
-- Avoid spaces before commas and semicolons
+- Formatting | Avoid spaces before commas and semicolons
 
 ```
 The way to standardize:
@@ -1307,7 +1399,7 @@ function spam(uint i, Coin coin);
 function spam(uint i , Coin coin) ;
 ```
 
-- Avoid multiple spaces before and after the assignment
+- Formatting | Avoid multiple spaces before and after the assignment
 
 ```
 The way to standardize:
@@ -1323,7 +1415,7 @@ y             = 2;
 long_variable = 3;
 ```
 
-- Control structure
+- Formatting | Control structure
 
 ```
 The way to standardize:
@@ -1346,7 +1438,7 @@ contract Coin
 }
 ```
 
-- For the control structure, if there is only a single statement, you don't need to use parentheses.
+- Formatting | For the control structure, if there is only a single statement, you don't need to use parentheses.
 
 ```
 The way to standardize:
@@ -1368,7 +1460,7 @@ if (x < 10)
         }));
 ```
 
-- Wrong way to use `storage`, `memory`: Here, State variables are always stored in the `storage`. Also, you can not explicitly override the location of state variables.
+- Storage vs Memory | Wrong way to use `storage`, `memory`: Here, State variables are always stored in the `storage`. Also, you can not explicitly override the location of state variables.
 
 ```
 pragma solidity ^0.5.0;
@@ -1388,6 +1480,8 @@ contract DataLocation {
      uint[] memory stateArray; // error
 }
 ```
+
+- Arithmetic Operation | Don't use **BODMAS** rule in Solidity. It is not applicable in Solidity. Instead, use `()` to make the order of operation clear & also prioritize multiplication over division. (as multiplication, division are put on same level of precedence). [More](#arithmetic-operation).
 
 - [Names to avoid](https://docs.soliditylang.org/en/v0.8.6/style-guide.html#names-to-avoid)
 
@@ -1816,6 +1910,25 @@ unchecked {
   4. Take the help of security tools to find smart contract vulnerabilities.
   5. Take a look at the **gas-reporter**’s report generated (in form of table in terminal) during unit tests (run via CLI) using Hardhat tool, to prevent functions from failing due to touching gas limit.
   6. Contracts' size have to be kept as small as possible to prevent the contract from exceeding the contract size limit i.e. `24.5 KB`.
+  7. **Arithmetic Operation** has to be done carefully. A real-life exploit (happened in [Yield V2](https://github.com/code-423n4/2021-05-yield/blob/e4c8491cd7bfa5dc1b59eb1b257161cd5bf8c6b0/contracts/yieldspace/Pool.sol#L186)) can be seen in the code shown below. Here, performed division between `scaledFYTokenCached` and `_baseCached` before multiplication with `timeElapsed`. This introduced imprecise accuracy when calculating the cumulativeBalancesRatio.
+
+  > Always check the arithmetic operations by altering the operands and operators using Foundry.
+
+  ```solidity
+  function _update(
+          uint128 baseBalance,
+          uint128 fyBalance,
+          uint112 _baseCached,
+          uint112 _fyTokenCached
+      ) private {
+          ....
+
+              cumulativeBalancesRatio +=
+                  (scaledFYTokenCached / _baseCached) *
+                  timeElapsed;
+          ....
+      }
+  ```
 
 ---
 
@@ -1823,6 +1936,17 @@ Use these libraries for gas-optimized & secure contracts:
 
 - [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts)
 - [Solmate](https://github.com/Rari-Capital/solmate)
+
+---
+
+Use these tools for security analysis:
+
+1. [Slither | Crytic](https://github.com/crytic/slither)
+2. [MythX](https://mythx.io/tools/)
+   - MythX CLI recommended than VSCode extension
+3. [Solidity Scanner](https://solidityscan.com/) (for detecting precision loss in arithmetic operations)
+   ![](img/solidity-scanner.png)
+4. [Echidna | Crytic](https://github.com/crytic/echidna) (for fuzzing analysis)
 
 ### Write Professional code
 
@@ -2427,3 +2551,11 @@ For more, refer to [Interview Q.s](https://github.com/abhi3700/sol-playground/bl
 ### Gas optimization
 
 - [Awesome Solidity Gas Optimization](https://github.com/iskanderandrews/awesome-solidity-gas-optimization)
+
+```
+
+```
+
+```
+
+```

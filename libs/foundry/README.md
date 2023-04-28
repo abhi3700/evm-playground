@@ -859,6 +859,25 @@ ds-test/=lib/forge-std/lib/ds-test/src/
 - _Cause_: the `git status` is not clean i.e. need to commit the changes.
 - _Solution_: commit the changes and then run `$ forge install <package-name-as-in-github>` like `$ forge install rari-capital/solmate`
 
+### 7. [FAIL. Reason: Error != expected error: 0xaf4e51c7 != * ]
+
+- _Cause_: the error message is not matching with the expected error message. Hence, `0xaf4e51c7` is the selector of the error message - `ZeroAmount`
+- _Solution_: change the error message to the actual.
+
+**Before**:
+
+```solidity
+vm.expectRevert(AutoCompVault.ZeroAmount.selector);
+acvault.redeem(shareAmt + 1);
+```
+
+**After**:
+
+```solidity
+vm.expectRevert(AutoCompVault.InsufficientShareBalance.selector);
+acvault.redeem(shareAmt + 1);
+```
+
 ## References
 
 - [Smart Contract Development with Foundry | Nader Dabit](https://www.youtube.com/watch?v=uelA2U9TbgM)
