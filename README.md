@@ -87,7 +87,16 @@ contract Greeter {
 }
 ```
 
-## Compile
+### Frameworks
+
+- [Hardhat](./libs/hardhat/)
+- [Foundry](./libs/foundry/)
+
+## My Repositories
+
+Refer [this](https://github.com/abhi3700#contribution-related-to-evm-blockchains)
+
+## Build
 
 - Ethereum smart contracts are generally written in Solidity and then compiled into EVM bytecode and ABI via `solc`.
 
@@ -111,6 +120,10 @@ PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH3 0x11 JUMPI PUSH1 0x0 DU
 - [Bytecode to Opcode converter tool](https://etherscan.io/opcode-tool)
 
 > NOTE: It's almost impossible to generate Smart contract code from EVM ABI & Bytecode.
+
+---
+
+The contract compilation can happen using EVM frameworks like Hardhat, Truffle, **Foundry** (my favourite 2023 onwards), Brownie.
 
 ## Deploy
 
