@@ -22,49 +22,57 @@ Also, the product includes - FE, BE, BC components. The BE data schema (for Mong
   <b>Expand for "BE Data Schema"</b>
 </summary>
 
-```json
-{
+> Ensure that there is not much nesting
 
-    "team": {
-        "cliff": ,
-        "release frequency": ,
-        "total duration": ,
-        [
-            {
-                "alice": {
-                    "amount": ,
-                    "start_timestamp": ,
-                }
-            },
-            {
-                "bob": {
-                    "amount": ,
-                    "start_timestamp": ,
-                }
-            }
-            {
-                "charlie": {
-                    "amount": ,
-                    "start_timestamp": ,
-                }
-            }
-            {
-                "eve": {
-                    "amount": ,
-                    "start_timestamp": ,
-                }
-            }
-        ],
+1. Token Allocation Table:
 
-    }
+   > Considering "**finding a user in a category**".
 
-}
+   ```json
+   {
+     "Team": [
+       {
+         "address": "Alice",
+         "tokens_allocated": "2000",
+         "vesting_start_time": ""
+       },
+       {
+         "address": "Bob",
+         "tokens_allocated": "2000",
+         "vesting_start_time": ""
+       },
+       {
+         "address": "Charlie",
+         "tokens_allocated": "2000",
+         "vesting_start_time": ""
+       },
+       {
+         "address": "Alice",
+         "tokens_allocated": "2000",
+         "vesting_start_time": ""
+       }
+     ]
+   }
+   ```
 
-```
+   > Instead of 'alice', it would be address of the user. The above schema is just for reference.
+
+2. Category Info Table:
+
+   ```json
+   {
+     "category": "Marketing",
+     "vesting_period": "",
+     "cliff_period": "",
+     "claimable_frequency": "",
+     "merkle_root": "",
+     "total_tokens_limit": 20000000
+   }
+   ```
 
 </details>
 
-> Instead of 'alice', it would be address of the user. The above schema is just for reference.
+> The above one is just an example. We can definitely better this based on the requirement. Think from Algorithmic complexity standpoint - Time, Space.
 
 ```
 Vesting Schedule: - Cliff: 1 month - Release Frequency: Weekly - Total Duration: 2 years
@@ -180,6 +188,10 @@ But, if we want to do so, we can use vesting & the implementation would be like 
 ## References
 
 - https://github.com/abdelhamidbakhta/token-vesting-contracts/blob/main/contracts/TokenVesting.sol
+
+```
+
+```
 
 ```
 
