@@ -11,6 +11,85 @@
 
 ## Vesting types
 
+Pretty simple implementation!
+
+This is for each category of vesting i.e. private, seed, team, etc. But, for airdrop, there is ideally no vesting. It is advised to implement Merkle Tree approach which reduces the gas cost during vesting creation. From product standpoint, for merkle tree approach, users need a merkle proof which has to be provided into the SC function `claim`. That would be a good UX rather than manually copying the info.
+
+Also, the product includes - FE, BE, BC components. The BE data schema (for MongoDB) looks like this:
+
+<details> 
+<summary>
+  <b>Expand for "BE Data Schema"</b>
+</summary>
+
+```json
+{
+
+    "team": {
+        "cliff": ,
+        "release frequency": ,
+        "total duration": ,
+        [
+            {
+                "alice": {
+                    "amount": ,
+                    "start_timestamp": ,
+                }
+            },
+            {
+                "bob": {
+                    "amount": ,
+                    "start_timestamp": ,
+                }
+            }
+            {
+                "charlie": {
+                    "amount": ,
+                    "start_timestamp": ,
+                }
+            }
+            {
+                "eve": {
+                    "amount": ,
+                    "start_timestamp": ,
+                }
+            }
+        ],
+
+    }
+
+}
+
+```
+
+</details>
+
+> Instead of 'alice', it would be address of the user. The above schema is just for reference.
+
+```
+Vesting Schedule: - Cliff: 1 month - Release Frequency: Weekly - Total Duration: 2 years
+
+A CSV file for each category containing these columns: - User Address - Allocated Token Amount - Start Timestamp (when the cliff starts)
+
+Here's an example to illustrate this:
+
+    - Start timestamp: January 1, 2023
+    - Cliff: 1 year
+    - Release frequency: Monthly
+    - Total duration: 4 years
+
+    With these details, you would know that:
+
+    - The cliff period ends on January 1, 2024.
+    - Regular vesting begins on February 1, 2024, with a portion of the asset or benefit vesting monthly.
+    - The total vesting schedule ends on January 1, 2027.
+
+```
+
+---
+
+<!-- TODO: Need to update the below notes based on above findout -->
+
 Two components that has to be considered while implementing vesting:
 
 1.  **Amount calculation**. The following two types are w.r.t the **same** or **different** token amount distribution for a user in a category throughout the vesting period i.e. same amount every release or different amount every release.
@@ -101,3 +180,7 @@ But, if we want to do so, we can use vesting & the implementation would be like 
 ## References
 
 - https://github.com/abdelhamidbakhta/token-vesting-contracts/blob/main/contracts/TokenVesting.sol
+
+```
+
+```
