@@ -2533,9 +2533,18 @@ For more, refer to [Interview Q.s](https://github.com/abhi3700/sol-playground/bl
 
 ## References
 
+### Challenges
+
+- [Ethernaut](https://ethernaut.openzeppelin.com/)
+- [Capturetheether](https://capturetheether.com/challenges/)
+- [Calyptus Posts](https://www.linkedin.com/school/calyptus-learn/posts/?feedView=all)
+- [Damn Vulnerable DeFi](https://www.damnvulnerabledefi.xyz/)
+
+### Learning
+
 - [From Solidity to EOS contract development](https://www.programmersought.com/article/6940225644/)
+- [Learn Solidity | SC Programmer](https://solidity-by-example.org/)
 - [Solidity contract development specification](https://www.programmersought.com/article/4362686832/)
-- [Contract Hacks challenges](https://capturetheether.com/challenges/)
 - [Solidity Tutorial playlist](https://www.youtube.com/watch?v=jPHXG82WCYA&list=PLbbtODcOYIoE0D6fschNU4rqtGFRpk3ea)
 - [Mappings in Solidity Explained in Under Two Minutes](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)
 - [Gas Optimization in Solidity](https://yamenmerhi.medium.com/gas-optimization-in-solidity-75945e12322f)
@@ -2564,11 +2573,3 @@ For more, refer to [Interview Q.s](https://github.com/abhi3700/sol-playground/bl
 ### Gas optimization
 
 - [Awesome Solidity Gas Optimization](https://github.com/iskanderandrews/awesome-solidity-gas-optimization)
-
-```
-
-```
-
-```
-
-```
