@@ -5,10 +5,21 @@ import "forge-std/console.sol";
 
 contract Yul1 {
     /// @dev Simple Add operation
-    function add(uint256 x, uint256 y) public pure returns (uint256 z) {
+    function add(uint256 x, uint256 y) public pure returns (uint256) {
+        // consumes: 5485 gas
         assembly {
-            z := add(x, y)
+            let result := add(x, y)
+            mstore(0x0, result)
+            return(0x0, 32)
         }
+
+        // consumes: 5506 gas
+        // assembly {
+        //     z := add(x, y)
+        // }
+
+        // solidity
+        // z = x + y;
     }
 
     /// @dev Simple Sub operation

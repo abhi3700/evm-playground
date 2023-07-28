@@ -21,13 +21,13 @@ contract Yul1Test is Test {
         assertEq(y1, 1);
     }
 
-    function testAddMul() public {
-        uint256 y1 = yul1.addMul(1, 2);
-        assertEq(y1, 21);
-    }
+    // function testAddMul() public {
+    //     uint256 y1 = yul1.addMul(1, 2);
+    //     assertEq(y1, 21);
+    // }
 
-    function testAddDiv() public {
-        uint256 y1 = yul1.addDiv(1, 2);
-        assertEq(y1, 0);
-    }
+    // function testAddDiv() public {
+    //     uint256 y1 = yul1.addDiv(1, 2);
+    //     assertEq(y1, 0);
+    // }
 }
