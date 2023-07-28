@@ -55,13 +55,21 @@ assembly {
 }
 ```
 
+[Doc](../docs/add_comparo_yul.pdf)
+
 ![](../img/visual-stack-memory.png)
 
 ---
 
 **Comparo of `SUB` operation**:
 
-Consider this code with/without using `z` (external (to assembly scope) local variable).
+Consider this code with/without using `z` (external (to assembly scope) local variable). So, avoid using that. That would save additional `8 gas`.
+
+The if code is [here](https://github.com/abhi3700/evm_playground/blob/main/sc-yul/src/Yul1.sol#L27)
+
+The switch code is [here](https://github.com/abhi3700/evm_playground/blob/main/sc-yul/src/Yul1.sol#L43)
+
+[Doc](../docs/sub_comparo_yul.pdf)
 
 ## Resources
 
