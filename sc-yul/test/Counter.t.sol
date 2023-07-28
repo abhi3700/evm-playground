@@ -1,25 +1,38 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-/* import "forge-std/Test.sol";
+import "forge-std/Test.sol";
 import "../src/Counter.sol";
 
-contract CounterTest is Test {
+contract Yul1Test is Test {
     Counter public counter;
 
     function setUp() public {
         counter = new Counter();
-        counter.setNumber(0);
+        assertEq(counter.count(), 20);
     }
 
     function testIncrement() public {
         counter.increment();
-        assertEq(counter.number(), 1);
+        assertEq(counter.count(), 21);
+        counter.increment();
+        assertEq(counter.count(), 22);
     }
 
-    function testSetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+    function testDecrement() public {
+        counter.decrement();
+        assertEq(counter.count(), 19);
+        counter.decrement();
+        assertEq(counter.count(), 18);
+    }
+
+    function testSet() public {
+        counter.set(100);
+        assertEq(counter.count(), 100);
+    }
+
+    function testReset() public {
+        counter.reset();
+        assertEq(counter.count(), 0);
     }
 }
- */

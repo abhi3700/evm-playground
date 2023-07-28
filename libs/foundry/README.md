@@ -198,7 +198,7 @@ function testGetCount() public {
 
 ---
 
-In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test --match-contract Pausable`:
+In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test ---match-testatch-contract Pausable`:
 
 ![](../../img/foundry_test_1_file.png)
 
@@ -213,7 +213,7 @@ In order to test the functions named (with REGEX pattern) use like this:
 One can test single function as well by providing the exact testfile's function name:
 
 ```console
-❯ forge test -m testNonOwner
+❯ forge test --match-test testNonOwner
 [⠆] Compiling...
 No files changed, compilation skipped
 
@@ -225,7 +225,7 @@ Test result: ok. 2 passed; 0 failed; finished in 3.72ms
 
 ---
 
-Run a particular test file like `$ forge test --match-path test/HelloWorld.t.sol -vvv`
+Run a particular test file like `$ forge test ---match-testatch-path test/HelloWorld.t.sol -vvv`
 
 ![](../../img/foundry_test_1_file_out_of_all.png)
 
@@ -415,10 +415,10 @@ function testNonOwnerPauseWhenUnpaused(address testAddress) public {
 
 ## Gas report
 
-Just use the flag `--gas-report` for respective test functions (using `-m`, `--match-path`, `--match-contract`):
+Just use the flag `--gas-report` for respective test functions (using `--match-test`, `---match-testatch-path`, `---match-testatch-contract`):
 
 ```console
-$ forge test --match-path test/HelloWorld.t.sol -vvv --gas-report
+$ forge test ---match-testatch-path test/HelloWorld.t.sol -vvv --gas-report
 ```
 
 ![](../../img/foundry_test_gas_report.png)
@@ -555,7 +555,7 @@ In order to use `console.log()`, import this into your solidity file (contract, 
 import "forge-std/console.sol";
 ```
 
-Then, we get to test the file using `$ forge test --match-path test/Counter.t.sol -vv`:
+Then, we get to test the file using `$ forge test ---match-testatch-path test/Counter.t.sol -vv`:
 
 ![](../../img/foundry_debugging-1.png)
 

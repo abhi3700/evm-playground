@@ -194,3 +194,4 @@ Preparation for EVM execution:
 ## Resources
 
 - [EVM Part1: The ABCs of Ethereum Virtual Machine](https://medium.com/coinmonks/evm-part1-the-abcs-of-ethereum-virtual-machine-3669cbac0b4) ✅
+- [EVM Illustrated](../ethereum_evm_illustrated.pdf)
