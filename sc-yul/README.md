@@ -57,6 +57,12 @@ assembly {
 
 ![](../img/visual-stack-memory.png)
 
+---
+
+**Comparo of `SUB` operation**:
+
+Consider this code with/without using `z` (external (to assembly scope) local variable).
+
 ## Resources
 
 - [Solidity Tutorial : all about Assembly](https://jeancvllr.medium.com/solidity-tutorial-all-about-assembly-5acdfefde05c)

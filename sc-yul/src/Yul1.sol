@@ -23,10 +23,36 @@ contract Yul1 {
     }
 
     /// @dev Simple Sub operation
-    function sub(uint256 x, uint256 y) public pure returns (uint256 z) {
+    // consumes 5554 (w/o z) & 5562 (w/ z) gas
+    // function sub(uint256 x, uint256 y) public pure returns (uint256 z) {
+    //     assembly {
+    //         if gt(y, x) {
+    //             z := sub(y, x) // gas: 8
+    //             mstore(0x0, z)
+    //             return(0x0, 32)
+    //         }
+    //         if gt(x, y) {
+    //             z := sub(x, y) // gas: 8
+    //             mstore(0x0, z)
+    //             return(0x0, 32)
+    //         }
+    //     }
+    // }
+
+    // consumes 5554 (w/o z) & 5562 (w/ z) gas
+    function sub(uint256 x, uint256 y) public pure returns (uint256) {
         assembly {
-            if gt(y, x) { z := sub(y, x) }
-            if gt(x, y) { z := sub(x, y) }
+            switch gt(y, x)
+            case true {
+                // z := sub(y, x) // gas: 8
+                mstore(0x0, sub(y, x))
+                return(0x0, 32)
+            }
+            case false {
+                // z := sub(x, y) // gas: 8
+                mstore(0x0, sub(x, y))
+                return(0x0, 32)
+            }
         }
     }
 
