@@ -17,3 +17,6 @@ bin/
 
 # OZ upgrade
 .openzeppelin/
+
+# draw.io
+.$*.drawio.bkp

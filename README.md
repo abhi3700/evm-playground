@@ -1561,7 +1561,7 @@ contract ExternalPublicTest {
 }
 ```
 
-    - It's actually about `memory` or `calldata`. The former would consume more gas (491 wei) & the later would consume 260 wei gas.
+- It's actually about `memory` or `calldata`. The former would consume more gas (491 wei) & the later would consume 260 wei gas.
 
 - `now` -> which is equivalent to `block.timestamp` may not be as accurate as one may think. It is up to the miner to pick it, so it could be up to 15 minutes (900 seconds) off.
 - `view` vs `pure` in function
@@ -1888,29 +1888,29 @@ unchecked {
          }
          ```
 
-         - Instead of writing 1st code snippet, 2nd code snippet is preferred. This vulnerability is detected by Slither.
+       - Instead of writing 1st code snippet, 2nd code snippet is preferred. This vulnerability is detected by Slither.
 
-           ```solidity
-                   // Inside a function
-                   ...
-                   vestingToken.transferFrom(msg.sender, address(this), _amount);
+         ```solidity
+                 // Inside a function
+                 ...
+                 vestingToken.transferFrom(msg.sender, address(this), _amount);
 
-                   emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
-                   ...
-           ```
+                 emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
+                 ...
+         ```
 
-           ```solidity
-                   // Inside a function
-                   ...
-                   bool success = vestingToken.transferFrom(msg.sender, address(this), _amount);
-                   if(success) {
-                       emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
-                   } else {
-                       emit VestTransferFromFailed(_amount);
-                       revert("vestingToken.transferFrom function failed");
-                   }
-                   ...
-           ```
+         ```solidity
+                 // Inside a function
+                 ...
+                 bool success = vestingToken.transferFrom(msg.sender, address(this), _amount);
+                 if(success) {
+                     emit TokenVested(_beneficiary, _amount, _unlockTimestamp, block.timestamp);
+                 } else {
+                     emit VestTransferFromFailed(_amount);
+                     revert("vestingToken.transferFrom function failed");
+                 }
+                 ...
+         ```
 
      - <u>Resources</u>:
        - Watch this [video](https://www.youtube.com/watch?v=4Mm3BCyHtDY)
