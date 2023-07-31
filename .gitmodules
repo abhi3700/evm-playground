@@ -7,3 +7,6 @@
 [submodule "sc-foundry/lib/forge-std"]
 	path = sc-foundry/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "sc-sol-foundry"]
+	path = sc-sol-foundry
+	url = https://github.com/abhi3700/evm-sol-foundry.git
