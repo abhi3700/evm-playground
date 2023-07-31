@@ -198,7 +198,7 @@ function testGetCount() public {
 
 ---
 
-In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test ---match-testatch-contract Pausable`:
+In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test ---match-contract Pausable`:
 
 ![](../../img/foundry_test_1_file.png)
 
@@ -225,9 +225,13 @@ Test result: ok. 2 passed; 0 failed; finished in 3.72ms
 
 ---
 
-Run a particular test file like `$ forge test ---match-testatch-path test/HelloWorld.t.sol -vvv`
+Run a particular test file like `$ forge test ---match-path test/HelloWorld.t.sol -vvv`
 
 ![](../../img/foundry_test_1_file_out_of_all.png)
+
+### Declare & Deploy contracts inside test
+
+Please refer [this](../../utils/foundry/test/define_sc_deploy.md).
 
 ### Test Function Naming
 
@@ -257,7 +261,7 @@ Here, in order to create a test function that fails, **we don't need** to follow
 
 ![](../../img/foundry_test_m2.png)
 
-### Revert
+### Error
 
 For a contract function like this:
 
@@ -270,7 +274,7 @@ function throwError() external pure {
 we can use the revert function (in foundry) for **M-2** (described above) as shown below:
 
 - `vm.expectRevert()` is used to check if the function call is going to revert or not.
-- `vm.expectRevert(bytes("onlyOwner"))` is used to check if the function call is going to revert with the exact revert message or not.
+- `vm.expectRevert(bytes("onlyOwner"))` or `vm.expectRevert("onlyOwner")` is used to check if the function call is going to revert with the exact revert message or not.
 
 ```solidity
 function testRevert() public {
@@ -306,6 +310,10 @@ function testCustomError() public {
     error.throwCustomError();
 }
 ```
+
+---
+
+Now, the error has an argument, look at this [example](../../utils/foundry/test/error_w_arg.md).
 
 ---
 
@@ -382,9 +390,73 @@ For detailed example, refer [this](../../utils/foundry/test/Event.t.sol) for [co
 
 [Source](https://www.youtube.com/playlist?list=PLO5VPQH6OWdUrKEWPF07CSuVm3T99DQki)
 
+### Time
+
+There are mainly 4 functions - time (3), block_num(1).
+
+- `vm.warp`: set block timestamp to future timestamp
+- `skip`: increment by time
+- `rewind`: decrement by time
+- `vm.roll`: set block.number
+
+### Fund Test ETH
+
+There is one function - `deal(to, value)` e.g. `deal(alice, 100)` using which any account can be funded with Test ETH inside foundry test script.
+
+[utils doc](../../utils/foundry/test/transfer_eth.md).
+
+[code](../../sc-sol-foundry/test/Payable.t.sol).
+
+Another function is `hoax(to, value)`. This sets the balance & also sets the caller. So, we don't need to fund the account in `setUp()` function.
+
+> If Alice is funded inside `setUp()` with 100 using `deal`, and if again it's funded with `200` (using `hoax`) inside a `testDeposit()` (say) function, then the total balance of Alice is `200` (not `300`) although `setUp()` is auto-executed before `testDeposit()` (or any test function). This is because `hoax` doesn't add that amount to pre-existing balance, rather it sets the balance.
+
+### Signature
+
+In Foundry, if we need to check for a message signer is the expected signer or not. We can follow this [example](../../sc-sol-foundry/test/Signature.t.sol).
+
+### Gasless Token transfer
+
+Here are the examples:
+
+- [Contract](../../sc-sol-foundry/src/GaslessTokenTransfer.sol)
+- [Test](../../sc-sol-foundry/test/GaslessTokenTransfer.t.sol)
+
+### Fork
+
+Just use fork-url of mainnet using alchemy, infura, etc.
+
+```sh
+$ forge test --fork-url <mainnet-url> --match-path test/Fork.t.sol -vvvv
+
+Running 1 test for test/Fork.t.sol:ForkTest
+[PASS] testDeposit() (gas: 41841)
+Logs:
+  Balance before:  0
+  Balance after:  100
+
+Traces:
+  [41841] ForkTest::testDeposit()
+    ├─ [2534] 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2::balanceOf(ForkTest: [0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496]) [staticcall]
+    │   └─ ← 0x0000000000000000000000000000000000000000000000000000000000000000
+    ├─ [0] console::log(Balance before: , 0) [staticcall]
+    │   └─ ← ()
+    ├─ [21974] 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2::deposit{value: 100}()
+    │   ├─ emit Deposit(param0: ForkTest: [0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496], param1: 100)
+    │   └─ ← ()
+    ├─ [534] 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2::balanceOf(ForkTest: [0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496]) [staticcall]
+    │   └─ ← 0x0000000000000000000000000000000000000000000000000000000000000064
+    ├─ [0] console::log(Balance after: , 100) [staticcall]
+    │   └─ ← ()
+    └─ ← ()
+
+Test result: ok. 1 passed; 0 failed; 0 skipped; finished in 3.30s
+Ran 1 test suites: 1 tests passed, 0 failed, 0 skipped (1 total tests)
+```
+
 ### Fuzzy
 
-Fuzz test basically means it'll randomly choose addresses and run the test 256 times by default.
+Fuzz test basically means it'll randomly choose addresses and run the test 256 times by default depending on input type.
 
 if you want to make it run more than 256, you can change `fuzz_runs` on `foundry.toml` to any number you want like 1000, 5000 or even 50k, but it'll change for all the fuzz tests, not for a particular test file/function.
 
@@ -411,6 +483,17 @@ function testNonOwnerPauseWhenUnpaused(address testAddress) public {
   vault.pause();
   vm.stopPrank();
 }
+```
+
+---
+
+For a simple example, refer this [code](../../sc-sol-foundry/test/Fuzzy.t.sol).
+
+```solidity
+// assume
+vm.assume(<condition>);
+// bound
+uint256 x = bound(x, 1, 100);
 ```
 
 ## Gas report

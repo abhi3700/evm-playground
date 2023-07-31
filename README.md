@@ -1244,6 +1244,8 @@ contract Time {
 - [EIP-721: Non-Fungible Token Standard](https://eips.ethereum.org/EIPS/eip-721)
 - [EIP-1155: Multi Token Standard](https://eips.ethereum.org/EIPS/eip-1155)
 - [EIP-2535: Diamonds, Multi-Facet Proxy](https://eips.ethereum.org/EIPS/eip-2535)
+- [EIP-2612: Permit Extension for EIP-20 Signed Approvals](https://eips.ethereum.org/EIPS/eip-2612)
+  - Use solmate [ERC20.sol](https://github.com/transmissions11/solmate/blob/main/src/tokens/ERC20.sol) (includes `permit()` function)
 - [EIP-2771: Secure Protocol for Native Meta Transactions](https://eips.ethereum.org/EIPS/eip-2771)
 - [EIP-3156: Flash Loans](https://eips.ethereum.org/EIPS/eip-3156)
 - [EIP-3525: Semi-Fungible Token Standard](https://eips.ethereum.org/EIPS/eip-3525)
