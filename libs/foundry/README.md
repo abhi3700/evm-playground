@@ -934,6 +934,8 @@ transactionIndex        0
 type
 ```
 
+For more such commands, refer [this](./cast.md).
+
 ## Code snippets
 
 More can be found [here](../../utils/foundry/)
