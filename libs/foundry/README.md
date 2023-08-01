@@ -59,6 +59,20 @@ foundryup: installed - chisel 0.1.1 (4a0c8dc 2023-04-15T00:04:41.578991000Z)
 foundryup: done
 ```
 
+---
+
+CLI command autocompletions:
+
+```sh
+forge completions zsh > /usr/local/share/zsh/site-functions/_forge
+cast completions zsh > /usr/local/share/zsh/site-functions/_cast
+anvil completions zsh > /usr/local/share/zsh/site-functions/_anvil
+```
+
+> Use <kbd>tab</kbd> to view the next option.
+
+[Source](https://book.getfoundry.sh/config/shell-autocompletion?highlight=cast%20completions#zsh).
+
 ## Editor
 
 Use VSCode
@@ -734,6 +748,35 @@ Listening on 127.0.0.1:8545
 
 ---
 
+Modify the script to deploy the contract like this:
+
+```solidity
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
+
+import "forge-std/Script.sol";
+import {AutoCompVault} from "../src/AutoCompVault.sol";
+import {DepositToken} from "../src/DepositToken.sol";
+
+contract AutoCompVaultScript is Script {
+    function setUp() public {}
+
+    function run() public {
+        vm.startBroadcast();
+        DepositToken token = new DepositToken("CRV:stETH Token", "CRVstETH", 1_000_0001e18);
+        AutoCompVault acvault = new AutoCompVault(address(token), 100, 1 days);
+        vm.stopBroadcast();
+    }
+}
+```
+
+Here,
+
+- `vm.startBroadcast()` and `vm.stopBroadcast()` are used to wrap the contract deployment transaction.
+- token, acvault are the contract instances that are used in the script.
+
+---
+
 Run SIMULATION to estimate the gas cost to deploy the contract
 
 ```console
@@ -801,6 +844,17 @@ ONCHAIN EXECUTION COMPLETE & SUCCESSFUL. Transaction receipts written to "broadc
 Transactions saved to: broadcast/Contract.s.sol/31337/run-latest.json
 ```
 
+---
+
+**Using `forge create` to deploy the contract in CLI**:
+
+```sh
+# without args
+$ forge create --rpc-url <RPC_URL> --private-key <PRIVATE_KEY_w_0x> src/Counter.sol:Counter --constructor-args ""
+# with args
+$ forge create --rpc-url <RPC_URL> --private-key <PRIVATE_KEY_w_0x> src/MyToken.sol:MyToken --constructor-args "DAI" "DAI" 18
+```
+
 ## Interaction with Contract
 
 Use `cast` tool to interact with
@@ -808,13 +862,35 @@ Use `cast` tool to interact with
 **get function**
 
 ```console
-❯ cast call 0x5fbdb2315678afecb367f032d93f642f64180aa3 "count()(uint)"
+❯ cast call 0x5fbdb2315678afecb367f032d93f642f64180aa3 "count()(uint256)"
 10
 ```
 
 ---
 
 **set function**
+
+To set a number via `setNumber(uint256)`
+
+```console
+❯ cast send 0x5fbdb2315678afecb367f032d93f642f64180aa3 "setNumber(uint256)" 20 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+blockHash               0xfa27deda66eb7e9d7211c225bb41f462a71222e8b7e878455ca13bbaaf87920c
+blockNumber             4
+contractAddress
+cumulativeGasUsed       26394
+effectiveGasPrice       3671048153
+gasUsed                 26394
+logs                    []
+logsBloom               0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+root
+status                  1
+transactionHash         0xf1114cda0205944aaec727b0bcb6bd99c0edc3d41b517d3eecb618296dcc86ba
+transactionIndex        0
+type                    2
+```
+
+---
 
 To increment the count via `increment()`
 
@@ -835,6 +911,8 @@ transactionHash         0xfa3250b9aebcceba276b52a8939c9036982114f3f5c07d45c08b4e
 transactionIndex        0
 type
 ```
+
+---
 
 To decrement the count via `decrement()`
 
