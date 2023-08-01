@@ -133,6 +133,13 @@ Also add as submodule in `.gitmodules`
 
 ### CLI via `forge`
 
+```
+-vv: shows the logs
+-vvv: shows the traces with logs
+-vvvv: shows the traces of the test function with logs
+-vvvvv: shows the traces of the test function & setUp function with logs
+```
+
 Here is the color code in terminal for `forge` command:
 
 ```text
