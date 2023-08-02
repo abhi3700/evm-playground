@@ -1,6 +1,6 @@
-// keccak256(bytes memory) returns (bytes32) 
-function callKeccak256() public pure returns(bytes32 result){
-    return keccak256("ABC");
+// keccak256(bytes memory) returns (bytes32)
+function callKeccak256(string memory name) public pure returns (bytes32 result) {
+    return keccak256(bytes(name));
 }
 
 /*

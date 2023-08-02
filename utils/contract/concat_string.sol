@@ -1,5 +1,11 @@
-string public hello;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.18;
 
-function sayHello(string memory user ) public {
-    hello = string(abi.encodePacked("Hello ", user));
+contract AbiEncodings {
+    string public hello;
+
+    /// Use encodePacked.
+    function sayHello(string memory user) public {
+        hello = string(abi.encodePacked("Hello ", user)); // "Hello {user}"
+    }
 }
