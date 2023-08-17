@@ -133,6 +133,21 @@ Also add as submodule in `.gitmodules`
 
 ### CLI via `forge`
 
+Use 3 ways to test in different cases:
+
+> Used short form of respective match flags.
+
+```sh
+# match test
+$ forge test --mt testCount
+# match contract
+$ forge test --mc CounterTest
+# match path
+$ forge test --mp test/Counter.t.sol
+```
+
+For debugging, use these flags:
+
 ```
 -vv: shows the logs
 -vvv: shows the traces with logs

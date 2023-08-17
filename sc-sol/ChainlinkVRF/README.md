@@ -117,6 +117,8 @@ For Sepolia testnet, details are here:
    [77239408634929244818284413030926925607624771786591790234671878624870055999441,107121686211826326389036137481345444293166266423379007228065664053677342144542]
    ```
 
+This is how, the random no.s are generated.
+
 Find all the contracts [here](https://github.com/smartcontractkit/chainlink/tree/develop/contracts/src/v0.8/vrf) for solidity v0.8+.
 
 ## Resources
