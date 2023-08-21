@@ -26,6 +26,9 @@ For Sepolia testnet, details are here:
 
 ## Getting started
 
+> NOTE: These parameters are important to change in a contract for different networks.
+> ![](../../img/chainlink-vrf-consumer-address-sepolia.png)
+
 1. Create a Consumer SC. Follow [this](../../sc-sol-foundry/src/RandomNumber.sol) example.
 2. Deploy the Consumer SC using foundry [script](../../sc-sol-foundry/scripts/RandomNumber.s.sol) example using:
 

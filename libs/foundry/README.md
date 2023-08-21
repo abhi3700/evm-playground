@@ -463,7 +463,7 @@ Here are the examples:
 Just use fork-url of mainnet using alchemy, infura, etc.
 
 ```sh
-$ forge test --fork-url <mainnet-url> --match-path test/Fork.t.sol -vvvv
+$ forge test --fork-url <mainnet-url> --mp test/Fork.t.sol -vvvv
 
 Running 1 test for test/Fork.t.sol:ForkTest
 [PASS] testDeposit() (gas: 41841)
