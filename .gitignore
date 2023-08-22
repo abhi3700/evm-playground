@@ -34,3 +34,6 @@ out/
 
 # Dotenv file
 .env
+
+# rust
+target/

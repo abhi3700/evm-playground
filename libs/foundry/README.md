@@ -460,7 +460,9 @@ Here are the examples:
 
 ### Fork
 
-Just use fork-url of mainnet using alchemy, infura, etc.
+Just use `fork-url` flag of mainnet using alchemy, infura, etc.
+
+> Here, a contract is reset to the state of the network at the start of each run. So, it remains in cache locally.
 
 ```sh
 $ forge test --fork-url <mainnet-url> --mp test/Fork.t.sol -vvvv
