@@ -13,7 +13,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv::from_path("./.env").expect("Failed in loading the file");
     let rpc_url = std::env::var("SEPOLIA_RPC_URL").expect("Please check if it's empty");
 
-    let client = Provider::<Http>::try_from(rpc_url).expect("Failed to connect w RPC");
+    let client: Provider<Http> =
+        Provider::<Http>::try_from(rpc_url).expect("Failed to connect w RPC");
     // get node info as struct
     // let node_info = provider.node_info().await?;
     // println!("Node info: {:?}", node_info); // for infura node, it's not available
