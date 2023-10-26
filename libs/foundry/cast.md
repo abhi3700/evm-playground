@@ -20,8 +20,17 @@ $ cast call 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43 "balanceOf(address)" 0x89
 #### `$ cast nonce <address> --rpc-url <rpc-url>`: Get a nonce of an address
 
 ```sh
-$ cast nonce --rpc-url $GOERLI_RPC_URL 0x8997F1E62d679Db9713d71E0C0920E93B5f7B4B5
+$ cast nonce 0x8997F1E62d679Db9713d71E0C0920E93B5f7B4B5 --rpc-url $GOERLI_RPC_URL
 ```
+
+#### `$ cast balance <address> --rpc-url <rpc-url>`: Get balance of an address
+
+```sh
+❯ cast balance $DEPLOYER_PUBLIC_KEY --rpc-url $GOERLI_RPC_URL
+666141520542606020
+```
+
+> The balance is in wei.
 
 #### `$ cast wallet new`: Generate a new keypair.
 
@@ -39,13 +48,13 @@ $ cast wallet address 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7b
 #### `$ cast code <contract-address> --rpc-url <rpc-url>`: Get runtime bytecode of a contract.
 
 ```sh
-$ cast code --rpc-url $GOERLI_RPC_URL 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43
+$ cast code 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43 --rpc-url $GOERLI_RPC_URL
 ```
 
 #### `$ cast codesize <contract-address> --rpc-url <rpc-url>`: Get runtime bytecode size of a contract.
 
 ```sh
-$ cast codesize --rpc-url $GOERLI_RPC_URL 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43
+$ cast codesize 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43 --rpc-url $GOERLI_RPC_URL
 ```
 
 #### `$ cast compute-address --nonce <nonce> <address>`: Compute the contract address from a given nonce and deployer address
@@ -65,3 +74,12 @@ Successfully found contract address in 0 seconds.
 Address: 0x5FbDfBd703aa1fB27a1a221dC4377e5d4Dc21Ad5
 Salt: 78701361982984830578193236588942944668249669402332830498138071945150086690932
 ```
+
+#### `$ cast gas-price --rpc-url <rpc-url>`: Get gas price
+
+```sh
+$ cast gas-price --rpc-url $GOERLI_RPC_URL
+21
+```
+
+> The gas price is in wei.
