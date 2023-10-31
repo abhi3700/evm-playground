@@ -1068,3 +1068,4 @@ acvault.redeem(shareAmt + 1);
 ## References
 
 - [Smart Contract Development with Foundry | Nader Dabit](https://www.youtube.com/watch?v=uelA2U9TbgM)
+- [ForGePT: ChatGPT trained with foundry](https://forgept.apoorv.xyz/)
