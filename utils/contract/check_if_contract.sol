@@ -10,4 +10,12 @@ function isContract(address account) public view returns (bool) {
     return (size > 0);
 }
 
-/// Another way to check is `account.code.length == 0` => address is not a contract.
+/// Another way to check is `account.code.length > 0` => address is a contract.
+/// NOTE: This might consume more gas
+function isContract(address account) internal view returns (bool) {
+    // This method relies on extcodesize/address.code.length, which returns 0
+    // for contracts in construction, since the code is only stored at the end
+    // of the constructor execution.
+
+    return account.code.length > 0;
+}
