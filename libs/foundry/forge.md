@@ -30,7 +30,7 @@ In order to add more dependency lib, use like this:
 forge install OpenZeppelin/openzeppelin-contracts-upgradeable
 ```
 
-> Just copy {owner/repo_name} from the actual repo url: https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable
+> Just copy {owner/repo_name} from the actual repo url: <https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable>
 
 Also add as submodule in `.gitmodules`
 
@@ -325,6 +325,15 @@ function testEmitTransferEvent() public {
 }
 ```
 
+Also, the `1`st step could have be done like this as well:
+
+```solidity
+function testEmitTransferEvent() public {
+    // Here, we are checking for emitted as well i.e. the contract itself.
+    vm.expectEmit(true, true, false, true, address(e));
+}
+```
+
 We also have the freedom to check the params independently the params & ignore the rest of the params.
 
 For detailed example, refer [this](../../utils/foundry/test/Event.t.sol) for [contract](../../utils/foundry/src/Event.sol).
@@ -444,7 +453,7 @@ uint256 x = bound(x, 1, 100);
 Just use the flag `--gas-report` for respective test functions (using `--match-test`, `---match-testatch-path`, `---match-testatch-contract`):
 
 ```console
-$ forge test ---match-testatch-path test/HelloWorld.t.sol -vvv --gas-report
+forge test ---match-testatch-path test/HelloWorld.t.sol -vvv --gas-report
 ```
 
 ![](../../img/foundry_test_gas_report.png)
@@ -600,12 +609,15 @@ console log functions (most commonly used):
 For more, refer this file: `forge-std/console.sol`
 
 - `log(string memory message)`: log a message.
+
   ```solidity
   console.log("Hello World");
   console.log("Hello ", "World");
   console.log("Hello times ", 1);
   ```
+
 - `logInt(int)`: log int value.
+
   ```solidity
   console.log(1);
   ```
@@ -776,7 +788,7 @@ Transactions saved to: broadcast/Contract.s.sol/31337/run-latest.json
 #### Deploy a contract with broadcast of the transaction
 
 ```sh
-$ forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast
+forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast
 ```
 
 #### Deploy a contract with broadcast and verification on etherscan
@@ -784,7 +796,7 @@ $ forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --pr
 This is on Sepolia testnet.
 
 ```sh
-$ forge script script/Load.s.sol:LoadScript --rpc-url $SEPOLIA_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --verify
+forge script script/Load.s.sol:LoadScript --rpc-url $SEPOLIA_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --verify
 ```
 
 By default, the verifier is etherscan. So, no need to specify it.
@@ -806,10 +818,10 @@ $ forge script script/NFT.s.sol:MyScript --chain-id 137 --rpc-url $RPC_URL \
 This is on Subspace Nova testnet.
 
 ```sh
-$ forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --verify --verifier blockscout --verifier-url $VERIFIER_URL
+forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --verify --verifier blockscout --verifier-url $VERIFIER_URL
 ```
 
-> Please add /api? to the end of explorer url like this: "https://nova.subspace.network/api?". This is without any api key. Here, the block explorer is: "https://nova.subspace.network/".
+> Please add /api? to the end of explorer url like this: "<https://nova.subspace.network/api>?". This is without any api key. Here, the block explorer is: "<https://nova.subspace.network/>".
 
 ### create
 
