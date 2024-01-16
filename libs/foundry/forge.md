@@ -582,15 +582,19 @@ solmate/=lib/solmate/src/
 
 ## Debuggging
 
-In order to use `console.log()`, import this into your solidity file (contract, test, deploy scripts):
-
-> Normally, `logInt()`, `logUint()` doesn't support 256 bit in `console.sol`, instead import `console.sol` for foundry only project. And for hardhat + foundry projects, use `forge-std/console.sol`.
+In order to use `console2.log()`, import this into your solidity file (contract, test, deploy scripts):
 
 ```solidity
+// console
 import "forge-std/console.sol";
+
+// console2
+import {console2} from "forge-std/Test.sol";
 ```
 
-Then, we get to test the file using `$ forge test ---match-testatch-path test/Counter.t.sol -vv`:
+> Normally, `logInt()`, `logUint()` doesn't support 256 bit in `console.sol`, instead import `console2.sol` for foundry only project. And for hardhat + foundry projects, use `forge-std/console.sol`.
+
+Then, we get to test the file using `$ forge test ---mp test/Counter.t.sol -vv`:
 
 ![](../../img/foundry_debugging-1.png)
 
@@ -604,22 +608,34 @@ Before deployment, ensure that all the console logs related code are removed fro
 
 ---
 
-console log functions (most commonly used):
+**console log functions (most commonly used)**:
 
 For more, refer this file: `forge-std/console.sol`
 
 - `log(string memory message)`: log a message.
 
   ```solidity
-  console.log("Hello World");
-  console.log("Hello ", "World");
-  console.log("Hello times ", 1);
+  console2.log("Hello World");
+  console2.log("Hello ", "World");
+  console2.log("Hello times ", 1);
   ```
 
 - `logInt(int)`: log int value.
 
   ```solidity
-  console.log(1);
+  console2.log(1);
+  ```
+
+- To log enum variants, use like this:
+
+  ```solidity
+  enum MyEnum {
+    A,
+    B,
+    C
+  }
+
+  console2.log(uint256(MyEnum.A));
   ```
 
 ## Deployment
