@@ -365,6 +365,22 @@ Another function is `hoax(to, value)`. This sets the balance & also sets the cal
 
 In Foundry, if we need to check for a message signer is the expected signer or not. We can follow this [example](../../sc-sol-foundry/test/Signature.t.sol).
 
+---
+
+**How to pack the r, s, v values into a single `bytes` signature value?**
+
+Here, the signature is supposed to be parsed into a contract function.
+
+```solidity
+bytes32 message = sendersTreasury.constructMessageOf(id);
+// construct the signature by alice
+(uint8 v, bytes32 r, bytes32 s) = vm.sign(aliceSKey, message);
+
+sendersTreasury.signPayReq{value: 10}(id, abi.encodePacked(r, s, v));
+```
+
+> NOTE: Just to remember, please observe that the order is in alphabetical order i.e. `r, s, v`.
+
 ### Gasless Token transfer
 
 Here are the examples:
