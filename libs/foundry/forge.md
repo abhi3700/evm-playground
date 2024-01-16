@@ -170,6 +170,16 @@ Run a particular test file like `$ forge test ---match-path test/HelloWorld.t.so
 
 ![](../../img/foundry_test_1_file_out_of_all.png)
 
+### Summary & Detailed
+
+Use `--summary` & `--detailed` flags accordingly to get the summary & detailed report of the test functions.
+
+Just summary looks like this:
+![](../../img/foundry_test_summary.png)
+
+Detailed summary looks like this:
+![](../../img/foundry_test_summary_detailed.png)
+
 ### Declare & Deploy contracts inside test
 
 Please refer [this](../../utils/foundry/test/define_sc_deploy.md).
