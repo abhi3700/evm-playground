@@ -876,6 +876,29 @@ $ forge create --rpc-url <RPC_URL> --private-key <PRIVATE_KEY_w_0x> src/Counter.
 $ forge create --rpc-url <RPC_URL> --private-key <PRIVATE_KEY_w_0x> src/MyToken.sol:MyToken --constructor-args "DAI" "DAI" 18
 ```
 
+## Verify contract
+
+This is to verify contract on the block explorer like etherscan, blockscout, etc.
+
+### blockscout
+
+check verification status of a contract on blockscout:
+
+```sh
+# forge verify-check <GUID>
+forge verify-check 7a363ef616bdd60cf3e6b760f0a5672b77c5d9f265a6c5c2
+```
+
+> Here, **GUID** is the unique id of the contract when verifying on blockscout. Basically, each time when we verify a contract on blockscout, it generates a unique id for that contract.
+
+---
+
+verify contract if you think the previous verification failed:
+
+```sh
+forge verify-contract 0x7A363EF616bdd60cF3E6B760F0a5672b77c5d9f2 src/SendersTreasury.sol:SendersTreasury --verifier blockscout --verifier-url $VERIFIER_URL
+```
+
 ## Interaction with Contract
 
 Use `cast` tool to interact with
