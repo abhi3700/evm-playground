@@ -38,6 +38,28 @@ cast nonce 0x8997F1E62d679Db9713d71E0C0920E93B5f7B4B5 --rpc-url $GOERLI_RPC_URL
 cast wallet new
 ```
 
+#### `$ cast wallet vanity --starts-with ab11`: Generate a new keypair
+
+```sh
+cast wallet vanity --starts-with ab11
+
+Starting to generate vanity address...
+Successfully found vanity address in 0 seconds.
+Address: 0xAb11D47D3e41233a835bA845A4AdEdFabAB1742F
+Private Key: 0x4ab83d67eba63b35a1c7a6efaa5a396a016c2d5e3d589edb53ca8e279a98fb03
+```
+
+#### `$ cast wallet vanity --ends-with <HEX>`: Generate a new keypair
+
+```sh
+cast wallet vanity --ends-with abad
+
+Starting to generate vanity address...
+Successfully found vanity address in 0 seconds.
+Address: 0x1633217c6751929f508Ec83a498822662ee9abad
+Private Key: 0x59124c1f79877395b09512297269707cda811b49195403f34bb719a34016c56c
+```
+
 #### `$ cast wallet address <private-key>`: Get address from a private key
 
 ```sh
