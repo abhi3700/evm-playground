@@ -9,9 +9,7 @@ Contracts on Ethereum & EVM compatible Blockchains [also helpful for EOSIO Devel
 
 ## Installation
 
-### Editor
-
-#### Visual Studio Code [Recommended]
+### Visual Studio Code
 
 - [evm-boilerplate](https://github.com/abhi3700/evm_boilerplate)
 - [formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) [YouTube](https://www.youtube.com/watch?v=PX6xb8sRlFc)
@@ -86,6 +84,8 @@ contract Greeter {
     }
 }
 ```
+
+### [Atlas IDE](https://app.atlaszk.com/ide)
 
 ### Frameworks
 
@@ -825,7 +825,7 @@ contract A is B, C, D {
 - Using `foundry` tool, we can generate function selector for a function.
 
 ```console
-$ cast sig "transfer(address,uint256)"
+cast sig "transfer(address,uint256)"
 ```
 
 - 2 functions having same code logic i.e. same bytecode may end up having different gas cost. This is because of their position/index in the contract. The function with lower index will have lower gas cost. [Source](https://ethereum.stackexchange.com/questions/100/why-do-functions-with-the-same-code-have-different-gas-costs). This is the way the functions are stored in the contract. The function with lower index will be stored first and the function with higher index will be stored later. So, the function with lower index will have lower gas cost.
@@ -1506,7 +1506,7 @@ contract DataLocation {
 
 ```
 bool isReady;
-uint a;			// uint alias for uint256
+uint a;   // uint alias for uint256
 address recipient;
 bytes32 data;
 ```
@@ -1540,7 +1540,7 @@ enum {
 
 - Main global variables: `block`, `msg`, `tx`
 - Instead of `string`, `bytes32` data type is used for security reasons & also to save memory. This is because, in ASCII encoding, each character needs 8 bits, whereas in Unicode encoding, each character needs 16 bits
-  - E.g. “Hello World”, ASCII size = ( 11 _ 8)/8 = 11 Bytes & Unicode size = ( 11 _ 16)/8 = 22 Bytes.
+  - E.g. “Hello World”, ASCII size = ( 11 _8)/8 = 11 Bytes & Unicode size = ( 11_ 16)/8 = 22 Bytes.
   - Then there are language specific things that get added up to these. For example in C, we will need an ‘\0’ at end of each string(char array), so we will need an extra byte.
   - Unicode is widely used these days, as it supports multiple languages and emotions to be represented.
 - Which one to use `external` or `public`?
@@ -1797,7 +1797,7 @@ unchecked {
   IERC20(USDCToken).transferFrom(msg.sender, address(this), _amount);
   ```
 
-#### EVM Storage:
+#### EVM Storage
 
 - [Refer](https://medium.com/geekculture/hitchhikers-guide-to-the-evm-56a3d90212ac)
 - [Images](./img/evm_storage/)
@@ -2057,8 +2057,8 @@ require(success, "Transfer failed.");
 - `0` is replaced by `address(0)` like this:
 
 ```
-require(_counters[account] != Counter(0));			// as per v0.5.17
-require(_counters[account] != Counter(address(0)));			// as per v0.8.6
+require(_counters[account] != Counter(0));   // as per v0.5.17
+require(_counters[account] != Counter(address(0)));   // as per v0.8.6
 ```
 
 - `callcode` is replaced with `delegatecall`. DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value. If Alice invokes Bob who does DELEGATECALL to Charlie, the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob). [Reason](https://ethereum.stackexchange.com/a/3672/76168). `callcode` was until Homestead.
@@ -2372,13 +2372,13 @@ After:
 
 ```
 
-#### 9. reason: 'cannot estimate gas; transaction may fail or may require manual gas limit' code: 'UNPREDICTABLE_GAS_LIMIT',
+#### 9. reason: 'cannot estimate gas; transaction may fail or may require manual gas limit' code: 'UNPREDICTABLE_GAS_LIMIT'
 
 - _Cause_: There is some kind of ERC20 token being transferred to the contract using a function e.g. `allocatePC` for SC: `crowdfunding-sc`. So, the caller doesn't have enough ERC20 token. Hence, it is throwing error. This happens in proxy based architecture including architecture like diamond standard, openzeppelin proxy pattern.
 - _Solution_: Mint PC to deployer & then interact with the contract's function - `allocatePC`
   > NOTE: `allocatePC` function accepts ERC20 token & then set some activity based on requirement.
 
-#### 10. Error HH9: Error while loading Hardhat's configuration. You probably tried to import the "hardhat" module from your config or a file imported from it. This is not possible, as Hardhat can't be initialized while its config is being defined.
+#### 10. Error HH9: Error while loading Hardhat's configuration. You probably tried to import the "hardhat" module from your config or a file imported from it. This is not possible, as Hardhat can't be initialized while its config is being defined
 
 - _Cause_: use of `require("hardhat")` inside `hardhat.config.*` directly or indirectly.
 - _Solution_: It could be that this line is being used in deployment scripts in order to read hardhat raw values. So, it's beter to comment the line calling `require("hardhat")` indirectly into config file. Although we can deploy scripts otherwise.
