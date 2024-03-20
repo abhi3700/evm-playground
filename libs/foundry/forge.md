@@ -34,6 +34,11 @@ forge install OpenZeppelin/openzeppelin-contracts-upgradeable
 
 Also add as submodule in `.gitmodules`
 
+## Add hardhat to Foundry or viceversa
+
+- [Adding Hardhat to a Foundry project](https://book.getfoundry.sh/config/hardhat#adding-hardhat-to-a-foundry-project)
+- [Adding Foundry to a Hardhat project](https://book.getfoundry.sh/config/hardhat#adding-foundry-to-a-hardhat-project)
+
 ## Testing
 
 ### CLI via `forge`
