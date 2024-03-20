@@ -516,6 +516,8 @@ Then, build using `$ forge build`.
 
 ## Remapping, Lib, Dependencies, Imports
 
+### Lib installed via `forge`
+
 Import Solidity libraries like **Solmate** and **Openzeppelin** into your Foundry project.
 
 Error when installing lib using `$ forge install` because there were untracked/modified files in the project. So, ensure we have a clean slate i.e. `$ git status` should be clean:
@@ -567,12 +569,15 @@ In order to fix this, we can reinstall the `solmate` lib using `$ forge install 
 
 And then, rebuild using `$ forge build`.
 
----
+At the end, we can see the cumulative dependencies in the project using `$ forge remappings`.
 
-Next, we want to import a file from Openzeppelin contracts repo. So, we can install that using `$ npm i @openzeppelin/contracts`:
+### Lib installed via `npm`
+
+Here, given we installed the `@openzeppelin/contracts` library via `npm` using `$ npm i @openzeppelin/contracts` command, we can import it into our Foundry project contracts (`src/*.sol`) properly.
 ![](../../img/foundry_remapping_openzeppelin-1.png)
 
-And then, we can import `Ownable.sol` file from the Openzeppelin contracts like this into our `Imports.sol` contract:
+Now, let's import `Ownable.sol` file from the Openzeppelin contracts like this into our `Imports.sol` contract:
+> Otherwise, we would have to import by path i.e. `../node_modules/@openzeppelin/contracts/access/Ownable.sol`
 
 ```solidity
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -580,7 +585,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract TestOz is Ownable {}
 ```
 
-And then create a `remappings.txt` file & add this line:
+In order to achieve this, create a `remappings.txt` file & add this line:
 
 ```txt
 @openzeppelin/=node_modules/@openzeppelin/
@@ -598,10 +603,13 @@ forge-std/=lib/forge-std/src/
 solmate/=lib/solmate/src/
 ```
 
+| NOTE | No matter you install via foundry `forge`/hardhat (`npm`), all what matters is the remappings, if you don't prefer to literally import the file(s) by path. |
+|--|--|
+
 ## Formatting
 
 - M-1: Format your Solidity code using `$ forge format`.
-- M-2: In my editor (VSC), I have the solidity extensions installed. So, my code gets auto-formatted on save.
+- M-2: In my editor (VSC), I have the solidity extensions installed. So, my code gets auto-formatted on save <kbd>cmd+s</kbd>.
   - For this, all the used extensions can be synced as & when I login into my VSC account via Github.
 
 > To save the code without formatting, use `cmd+k` + `cmd+s` (on Mac).
