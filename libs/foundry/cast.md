@@ -2,6 +2,9 @@
 
 ## Commands
 
+| NOTE | Wherever, you found `$...` in the command, you need to run `$ source .env` first i.e. import your env vars.
+|--|--|
+
 #### `$ cast send <contract> <method-sig> <args> --rpc-url <rpc-url> --private-key <private-key-w-0x>`: Send a transaction to a contract
 
 ```sh
@@ -144,3 +147,193 @@ $ cast from-wei 100000000000000000
 $ cast to-wei 0.100000000000000000
 100000000000000000
 ```
+
+#### `cast chain-id --rpc-url <RPC_URL>`: Get chain id
+
+```sh
+$ cast chain-id --rpc-url $SEPOLIA_RPC_URL
+11155111
+```
+
+#### `cast --to-bytes <VALUE_IN_ANY_BYTES>`: Convert to bytes32 using zero padding
+
+```sh
+$ cast to-bytes32 0xc81dcb9afa23cb8483f31b0252a00c93cfc5ac9e                                                                ⏎
+0xc81dcb9afa23cb8483f31b0252a00c93cfc5ac9e000000000000000000000000
+```
+
+#### `cast format-bytes32-string <STRING_VALUE>`: Convert string to bytes32
+
+```sh
+$ cast format-bytes32-string 'Abhijit is a good boy.'
+0x416268696a6974206973206120676f6f6420626f792e00000000000000000000
+```
+
+> No matter you use single/double quotes.
+
+#### `cast client --rpc-url <RPC_URL>`: Get client version
+
+```sh
+$ cast client --rpc-url $SEPOLIA_RPC_URL
+Geth/v1.13.14-omnibus-9653f48e/linux-amd64/go1.21.6
+```
+
+This is the client version of the node connected to.
+
+#### `cast receipt <TRANSACTION_HASH> logs --rpc-url <RPC_URL>`: Get the transaction receipt for a transaction
+
+This is a tx sent for contract deployment with 2 constructor params:
+
+<details><summary>Details:</summary>
+
+```sh
+$ cast receipt 0xc9399c465bbaa846a11cfa08bb8a1d282e937d255d1748ef66442baf32201fca logs --rpc-url $SEPOLIA_RPC_URL 
+[
+
+    address: 0xC81dcb9AfA23Cb8483f31b0252a00C93cfc5aC9e
+    blockHash: 0xac6a8fd10aa73ee6a158a563613d3bded6bff7c30d30f9bbe311ee42c3e17193
+    blockNumber: 5525138
+    data: 0x
+    logIndex: 50
+    removed: false
+    topics: [
+        0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
+        0x0000000000000000000000000000000000000000000000000000000000000000
+        0x0000000000000000000000000370d871f1d4b256e753120221f3be87a40bd246
+    ]
+    transactionHash: 0xc9399c465bbaa846a11cfa08bb8a1d282e937d255d1748ef66442baf32201fca
+    transactionIndex: 71
+
+    address: 0x6EDCE65403992e310A62460808c4b910D972f10f
+    blockHash: 0xac6a8fd10aa73ee6a158a563613d3bded6bff7c30d30f9bbe311ee42c3e17193
+    blockNumber: 5525138
+    data: 0x000000000000000000000000c81dcb9afa23cb8483f31b0252a00c93cfc5ac9e0000000000000000000000000370d871f1d4b256e753120221f3be87a40bd246
+    logIndex: 51
+    removed: false
+    topics: [
+        0x6ee10e9ed4d6ce9742703a498707862f4b00f1396a87195eb93267b3d7983981
+    ]
+    transactionHash: 0xc9399c465bbaa846a11cfa08bb8a1d282e937d255d1748ef66442baf32201fca
+    transactionIndex: 71
+]
+```
+
+Here, there are 2 actions/logs in this tx, so let's decode the topics using `$ cast 4byte`
+
+Now, let's take the 1st log in the tx.
+
+> Only considered data & topics.
+
+```
+data: 0x
+topics: [
+    0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0
+    0x0000000000000000000000000000000000000000000000000000000000000000
+    0x0000000000000000000000000370d871f1d4b256e753120221f3be87a40bd246
+]
+```
+
+- 1st topic contains function selector (0x..):
+
+```sh
+$ cast 4byte 0x8be0079c
+OwnershipTransferred(address,address)
+```
+
+To get the 1st event log, we need to take `topics`+`data` i.e. 0x`4 bytes of 1st topic` + `2nd topic` + `3rd topic` + `data`
+
+```sh
+cast 4byte-decode 0x8be0079c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000370d871f1d4b256e753120221f3be87a40bd2460000000000000000000000000000000000000000000000000000000000000000
+
+1) "OwnershipTransferred(address,address)"
+0x0000000000000000000000000000000000000000
+0x0370D871f1D4B256E753120221F3Be87A40bd246
+```
+
+---
+
+Now, let's take the 2nd log in the tx.
+
+```sh
+data: 0x000000000000000000000000c81dcb9afa23cb8483f31b0252a00c93cfc5ac9e0000000000000000000000000370d871f1d4b256e753120221f3be87a40bd246
+topics: [
+    0x6ee10e9ed4d6ce9742703a498707862f4b00f1396a87195eb93267b3d7983981
+]
+```
+
+let's directly do `4byte-decode`:
+
+```sh
+cast 4byte-decode 0x6ee10e9e000000000000000000000000c81dcb9afa23cb8483f31b0252a00c93cfc5ac9e0000000000000000000000000370d871f1d4b256e753120221f3be87a40bd246
+```
+
+OR
+
+consider the 1st topic as event signature & decode:
+
+```sh
+$ cast 4byte-event 0x6ee10e9ed4d6ce9742703a498707862f4b00f1396a87195eb93267b3d7983981
+DelegateSet(address,address)
+```
+
+It should be like:
+
+```sh
+2) DelegateSet (address sender, address delegate)
+0xc81dcb9afa23cb8483f31b0252a00c93cfc5ac9e
+0x0370d871f1d4b256e753120221f3be87a40bd246
+```
+
+You can verify these 2 event logs from [url](https://sepolia.etherscan.io/tx/0xc9399c465bbaa846a11cfa08bb8a1d282e937d255d1748ef66442baf32201fca#eventlog)
+
+</details>
+
+---
+
+This is a tx sent for calling a function with signature: `send(uint32,string,bytes)`:
+
+<details><summary>View on terminal:</summary>
+
+```sh
+$ cast receipt 0xbd40578f79efda941d381fa33e70261b960af1b8c9e5a9b673e44a5a7a82c7be logs --rpc-url $SEPOLIA_RPC_URL 
+[
+
+    address: 0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE
+    blockHash: 0x916bd1d22786d43f055fa2f54f2736383f0e1a6a1431edf4e07502fa55528167
+    blockNumber: 5530538
+    data: 0x000000000000000000000000718b92b5cb0a5552039b593faf724d182a881eda0000000000000000000000000000000000000000000000000000381c8a97d749
+    logIndex: 48
+    removed: false
+    topics: [
+        0x61ed099e74a97a1d7f8bb0952a88ca8b7b8ebd00c126ea04671f92a81213318a
+    ]
+    transactionHash: 0xbd40578f79efda941d381fa33e70261b960af1b8c9e5a9b673e44a5a7a82c7be
+    transactionIndex: 55
+
+    address: 0xcc1ae8Cf5D3904Cef3360A9532B477529b177cCE
+    blockHash: 0x916bd1d22786d43f055fa2f54f2736383f0e1a6a1431edf4e07502fa55528167
+    blockNumber: 5530538
+    data: 0x000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000010000000000000000000000008eebf8b423b73bfca51a1db4b7354aa0bfca919300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000002d8b300d357
+    logIndex: 49
+    removed: false
+    topics: [
+        0x07ea52d82345d6e838192107d8fd7123d9c2ec8e916cd0aad13fd2b60db24644
+    ]
+    transactionHash: 0xbd40578f79efda941d381fa33e70261b960af1b8c9e5a9b673e44a5a7a82c7be
+    transactionIndex: 55
+
+    address: 0x6EDCE65403992e310A62460808c4b910D972f10f
+    blockHash: 0x916bd1d22786d43f055fa2f54f2736383f0e1a6a1431edf4e07502fa55528167
+    blockNumber: 5530538
+    data: 0x00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000160000000000000000000000000cc1ae8cf5d3904cef3360a9532b477529b177cce00000000000000000000000000000000000000000000000000000000000000d101000000000000000100009ce1000000000000000000000000c81dcb9afa23cb8483f31b0252a00c93cfc5ac9e00009cad6edce65403992e310a62460808c4b910d972f10f0000000000000000000000009cc7135c113d207a5f0816e65335198eb5a1d8cfc440a5177d6012562f76850200000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000015416268696a6974206973206120676f6f6420626f790000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001600030100110100000000000000000000000000030d4000000000000000000000
+    logIndex: 50
+    removed: false
+    topics: [
+        0x1ab700d4ced0c005b164c0f789fd09fcbb0156d4c2041b8a3bfbcd961cd1567f
+    ]
+    transactionHash: 0xbd40578f79efda941d381fa33e70261b960af1b8c9e5a9b673e44a5a7a82c7be
+    transactionIndex: 55
+]
+```
+
+</details>
