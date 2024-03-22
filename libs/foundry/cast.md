@@ -337,3 +337,40 @@ $ cast receipt 0xbd40578f79efda941d381fa33e70261b960af1b8c9e5a9b673e44a5a7a82c7b
 ```
 
 </details>
+
+#### `cast selectors <CONTRACT_BYTECODE>`: Get selectors from a contract bytecode
+
+```sh
+cast selectors $(cast code 0xc81dcb9afa23cb8483f31b0252a00c93cfc5ac9e --rpc-url $SEPOLIA_RPC_URL) 
+
+0x82413eac  bytes,address
+0x8da5cb5b
+0xbb0b6a53  uint32
+0xca5eb5e1  address
+0xe0539e58  uint32,bytes,bytes
+0xf2fde38b  address
+0xf77e5dd3  uint32,bytes,bytes,bool
+0xff7bd03d  uint32,uint256
+0x5e280f11
+0x715018a6
+0x73d4a13a
+0x7d25a05e  uint32,uint256
+0x13137d65  uint256,bytes,address,bytes
+0x17442b70
+0x3400288b  uint32,uint256
+```
+
+Now, if you want to get the function signature from the selector, use `$ cast 4bytes <SELECTOR>`.
+
+So, for instance:
+
+```sh
+$ cast 4byte 0x8da5cb5b
+owner()
+
+$ cast 4byte 0x8da5cb5b
+peers(uint32)
+
+$ cast 4byte 0xff7bd03d
+allowInitializePath((uint32,bytes32,uint64))
+```
