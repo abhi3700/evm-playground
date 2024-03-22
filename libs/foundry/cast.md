@@ -340,6 +340,8 @@ $ cast receipt 0xbd40578f79efda941d381fa33e70261b960af1b8c9e5a9b673e44a5a7a82c7b
 
 #### `cast selectors <CONTRACT_BYTECODE>`: Get selectors from a contract bytecode
 
+[Tx url](https://sepolia.etherscan.io/tx/0xc9399c465bbaa846a11cfa08bb8a1d282e937d255d1748ef66442baf32201fca).
+
 ```sh
 cast selectors $(cast code 0xc81dcb9afa23cb8483f31b0252a00c93cfc5ac9e --rpc-url $SEPOLIA_RPC_URL) 
 
@@ -374,3 +376,13 @@ peers(uint32)
 $ cast 4byte 0xff7bd03d
 allowInitializePath((uint32,bytes32,uint64))
 ```
+
+#### `cast abi-decode --input <SIGNATURE> <DATA>`: Decode data with ABI signature
+
+```sh
+$ cast abi-decode --input "setPeer(uint32,bytes32)" 0x0000000000000000000000000000000000000000000000000000000000009ce1c81dcb9afa23cb8483f31b0252a00c93cfc5ac9e000000000000000000000000 
+40161 [4.016e4]
+0xc81dcb9afa23cb8483f31b0252a00c93cfc5ac9e000000000000000000000000
+```
+
+[Tx url](https://mumbai.polygonscan.com/tx/0xddbe10afe2fbeee4cd70efdbdc26a5f92d1d44827c1a65832aa5557b39e3c615).
