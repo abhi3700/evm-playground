@@ -12,6 +12,32 @@ source .env
 cast send 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43 "transfer(address,uint)" 0x8997F1E62d679Db9713d71E0C0920E93B5f7B4B5 1000000 --private-key $DEPLOYER_PRIVATE_KEY --rpc-url $GOERLI_RPC_URL
 ```
 
+Another example where the function is like this:
+
+```solidity
+
+struct NewPrice{
+    address asset;
+    uint256 timestamp;
+    uint256 price;
+}
+
+function updatePrices(NewPrice[] memory _array) public onlyRole(FEEDER_ROLE) {
+    for(uint256 i=0; i<_array.length; i++){
+        address asset = _array[i].asset;
+        uint256 timestamp = _array[i].timestamp;
+        uint256 price = _array[i].price;
+        putPrice(asset, timestamp, price);
+    }
+}
+```
+
+Now, we can use `cast` via:
+
+```sh
+cast send $CONTRACT_ADDRESS "updatePrices((address,uint256,uint256)[])" "[(ADDR,100,200),(ADDR,300,400)]" --rpc-url $SEPOLIA_RPC_URL --private-key=DEPLOYER_PRIVATE_KEY
+```
+
 > Before any command, you need to source `.env` file to set environment variables, if any of them is required.
 
 #### `$ cast call <contract> <method-sig> <args> --rpc-url <rpc-url>`: Call a contract view method
