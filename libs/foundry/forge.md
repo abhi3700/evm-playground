@@ -19,6 +19,7 @@ forge init --template https://github.com/foundry-rs/forge-template <project-name
 ## Common Commands
 
 - `$ forge install` to install the libs used in `foundry.toml`.
+- `$ forge remove` to install the libs used in `foundry.toml`.
 - `$ forge build` to compile the contracts
 - `$ forge test .... -vvvv` to look into the traces.
 
@@ -560,7 +561,12 @@ In order to see what dependencies (as libs) are being used in the project, use `
   - `$ forge update lib/solmate`: update the `solmate` lib.
   - `$ forge update lib/forge-std`: update the `forge-std` lib.
   - `ds-test` gets updated as soon as the `lib/forge-std` gets updated.
-- `$ forge remove solmate`: remove the `solmate` lib.
+- `$ forge remove GITHUB_ACCOUNT/REPO_NAME`: remove the `solmate` lib.
+
+  ```sh
+  forge remove OpenZeppelin/openzeppelin-contracts/
+  forge remove transmissions11/solmate
+  ```
 
 ---
 
