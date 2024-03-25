@@ -530,6 +530,15 @@ Error when installing lib using `$ forge install` because there were untracked/m
 
 ![](../../img/foundry_remapping_error.png)
 
+Otherwise, try with `--no-commit` flag:
+
+```sh
+forge install GIT_ACCOUNT/REPO --no-commit
+```
+
+This won't commit the required files.
+> Basically, inherently it does `$ git submodule add ...` & then `git add ...` & then `git commit -m "..."` which is wrapped inside `forge install..`.
+
 ---
 
 Success when the `git status` is clean:
