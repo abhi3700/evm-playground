@@ -4,68 +4,32 @@ A NEW SC language for EVM Blockchains.
 
 ## About
 
-## Installation
+## Install
 
-### Build from Source
-
-> Although this method is very naive, so it might throw error during the `cargo build ...`. So, download the binary instead ([shown](https://github.com/abhi3700/evm_playground/blob/main/fe/README.md#download-binary-recommended) below).
-
-1. Create `fe` compiler
-
-```console
-❯ git clone https://github.com/ethereum/fe.git
-❯ cd fe
-❯ cargo build
-❯ cargo build --features solc-backend
+```sh
+brew install fe-lang/tap/fe
 ```
 
-Now, the `fe` compiler is found at this location '`fe/target/debug/`'
+```sh
+$ fe
+fe 0.26.0
+The Fe Developers <snakecharmers@ethereum.org>
+An implementation of the Fe smart contract language
 
-> `cargo build` gives `fe` binary which creates ABI file.
-> `cargo build --features solc-backend` gives `fe` binary which creates both ABI (`.json`) & binary (`.bin`) files.
+USAGE:
+    fe <SUBCOMMAND>
 
-> For more details, follow [Build doc](https://github.com/ethereum/fe/blob/master/docs/src/development/build.md)
+OPTIONS:
+    -h, --help       Print help information
+    -V, --version    Print version information
 
-Now, add into `.zprofile` file via `❯ code ~/.zprofile` (open using VSCode).
-
-```bash
-# Fe compiler for EVM SC
-alias fe="~/F/coding/github_repos/fe/target/debug/fe"
-```
-
-```bash
-❯ source ~/.zprofile
-```
-
-Check `fe` is installed:
-
-```bash
-❯ fe --version                                                                ⏎
-fe 0.19.1-alpha
-```
-
-### Download Binary [RECOMMENDED]
-
-Download the binary `fe_mac` from [here](https://github.com/ethereum/fe/releases) into home directory i.e. `~`.
-
-And then change the permission for execution of the file.
-
-Now, add into `.zprofile` file via `❯ code ~/.zprofile` (open using VSCode).
-
-```bash
-# Fe compiler for EVM SC
-alias fe="~/fe_mac"
-```
-
-```bash
-❯ source ~/.zprofile
-```
-
-Check `fe` is installed:
-
-```bash
-❯ fe --version                                                                ⏎
-fe 0.19.1-alpha
+SUBCOMMANDS:
+    build     Build the current project
+    check     Analyze the current project and report errors, but don't build artifacts
+    help      Print this message or the help of the given subcommand(s)
+    new       Create new fe project
+    test      Execute tests in the current project
+    verify    Verify any onchain contract against local available source code.
 ```
 
 ## Quickstart
