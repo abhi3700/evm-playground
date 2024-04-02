@@ -813,6 +813,8 @@ Transactions saved to: broadcast/Contract.s.sol/31337/run-latest.json
 
 Run this to broadcast the transaction
 
+> Before sending a tx, it's always better to check its gas estimate.
+
 ```console
 ❯ forge script script/Contract.s.sol:ContractScript --fork-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
 [⠢] Compiling...
