@@ -890,7 +890,7 @@ $ forge script script/NFT.s.sol:MyScript --chain-id 137 --rpc-url $RPC_URL \
 This is on Subspace Nova testnet.
 
 ```sh
-forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --verify --verifier blockscout --verifier-url $VERIFIER_URL
+forge script script/Load.s.sol:LoadScript --rpc-url $SUBSPACE_EVM_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --verify --verifier blockscout --verifier-url $NOVA_VERIFIER_URL
 ```
 
 > Please add /api? to the end of explorer url like this: "<https://nova.subspace.network/api>?". This is without any api key. Here, the block explorer is: "<https://nova.subspace.network/>".
@@ -906,27 +906,62 @@ $ forge create --rpc-url <RPC_URL> --private-key <PRIVATE_KEY_w_0x> src/Counter.
 $ forge create --rpc-url <RPC_URL> --private-key <PRIVATE_KEY_w_0x> src/MyToken.sol:MyToken --constructor-args "DAI" "DAI" 18
 ```
 
-## Verify contract
+## Verification
 
-This is to verify contract on the block explorer like etherscan, blockscout, etc.
+This is to verify contract on the block explorer like **etherscan**, **blockscout**, etc.
+
+### Etherscan
+
+#### Verify check
+
+```sh
+# forge verify-check <GUID> --verifier blockscout --verifier-url <VERIFIER_URL>
+forge verify-check 7a363ef616bdd60cf3e6b760f0a5672b77c5d9f265a6c5c2 --verifier etherscan --verifier-url $SEPOLIA_VERIFIER_URL
+
+# Or, comprehensive
+forge verify-check 7a363ef616bdd60cf3e6b760f0a5672b77c5d9f265a6c5c2 -verifier etherscan --verifier-url $SEPOLIA_VERIFIER_URL --chain <CHAIN_ID> --etherscan-api-key <ETHERSCAN_API_KEY>
+```
+
+`ETHERSCAN_API_KEY` is mostly same for all networks. But for networks like Polygon scan, it is different.
+
+#### Verify contract
+
+```sh
+# forge verify-contract CONTRACT_ADDRESS CONTRACT_PATH:CONTRACT_NAME --verifier VERIFIER_NAME --verifier-url VERIFIER_URL
+forge verify-contract 0x7A363EF616bdd60cF3E6B760F0a5672b77c5d9f2 src/SendersTreasury.sol:SendersTreasury --verifier etherscan --verifier-url $NOVA_VERIFIER_URL
+
+forge verify-contract 0x7A363EF616bdd60cF3E6B760F0a5672b77c5d9f2 src/SendersTreasury.sol:SendersTreasury --verifier etherscan --verifier-url $NOVA_VERIFIER_URL --chain $CHAIN_ID
+```
 
 ### blockscout
+
+#### Verify check
 
 check verification status of a contract on blockscout:
 
 ```sh
-# forge verify-check <GUID>
-forge verify-check 7a363ef616bdd60cf3e6b760f0a5672b77c5d9f265a6c5c2
+# forge verify-check <GUID> --verifier blockscout --verifier-url <VERIFIER_URL>
+forge verify-check 7a363ef616bdd60cf3e6b760f0a5672b77c5d9f265a6c5c2 --verifier blockscout --verifier-url $SEPOLIA_VERIFIER_URL
+
+# Or, comprehensive
+forge verify-check 7a363ef616bdd60cf3e6b760f0a5672b77c5d9f265a6c5c2 --verifier blockscout --verifier-url $SEPOLIA_VERIFIER_URL --chain <CHAIN_ID>
 ```
 
-> Here, **GUID** is the unique id of the contract when verifying on blockscout. Basically, each time when we verify a contract on blockscout, it generates a unique id for that contract.
+> Here, **GUID** is the unique id of the contract when verifying on blockscout. Basically, each time when we verify a contract on blockscout, it generates a unique id for that contract. Other args
 
----
+`VERIFIER_URL` is different for different chains:
+
+```sh
+Subspace Nova: https://nova.subspace.network/api?
+ETH Sepolia: https://eth-sepolia.blockscout.com/api?
+```
+
+#### Verify contract
 
 verify contract if you think the previous verification failed:
 
 ```sh
-forge verify-contract 0x7A363EF616bdd60cF3E6B760F0a5672b77c5d9f2 src/SendersTreasury.sol:SendersTreasury --verifier blockscout --verifier-url $VERIFIER_URL
+forge verify-contract 0x7A363EF616bdd60cF3E6B760F0a5672b77c5d9f2 src/SendersTreasury.sol:SendersTreasury --verifier blockscout --verifier-url $NOVA_VERIFIER_URL
 ```
 
 ## Interaction with Contract
