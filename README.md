@@ -2209,7 +2209,13 @@ List of Warnings, Errors in Contract
   - Using `ethers-ts`:
 
 ```ts
-
+const tx = await wTsscLzNova
+    .connect(signer1)
+    .setPeer(epId2, wTsscLzSepolia, { gasLimit: 8000000 });
+const receipt = await tx.wait();
+console.log(
+    `tx hash: \${tx.hash} in block #\${receipt.blockNumber}`
+);
 ```
 
 - Using `foundry`:
