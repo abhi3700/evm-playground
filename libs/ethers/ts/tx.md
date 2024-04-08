@@ -32,12 +32,13 @@ In real, it looks like this:
 The code for this:
 
 ```ts
-const rawTx = await srcToken
-    .connect(srcSigner)
-    .send(sendParams, messagingFee, srcSigner.address, { value: messagingFee.nativeFee })
+// transfer 0.1 DONUT token
+const rawTx = await token
+    .connect(alice)
+    .deposit(bob.address, ethers.utils.parseUnits('1', '17'), { value: ethers.utils.parseEther('0.1') })
 const txReceipt = await rawTx.wait()
 console.log(
-    `Tx hash for sending tokens from contract \'${srcToken.address.slice(0, 6)}...${srcToken.address.slice(-4)}\': \n\t\'${sendTx.hash}\'`
+    `Tx hash for sending tokens from contract \'${srcToken.address.slice(0, 6)}...${srcToken.address.slice(-4)}\': \n\t\'${sendTx.hash}\' in block #${txReceipt.blockNumber}`
 )
 console.log(rawTx)
 console.log(txReceipt)

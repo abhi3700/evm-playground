@@ -2202,6 +2202,24 @@ List of Warnings, Errors in Contract
 - _Cause_: `push` method is not available for dynamic array of type `address payable[]`. Another reason could be that the array is defined as fixed rather than dynamic in order to use `push` method.
 - _Solution_: just define w/o `payable`
 
+#### 5. Error: Awaiting_internal transactions | CALL_EXCEPTION | OUT_OF_GAS
+
+- _Cause_: The transaction would require a high gas limit to be set explicitly.
+- _Solution_: Set a gas limit. If you set it too high, you will not be charged for unused gas, but it's still good practice to set a reasonable limit based on the complexity of the operation you're performing.
+  - Using `ethers-ts`:
+
+```ts
+
+```
+
+- Using `foundry`:
+
+```sh
+cast send $WTSSCLZ_NOVA "setPeer(uint32,bytes32)" $SEPOLIA_ENDPOINT_V2_ID 0x00000000000000000000000087Aca95Fb76D1617fCb068c4154594Ec6149b0fF --rpc-url $NOVA_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY --gas-limit 1000000
+```
+
+> Initially, tx [failed](https://nova.subspace.network/tx/0xb664c97dd7871362599b20a981053a0db960de767cc90f5cde2825c7449df0d9) with 46k gas consumption. So, decided to set a limit of 1M (safe side). So, the tx was successful. [Tx url](https://nova.subspace.network/tx/0xae8948ca05203ff9ad198cc7fbaf21be7c8f13e41a3edca44df5ca00ce96467f).
+
 ### Testing
 
 List of Warnings, Errors in Unit testing
