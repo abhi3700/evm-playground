@@ -539,6 +539,13 @@ forge install GIT_ACCOUNT/REPO --no-commit
 This won't commit the required files.
 > Basically, inherently it does `$ git submodule add ...` & then `git add ...` & then `git commit -m "..."` which is wrapped inside `forge install..`.
 
+Install a particular version of git lib:
+
+```sh
+# use commit as version, if there is not release/tags.
+forge install smartcontractkit/ccip@b06a3c2eecb9892ec6f76a015624413fffa1a122
+```
+
 ---
 
 Success when the `git status` is clean:
