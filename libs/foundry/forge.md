@@ -1200,6 +1200,11 @@ ds-test/=lib/forge-std/lib/ds-test/src/
 - _Cause_: the error message is not matching with the expected error message. Hence, `0xaf4e51c7` is the selector of the error message - `ZeroAmount`
 - _Solution_: change the error message to the actual.
 
+### 8. Error: Failed to get EIP-1559 fees
+
+- _Cause_: the error is RPC related when using deploying contract via `$ forge script...`
+- _Solution_: Add `--legacy` flag to submit the transaction via `$ forge script .... --legacy`.
+
 **Before**:
 
 ```solidity
