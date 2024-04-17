@@ -412,3 +412,61 @@ $ cast abi-decode --input "setPeer(uint32,bytes32)" 0x00000000000000000000000000
 ```
 
 [Tx url](https://mumbai.polygonscan.com/tx/0xddbe10afe2fbeee4cd70efdbdc26a5f92d1d44827c1a65832aa5557b39e3c615).
+
+#### `cast rpc anvil_mine <NUM_OF_BLOCKS> --rpc-url <http://....>`: Mine empty block(s)
+
+```sh
+$ cast rpc anvil_mine 4 --rpc-url http://127.0.0.1:8545
+null
+```
+
+This mined 4 blocks in open Anvil (forked or unforked) terminal like this:
+
+```sh
+anvil_mine
+
+    Block Number: 352695
+    Block Hash: 0xf15244cce8077aa91fc07eff15db797c766246a0f57d7d0677fbf88fa590b7e7
+    Block Time: "Tue, 16 Apr 2024 18:22:01 +0000"
+
+
+    Block Number: 352696
+    Block Hash: 0xbde29fc728909b526f533e94014efa96e70ccbdef4084dcfba13c7212fcac028
+    Block Time: "Tue, 16 Apr 2024 18:22:02 +0000"
+
+
+    Block Number: 352697
+    Block Hash: 0xf1c771a259b8275590437cb1997bdbf2ce326f66906564fd3f2fdcd87135d19b
+    Block Time: "Tue, 16 Apr 2024 18:22:03 +0000"
+
+
+    Block Number: 352698
+    Block Hash: 0x39143890c2060e16bb3e8204aef1e2ca8c9b7aae93b1e703bb6e961ad94d41c9
+    Block Time: "Tue, 16 Apr 2024 18:22:04 +0000"
+
+eth_blockNumber
+eth_chainId
+```
+
+#### `cast --to-bytes32 <VALUE>`: Encode value to bytes32
+
+```sh
+$ cast --to-bytes32 0xB751710Af8Ce68677aB960adB103060f38d09714                    
+0xb751710af8ce68677ab960adb103060f38d09714000000000000000000000000
+```
+
+This is called right padding (i.e. adding zeros to right).
+
+In order to achieve left padding (i.e. adding zeros to left), use this code snippet:
+
+```solidity
+// left padding
+// e.g. 0x000000000000000000000000b751710af8ce68677ab960adb103060f38d09714
+bytes32(uint256(uint160(address(${1:ADDRESS}))))
+
+// right padding
+// e.g. 0xb751710af8ce68677ab960adb103060f38d09714000000000000000000000000
+bytes32(uint256(uint160(address(${1:ADDRESS}))) << 96)
+```
+
+> Snippet added for both left and right padding.

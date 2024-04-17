@@ -764,7 +764,7 @@ Gas Limit
 Listening on 127.0.0.1:8545
 ```
 
-### script
+### Script
 
 Here is the script to deploy the contract like this:
 
@@ -791,14 +791,36 @@ contract AutoCompVaultScript is Script {
 Here,
 
 - `vm.startBroadcast()` and `vm.stopBroadcast()` are used to wrap the contract deployment transaction.
-- token, acvault are the contract instances that are used in the script.
+- If a particular account is to be made as caller, then
+
+```solidity
+contract AutoCompVaultScript is Script {
+    function setUp() public {
+        uint256 privateKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
+        owner = vm.addr(privateKey);
+    }
+
+    function run() public {
+        vm.startBroadcast(owner);
+        // ...
+        vm.stopBroadcast();
+    }
+}
+```
+
+| NOTE | If during `$ forge script.... --private-key $DEPLOYER_PRIVATE_KEY --broadcast`, the same owner's private key is used as signer, then by default forge adds a huge gas coin to deploy on any network (local: Anvil, public)....around 1300e27 gas. You can verify by adding `console2.log(owner.balance)` inside `run()` function in script. <br/> So, don't 🙅🤯 freakout if owner's balance is not matching with its actual balance queried via `$ cast balance $DEPLOYER_PUBLIC_KEY --rpc-url <RPC_URL>`. Just remove `--private-key` flag to view the original balance. [Forum](https://ethereum.stackexchange.com/questions/162610/foundry-script-balance-mismatch-of-tx-caller/162611#162611)|
+|--|--|
+
+- `token`, `acvault` are the contract instances that are used in the script.
 
 #### on Local testnet (using anvil)
 
 Run SIMULATION to estimate the gas cost to deploy the contract
 
+Anvil node is opened forking real network's RPC url: `$ anvil --fork-url $NOVA_RPC_URL`
+
 ```sh
-$ forge script script/Contract.s.sol:ContractScript --fork-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+$ forge script script/Contract.s.sol:ContractScript --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 [⠢] Compiling...
 No files changed, compilation skipped
 Script ran successfully.
@@ -822,8 +844,8 @@ Run this to broadcast the transaction
 
 > Before sending a tx, it's always better to check its gas estimate.
 
-```console
-❯ forge script script/Contract.s.sol:ContractScript --fork-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
+```sh
+❯ forge script script/Contract.s.sol:ContractScript --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast
 [⠢] Compiling...
 No files changed, compilation skipped
 Script ran successfully.
