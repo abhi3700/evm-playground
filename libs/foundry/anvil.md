@@ -24,3 +24,9 @@ anvil --gas-price 3000000020
 ```sh
 anvil --gas-limit 60000000 --gas-price 3000000020
 ```
+
+## Visualize
+
+<https://app.tryethernal.com/overview> | FREE
+
+- In the settings page, you can change the network to local forked RPC node url: `ws://localhost:8545`, You can spin up a local node using `anvil` with `anvil -f $SEPOLIA_RPC_URL -p 8545`
