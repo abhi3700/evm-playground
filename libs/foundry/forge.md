@@ -665,6 +665,11 @@ We can do this for test file as well. For example, in `Counter.t.sol`.
 
 ---
 
+Additionally use `--debug` flag to `$ forge script ...` to see results like this:
+![](../../img/forge_debug.png)
+
+---
+
 Before deployment, ensure that all the console logs related code are removed from the contracts (may exist in the test files).
 
 ---
@@ -765,6 +770,12 @@ Listening on 127.0.0.1:8545
 ```
 
 ### Script
+
+In order to send txs in batch, use `--batch-size <NUM>` flag.
+
+E.g. to send 10 txs in batch: `$ forge script ... --batch-size 10`. Suppose you have 100 txs to send, then it'll send 10 txs in 1 batch, then 10 txs in 2nd batch, and so on.
+
+---
 
 Here is the script to deploy the contract like this:
 
