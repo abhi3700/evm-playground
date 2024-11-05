@@ -50,16 +50,17 @@ async fn get_gas_cost(
 
 /// Convert Wei to TSSC (in String)
 pub(crate) fn wei_to_tssc_string(bal_wei: U256) -> String {
-    let bal_tssc = format_units(bal_wei, "ether").unwrap();
+    let bal_tssc =
+        format_units(U256::from_dec_str(&bal_wei.to_string()).unwrap(), "ether").unwrap();
     bal_tssc
 }
 
 /// Convert Wei to TSSC (in f64)
 pub(crate) fn wei_to_tssc_f64(bal_wei: U256) -> f64 {
-    let bal_tssc = bal_wei.as_usize() as f64 / 1e18;
-    bal_tssc
-}
+    let eth = format_units(bal_wei, "ether").unwrap();
 
+    eth.parse::<f64>().unwrap()
+}
 /// Transfer TSSC (chain native token) to single account via eth API call method
 /// NOTE: For multiple receiver accounts, we can also use
 /// the contract "Fund"'s `transferTsscToMany`
@@ -350,4 +351,43 @@ pub(crate) async fn get_gas_cost(
     let gas_cost_tssc = wei_to_tssc_f64(gas_cost_wei);
 
     Ok(gas_cost_tssc)
+}
+
+
+/// Generate a new EVM wallet
+pub(crate) fn create_new_evm_wallet() -> eyre::Result<Address> {
+    let mnemonic = Mnemonic::new(MnemonicType::Words12, Language::English);
+    let phrase = mnemonic.phrase();
+
+    // TODO: save the seed phrase into a file
+    log::debug!("phrase: {}", phrase);
+    assert_eq!(
+        phrase.split(" ").count(),
+        12,
+        "The seed phrase must be 12 words"
+    );
+
+    // Generate wallet from the mnemonic
+    // Child key at derivation path: m/44'/60'/0'/0/{index}
+    let wallet = MnemonicBuilder::<English>::default()
+        .phrase(phrase)
+        // .index(0u32)?
+        // TODO: Use this if your mnemonic is encrypted
+        // .password(password)
+        .build()?;
+
+    let address = wallet.address();
+    // TODO: save this as well or else save the seed phrase with exact derivation path
+    let priv_key = format!("0x{}", hex::encode(wallet.signer().to_bytes()));
+    let pub_key = format!(
+        "0x{}",
+        hex::encode(wallet.signer().verifying_key().to_sec1_bytes())
+    );
+
+    // log::info!("Mnemonic: {}", mnemonic);
+    log::info!("Private key: {}", priv_key);
+    log::info!("\nAddress:     {:?}", address);
+    log::info!("Public key: {}", pub_key);
+
+    Ok(address)
 }

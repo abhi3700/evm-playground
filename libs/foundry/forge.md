@@ -42,6 +42,8 @@ Also add as submodule in `.gitmodules`
 
 ## Testing
 
+> In Foundry, unfortunately, there is no way to ignore a test function. But, you can ignore test by renaming from `testHello` to `ignoreTestHello`. This way, the `forge test` command won't be picking it up as it doesn't start with `test`.
+
 ### CLI via `forge`
 
 Use 3 ways to test in different cases:

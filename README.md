@@ -127,22 +127,23 @@ The contract compilation can happen using EVM frameworks like Hardhat, Truffle, 
 
 ## Deploy
 
-- The address of the contract account (not external account) is automatically generated at deployment time, and the contract can never be changed once deployed.
+- The address of the contract account (not external account) is automatically generated at deployment time, and the contract can never be changed once deployed. The deployer's address & its nonce are used to form a hash (32-byte). `Hash(RLP_encoding(deployer_address, nonce))` is from where the rightmost 20 bytes are used as the address of the contract.
 - In EVM chains, gas fee is analogous to EOS's CPU, NET (follow staked or pay-per-use model). `EOSIO's CPU & NET` <-> `ETH's gas fee`
 - In EVM chains, the contract data storage is unlimited unlike EOSIO's RAM (follow staked or pay-per-use model). `EOSIO's RAM` <-> `ETH's unlimited storage`.
   > But, the contract code is limited to 24KB in EVM chains.
-- The EVM has a 256-bit address space, which is 2^256 addresses. The first 20 bytes of the address are the address of the contract, and the last 12 bytes are the address of the account that created the contract. So, each slot of stack in machine is of `uint256` type.
+- The EVM has a stack machine with max. 1024 items (of each 256-bit (32-byte) word).
+  > This 256-bit word size is chosen to facilitate cryptographic operations, such as hashing and elliptic curve computations.
 - In ETH, an object is created based on ABI in the `geth` console and then calls the `new()` method to initiate a contract creation txn (parameters contain bytecode), whereas in EOSIO's `cleos` tool, `set()` method is used to specify the bytecode and the directory where the ABI is located.
   > In EOSIO, the contract account name is not generated automatically, but it has to be created manually/automatically by the user i.e. RAM, CPU, NET has to be provided. The contract account name is the same as the contract name in terms of rules.
 - [Remix](https://remix-ide.readthedocs.io/en/latest/run.html)
   - [Environments](https://remix-ide.readthedocs.io/en/latest/run.html#environment)
     > For seeing the contract data, function details, Remix IDE is the best tool for EVM contracts.
 
-```
-JavaScript VM: All the transactions will be executed in a sandbox blockchain in the browser. This means nothing will be persisted when you reload the page. The JsVM is its own blockchain and on each reload it will start a new blockchain, the old one will not be saved.
-Injected Provider: Remix will connect to an injected web3 provider. Metamask is an example of a provider that inject web3.
-Web3 Provider: Remix will connect to a remote node. You will need to provide the URL to the selected provider: geth, parity or any Ethereum client.
-```
+> JavaScript VM: All the transactions will be executed in a sandbox blockchain in the browser. This means nothing will be persisted when you reload the page. The JsVM is its own blockchain and on each reload it will start a new blockchain, the old one will not be saved.
+
+> Injected Provider: Remix will connect to an injected web3 provider. Metamask is an example of a provider that inject web3.
+
+> Web3 Provider: Remix will connect to a remote node. You will need to provide the URL to the selected provider: geth, parity or any Ethereum client.
 
 ## Call
 
@@ -173,6 +174,47 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 
 > - Functions
 
+### Data Location
+
+**Stack**:
+
+- **Nature**: A Last-In-First-Out (LIFO) data structure.
+- **Size**: Limited to 1024 elements, each being 256 bits (32 bytes).
+- **Purpose**: Holds intermediate values during execution, facilitating operations like arithmetic calculations and temporary data handling.
+- **Persistence**: Data exists only during the execution of a single operation; it’s cleared immediately after.
+- **Access**: Directly manipulated using opcodes such as `PUSH`, `POP`, `DUP`, and `SWAP`.
+
+---
+
+**Memory**:
+
+- **Nature**: A linear, byte-addressable, and expandable array.
+- **Size**: Starts at zero and can grow dynamically as needed during execution.
+- **Purpose**: Stores temporary data that may be needed across multiple operations within a single transaction, such as arrays or buffers.
+- **Persistence**: Data persists only for the duration of the transaction; it’s cleared once execution completes.
+- **Access**: Managed using opcodes like `MLOAD` (to read) and `MSTORE` (to write).
+
+---
+
+**Storage**:
+
+- **Nature**: A key-value store associated with each contract, where both keys and values are 256-bit words.
+- **Size**: Theoretically unbounded, but practical usage is constrained by gas costs.
+- **Purpose**: Holds persistent state variables that remain consistent across transactions, such as balances or contract settings.
+- **Persistence**: Data remains intact between transactions and is part of the blockchain’s state.
+- **Access**: Interacted with using opcodes like `SLOAD` (to read) and `SSTORE` (to write).
+
+---
+
+**Summary**:
+
+- Stack & Memory are both volatile in nature.
+- Storage is non-volatile in nature.
+- Storage cost ranking (least to most):
+  1. _Stack_
+  2. _Memory_ (costs increasing as more memory is used)
+  3. _Storage_ (due to permanent storage in blockchain).
+
 ### Contract
 
 - max code size: **`24 KB`**
@@ -198,23 +240,26 @@ Web3 Provider: Remix will connect to a remote node. You will need to provide the
 - Inheritance:
 
 ```
+
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.4.0 <0.9.0;
 
 import "./Owned.sol";
 
-
 contract Congress is Owned, TokenRecipient {
         //...
 }
+
 ```
 
 - The contract should be named using the CapWords specification (first letter)capital）
 
 ```
+
 contract BucketCrow {
         // ...
 }
+
 ```
 
 - After build, a contract looks like this:
@@ -223,10 +268,7 @@ contract BucketCrow {
 
 where, there is a bytecode.
 
-> NOTE: When a transaction is sent to a block all it's actions are considered confirmed i.e.
-
-        based on which some values can be set like `id` here.
-        Either of the action if fails, the whole transaction is failed.
+> NOTE: When a transaction is sent to a block all it's actions are considered confirmed i.e. based on which some values can be set like `id` here. Either of the action if fails, the whole transaction is reversed.
 
 > [Try this example](./sol/MyArray/TestArray.sol) on Remix.
 
@@ -352,7 +394,7 @@ function _safeTransfer(address token, address to, uint value) private {
 }
 ```
 
-These are the 2 functions which can be used in Solidity to prepare payloads in raw bytes for external contract calls. Such payloads can be passed as parameters to the low level Solidity `.call` ✅, `.delagateCall` ✅, `.staticCall` [❌Deprecated].
+These are the 2 functions which can be used in Solidity to prepare payloads in raw bytes for external contract calls. Such payloads can be passed as parameters to the low level Solidity `.call` ✅, `.delegateCall` ✅, `.staticCall` [❌Deprecated].
 
 Both are same functions implemented differently. Easy to use `abi.encodeWithSignature` [Personal preference though].
 
@@ -385,7 +427,7 @@ where, no bytecode.
 
 Read [more](https://docs.soliditylang.org/en/v0.8.14/contracts.html#interfaces)
 
-We don't need to implement the `view` functions with the exact same name as public state variable. Like in this eg:
+We don't need to implement the `view` functions for `public` state variable. Like in this eg:
 
 ![](img/interface_wo_implement_view_func.png)
 
@@ -418,12 +460,14 @@ msg = "I am unwell"
 
 messageHash = keccak256(msg);
 
-signedMessageHash = keccak256(messageHash);
+// a.k.a. signature
+signedMessageHash = sign(messageHash, privateKey);
 
+// verify the signature
 ecrecover(signedMessageHash, _signature) ==_signer;
 ```
 
-To use the actual solidity code, refer [this](https://github.com/OpenZeppelin/openzeppelin-sdk/blob/master/packages/lib/contracts/cryptography/ECDSA.sol).
+To use the actual solidity code, refer [this](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/ECDSA.sol).
 
 ---
 
@@ -433,9 +477,9 @@ To use the actual solidity code, refer [this](https://github.com/OpenZeppelin/op
 
 #### Gasless (Meta-transactions)
 
-We know that every (write) interaction on the Ethereum blockchain requires a small amount of ETH on the interacting address.
+We know that every (write) interaction on the Ethereum blockchain requires a small amount of ETH on the caller address.
 
-This sounds really awful from a UX perspective for token holders, as users first need to acquire ETH via a centralized exchange and transfer it to the wallet address accordingly. But wait, isn’t it the case — very simplified — that at the most foundational blockchain level, it is simply a matter of verifying the signed payload, i.e. off-chain cryptography?
+This sounds really awful from a UX perspective for token holders, as users (holding fiat money) first need to buy (onramp) ETH from a CEX and transfer it to the wallet address (caller). But wait, isn’t it the case — very simplified — that at the most foundational blockchain level, it is simply a matter of verifying the signed payload, i.e. off-chain cryptography?
 
 Ah yes, that sounds right! So how about the wallet user simply signs the payload off-chain and someone else (e.g. an operator) broadcasts and pays for the transaction?
 
@@ -453,13 +497,13 @@ Now, with EVM SC, the transactions can be gasless (meta-transactions) for users,
 Following are the steps: [Video](https://www.youtube.com/watch?v=hZjk4D6wxGA)
 
 1. Sign up on Biconomy with email address & then verify.
-1. Give a native coin value limit like ETH amount (for Ethereum) per DApp, per user, per API key.
+2. Give a native coin value limit like ETH amount (for Ethereum) per DApp, per user, per API key.
 
    - Here, Biconomy has deployed a `Forwarder.sol` SC for paying the gas-fee on behalf of the the contract deployer (who ensures native coin in the Biconomy setup page). So, Biconomy is the submitter (on behalf of SC owner/deployer) of the signed message by caller (user).
 
-1. Add DApp: name, sc_address, sc_abi
-1. Go to "Manage API": add DApp by name (filter), then select the function for which this gasless feature (meta-transaction) has to be enabled.
-1. Use the generated API during Biconomy SDK installation inside the code (FE, BE) via `$ npm install @biconomy/mexa` & then add this code:
+3. Add DApp: name, sc_address, sc_abi
+4. Go to "Manage API": add DApp by name (filter), then select the function for which this gasless feature (meta-transaction) has to be enabled.
+5. Use the generated API during Biconomy SDK installation inside the code (FE, BE) via `$ npm install @biconomy/mexa` & then add this code:
 
 ```ts
 import {Biconomy} from "@biconomy/mexa";
@@ -907,7 +951,7 @@ function newPurchase()
 
 ##### Storage
 
-```
+```solidity
 // according to roomId => gameId => playerId => Player
 mapping (uint => mapping (uint => mapping (uint => Player))) public players;
 ```
@@ -947,11 +991,22 @@ function doSomething() public  {
 }
 ```
 
+- Any local variable or function argument in a function, which has size > 32 bytes need to be defined with memory/calldata type. Bcoz there is temp. data persistence required.
+
+E.g.
+
+```solidity
+struct memory cart
+string calldata name
+address[] calldata receivers
+```
+
 ##### Calldata
 
-- `calldata` is non-modifiable and non-persistent data location where all the passing values to the function are stored. Also, `calldata` is the default location of parameters (not return parameters) of external (≤ `0.6.9` version) functions, but now all (≥ `0.7.0`) visibility functions.
+- `calldata` is non-modifiable and non-persistent data location where the function params (args) are stored. Also, `calldata` is the default location of parameters (not return parameters) of external (≤ `0.6.9` version) functions, but now all (≥ `0.7.0`) visibility functions.
 - So, use as a function parameters for a function of any visibility for solidity version ≥ `0.7.0`
 - Don't use for local variable to be used inside a function. Instead use memory.
+- `calldata` is read-only, mainly used for (external)function params.
 
 #### Mapping
 
@@ -978,9 +1033,9 @@ address[] mappingKeyArr;  // M-2
 - Example - [Mapping.sol](./base/Mapping/Mapping.sol)
 - check if key exists:
 
-```
+```solidity
 if (abi.encodePacked(balances[addr]).length > 0) {
-        delete balances[addr];
+    delete balances[addr];
 }
 ```
 
@@ -1003,7 +1058,7 @@ if (abi.encodePacked(balances[addr]).length > 0) {
 - delete at an index using `delete myArray[3]`
 - delete the last element using `delete myArray[myArray.length-1]`
 - If you start with an array [A,B,C,D,E,F,G] and you delete "D", then you will have an array [A,B,C,nothing,E,F,G]. It's no shorter than before.
-- Get all elements
+- Get all elements:
 
 ```solidity
 function getAllElement() public view returns (uint[]) {
@@ -1200,6 +1255,7 @@ require(<logicalCheck>, <optionalErrorMessage>);
 - [Example 1: Base Caller Contracts](./base/contracts/BaseCaller.sol)
 - [Example 2: Context Switcher](./base/contracts/ContextSwitcher.sol)
   - call, delegatecall
+- [Example 3: Delegate Call](./sc-sol-foundry/src/DelegateCall.sol)
 - calling a contract function with multiple arguments:
 
 ```solidity
@@ -1230,7 +1286,7 @@ contract Time {
 }
 ```
 
-- The block.timestamp returns the current block timestamp in seconds since the UNIX epoch as a `unit256` number.
+- The `block.timestamp` returns the current block timestamp in seconds since the UNIX epoch as a `unit256` number.
 - As a result, the block.timestamp property will be identical for each transaction on the block.
 - We can never expect an exact second due to the low-resolution clock of blockchain; therefore, our time comparison should always include greater or less than, rather than equal.
 - It’s also worth remembering that block creators can influence the time a block is created and the order in which transactions are processed to their benefit, leading to a Front-Running attack, a known Ethereum protocol issue.
@@ -1258,8 +1314,8 @@ contract Time {
 - They cannot inherit or be inherited by other contracts.
 - Libraries can be seen as implicit base contracts of the contracts that use them.
 - They exist for the purpose of code reuse.
-- They cannot receive Ether
-- They cannot be destroyed
+- They cannot receive Ether.
+- They cannot be destroyed.
 - Libraries are similar to contracts, but their purpose is that they are deployed only once at a specific address and their code is reused using the `DELEGATECALL` (`CALLCODE` until Homestead) feature of the EVM. This means that if library functions are called, their code is executed in the context of the calling contract, i.e. `this` points to the calling contract, and especially the storage from the calling contract can be accessed.
 - Contracts can call library functions without having to implement or deploy the functions for itself - [allowing the library functions to modify the state of the calling contract](https://docs.soliditylang.org/en/latest/contracts.html#libraries).
 - This is made possible by the DELEGATECALL opcode of the EVM. This enables developers to use code that has already been audited and battle-tested in the wild.
@@ -1296,11 +1352,24 @@ tx.origin (address): sender of the transaction (full call chain)
 
 ## Miscellaneous
 
+### State Variables
+
+- In Solidity, when a function assigns a new value to a state variable and then returns that variable, the returned value reflects the newly assigned value.
+
+```solidity
+function setNum(uint256 _num) public returns (uint256) {
+    num = _num;
+    return num;
+}
+```
+
+The `num` state variable is first updated with the `_num`. Immediately after, the function returns the current value of `num`, which is the newly assigned result. Therefore, the function returns the updated value of `num`, not its previous value.
+
 ### Arithmetic Operation
 
 The arithmetic operation is very tricky (in terms of precision handling especially in DeFi applications) in Solidity. The following code will give an idea of precision.
 
-> In Solidity, the order of the arithmetic operations is not clearly defined b/w same levels like multiplication and division. So, it is always better to use parentheses to avoid any precision loss (eventually) & clarify the operation, in addition to following multiply first and then divide.
+> In Solidity, the order of the arithmetic operations is not clearly defined b/w same levels like multiplication and division. So, it is always better to use parentheses to avoid any precision loss (eventually) & clarify the operation, in addition to following multiply first and then divide to avoid precision loss.
 
 ```solidity
 // bracketing `accruedInterestOfprevDepositedAmt / scalingFactor` is optional
@@ -1564,66 +1633,67 @@ contract ExternalPublicTest {
 ```
 
 - It's actually about `memory` or `calldata`. The former would consume more gas (491 wei) & the later would consume 260 wei gas.
+  > But, if the var is modified, then can't define it as `calldata`.
 
 - `now` -> which is equivalent to `block.timestamp` may not be as accurate as one may think. It is up to the miner to pick it, so it could be up to 15 minutes (900 seconds) off.
 - `view` vs `pure` in function
   - `view` demo: Here, the function is making a change (optional) into the state variables num1, num2 & getting the output.
 
-```
-// Solidity program to
-// demonstrate view
-// functions
-pragma solidity ^0.5.0;
+  ```solidity
+  // Solidity program to
+  // demonstrate view
+  // functions
+  pragma solidity ^0.5.0;
 
-// Defining a contract
-contract Test {
+  // Defining a contract
+  contract Test {
 
-        // Declaring state
-        // variables
-        uint num1 = 2;
-        uint num2 = 4;
+          // Declaring state
+          // variables
+          uint num1 = 2;
+          uint num2 = 4;
 
-     // Defining view function to
-     // calculate product and sum
-     // of 2 numbers
-     function getResult(
-     ) public view returns(
-         uint product, uint sum){
-             uint num1 = 10;
-             uint num2 = 16;
-            product = num1 * num2;
-            sum = num1 + num2;
-     }
-}
-```
+      // Defining view function to
+      // calculate product and sum
+      // of 2 numbers
+      function getResult(
+      ) public view returns(
+          uint product, uint sum){
+              uint num1 = 10;
+              uint num2 = 16;
+              product = num1 * num2;
+              sum = num1 + num2;
+      }
+  }
+  ```
 
-    - `pure` demo: Here, the function won't be able to read the state variables num1, num2 or even modify num1, num2, but getting the output.
+  - `pure` demo: Here, the function won't be able to read the state variables num1, num2 or even modify num1, num2, but getting the output.
 
-```
-// Solidity program to
-// demonstrate pure functions
-pragma solidity ^0.5.0;
+  ```solidity
+  // Solidity program to
+  // demonstrate pure functions
+  pragma solidity ^0.5.0;
 
-// Defining a contract
-contract Test {
+  // Defining a contract
+  contract Test {
 
-    // Defining pure function to
-    // calculate product and sum
-    // of 2 numbers
-    function getResult(
-    ) public pure returns(
-        uint product, uint sum){
-        uint num1 = 2;
-        uint num2 = 4;
-        product = num1 * num2;
-        sum = num1 + num2;
-    }
-}
-```
+      // Defining pure function to
+      // calculate product and sum
+      // of 2 numbers
+      function getResult(
+      ) public pure returns(
+          uint product, uint sum){
+          uint num1 = 2;
+          uint num2 = 4;
+          product = num1 * num2;
+          sum = num1 + num2;
+      }
+  }
+  ```
 
 - check if the address is present
 
-```
+```solidity
 // 1. store the addresses in a mapping
 mapping(address => uint256) mapAddressBool;
 
@@ -1653,16 +1723,16 @@ require((_stf.fundraisingPeriod >= 15 minutes) && (_stf.fundraisingPeriod <= max
 - Variable packing:
   - Solidity stores data in 256-bit memory slots. Variables less than 256 bits will be stored in a single slot, Data that does not fit in a single slot is spread over several slots.
   - Each storage slot costs gas, packing the variables helps you optimize your gas usage by reducing the number of slots our contract requires.
-  - [Image](./img/solidity_gasopt_1_variables_packing.png)
+  [Image](./img/solidity_gasopt_1_variables_packing.png)
 - Turn-on Solidity Optimizer:
   - specify an optimization flag to tell the Solidity compiler to produce highly optimized bytecode.
-  - [Image](./img/solidity_gasopt_2_turnon_sol_optimizer.png)
+  [Image](./img/solidity_gasopt_2_turnon_sol_optimizer.png)
 - Delete variables that you don’t need:
   - In Ethereum, you get a gas refund for freeing up storage space.
   - Deleting a variable refund 15,000 gas up to a maximum of half the gas cost of the transaction. Deleting with the `delete` keyword is equivalent to assigning the initial value for the data type, such as `0` for integers.
 - Compute known value-off chain:
   - If you know what data to hash, there is no need to consume more computational power to hash it using `keccak256` , you’ll end up consuming 2x amount of gas.
-  - [Image](./img/solidity_gasopt_3_compute_known_val_offchain.png)
+  [Image](./img/solidity_gasopt_3_compute_known_val_offchain.png)
 - Do not shrink Variables:
   - If only `uint8`, `uint16`, `uint32`, etc. are used as a state variables, then there is going to be gas consumed in converting it into `256 bit`. So, it's better if it's already defined as `uint256`
   - In solidity, you can pack multiple small variables into one slot, but if you are defining a lone variable and can’t pack it, it’s optimal to use a `uint256` rather than `uint8`.
@@ -1673,17 +1743,17 @@ require((_stf.fundraisingPeriod >= 15 minutes) && (_stf.fundraisingPeriod <= max
   - It is more gas efficient to initialize a tightly packed struct with separate assignments instead of a single assignment. Separate assignments makes it easier for the optimizer to update all the variables at once.
   - Initialize structs like this:
 
-```
-Point storage p = Point()
-p.x = 0;
-p.y = 0;
-```
+  ```solidity
+  Point storage p = Point()
+  p.x = 0;
+  p.y = 0;
+  ```
 
-    - Instead of:
+  instead of:
 
-```
-Point storage p = Point(0, 0);
-```
+  ```solidity
+  Point storage p = Point(0, 0);
+  ```
 
 - Inheritance
   - When we extend a contract, the variables in the child can be packed with the variables in the parent.
@@ -1701,7 +1771,7 @@ Point storage p = Point(0, 0);
   - When you design a Dapp you don’t have to put 100% of your data on the blockchain, usually, you have part of the system (Unnecessary data (metadata, etc .. ) ) on a centralized server.
 - Avoid manipulating storage data
   - Performing operations on memory or call data, which is similar to memory is always cheaper than storage.
-  - [Image](./img/solidity_gasopt_4_avoid_manipul_storage_data.png)
+  [Image](./img/solidity_gasopt_4_avoid_manipul_storage_data.png)
   - In the Second contract, before running the for loop we’re assigning the value of a storage data d to `_d` to avoid accessing the storage each time we iterate.
   - A common way to reduce the number of storage operations is manipulating a local memory variable before assigning it to a storage variable.
   - We see this often in loops:
@@ -2041,13 +2111,13 @@ List of errors/warnings to avoid: [doc](https://github.com/abhi3700/priv/blob/ma
 - `now` replaced by `block.timestamp` in global variables
 - `send` ( `recipient.send(1 ether);` ), `transfer` ( `recipient.transfer(1 ether);` ) is less safer than this:
 
-```
-(bool success, ) = recipient.call{gas: 10000, value:1 ether}(new bytes(0));
-require(success, "Transfer failed.");
-```
+  ```solidity
+  (bool success, ) = recipient.call{gas: 10000, value:1 ether}(new bytes(0));
+  require(success, "Transfer failed.");
+  ```
 
-    - [original discussion](https://github.com/ethereum/solidity/issues/610)
-    - hence, `call` > `transfer` > `send` [More](https://docs.soliditylang.org/en/latest/types.html#members-of-addresses)
+  - [original discussion](https://github.com/ethereum/solidity/issues/610)
+  - hence, `call` > `transfer` > `send` [More](https://docs.soliditylang.org/en/latest/types.html#members-of-addresses)
 
 > There are some dangers in using send: The transfer fails if the call stack depth is at 1024 (this can always be forced by the caller) and it also fails if the recipient runs out of gas. So in order to make safe Ether transfers, always check the return value of send, use transfer or even better: use a pattern where the recipient withdraws the money.
 
