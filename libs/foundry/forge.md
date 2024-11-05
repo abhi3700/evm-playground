@@ -825,6 +825,21 @@ contract AutoCompVaultScript is Script {
 |--|--|
 
 - `token`, `acvault` are the contract instances that are used in the script.
+- There could be multiple callers in a script. Consider this [script](https://github.com/abhi3700/omnipay_contracts/blob/7d47b97933ae903e7ab5b3ce90ed213df4d84e74/script/ReturnCoins.s.sol) with the following command:
+
+```sh
+forge script script/ReturnCoins.s.sol:ReturnCoinsScript \
+    --private-keys $DEPLOYER_PRIVATE_KEY \
+    --private-keys $ALICE_SK \
+    --private-keys $BOB_SK \
+    --private-keys $CHARLIE_SK \
+    --private-keys $DAVID_SK \
+    --private-keys $EVE_SK \
+    --private-keys $FRANK_SK \
+    --rpc-url $SEPOLIA_RPC_URL -vvvv --broadcast
+```
+
+  Use `--private-keys` flag as many times as the number of callers with their private keys.
 
 #### on Local testnet (using anvil)
 
