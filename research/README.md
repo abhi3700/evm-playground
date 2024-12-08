@@ -13,7 +13,11 @@ Diagrams [here](../evm.drawio) tab: "MEV".
 
 This is about channels, rollups (ZK, Optimistic), and sharding.
 
-My notes on [ZK rollups](https://www.notion.so/ZK-Rollups-8ebd9daa4550472db8ae6405ae68f678?pvs=4).
+My notes on
+
+- [ZK rollups](https://www.notion.so/ZK-Rollups-8ebd9daa4550472db8ae6405ae68f678?pvs=4).
+- [Rollups](https://www.notion.so/Rollups-3acd65c9f37a46f692ae31818e0680d1?pvs=4)
+  - covers all kinds of rollups.
 
 ## Mountain Merkle Tree (MMT)
 

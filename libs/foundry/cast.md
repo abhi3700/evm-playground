@@ -7,10 +7,27 @@
 
 #### `$ cast send <contract> <method-sig> <args> --rpc-url <rpc-url> --private-key <private-key-w-0x>`: Send a transaction to a contract
 
+Send some ETH to an address:
+
+```sh
+cast send \ 
+    --from $SENDER_ADDRESS \
+    $RECIPIENT_ADDRESS \ 
+    --value 1000000000000000000 \
+    --private-key $SENDER_PRIVATE_KEY \
+    --rpc-url $ANVIL_RPC_URL
+```
+
+---
+
+Send some ERC20 tokens to an address:
+
 ```sh
 source .env
 cast send 0xA2025B15a1757311bfD68cb14eaeFCc237AF5b43 "transfer(address,uint)" 0x8997F1E62d679Db9713d71E0C0920E93B5f7B4B5 1000000 --private-key $DEPLOYER_PRIVATE_KEY --rpc-url $GOERLI_RPC_URL
 ```
+
+---
 
 Another example where the function is like this:
 
