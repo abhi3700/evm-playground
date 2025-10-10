@@ -11,12 +11,29 @@ Components:
 
 ## Installation
 
+### via cargo
+
+```sh
+# latest
+cargo install --git https://github.com/foundry-rs/foundry --profile release --locked forge cast chisel anvil
+
+# specific commit
+cargo install --git https://github.com/foundry-rs/foundry \
+  --rev <COMMIT> \
+  --profile release --locked forge cast chisel anvil
+```
+
+### via curl
+
+> [!NOTE]
+> Faced some difficulty installing cast, .. tools.
+
 Following are the steps:
 
 1. Install `foundryup`
 
 ```console
-❯ curl -L https://foundry.paradigm.xyz | bash
+❯ curl -L https://foundry.paradigm.xyz | zsh
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                 Dload  Upload   Total   Spent    Left  Speed
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
@@ -99,7 +116,7 @@ Refer [this](https://book.getfoundry.sh/getting-started/first-steps)
 
 I have maintained the work [here](https://github.com/abhi3700/evm_contracts_foundry_1).
 
-- https://github.com/EricForgy/foundry-hardhat-sample
+- <https://github.com/EricForgy/foundry-hardhat-sample>
 
 ## References
 

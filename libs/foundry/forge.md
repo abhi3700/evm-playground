@@ -135,7 +135,7 @@ Test result: ok. 2 passed; 0 failed; finished in 279.50µs
 
 ---
 
-To log (on console) a variable output, use `$ forge test -vv`
+To log (on console) a variable output, use `$ forge t -vv`
 
 ```solidity
 function testGetCount() public {
@@ -147,7 +147,7 @@ function testGetCount() public {
 
 ---
 
-In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test ---match-contract Pausable`:
+In order to test the entire contract test file like `Pausable.t.sol` i.e. `$ forge test ---mc Pausable`:
 
 ![](../../img/foundry_test_1_file.png)
 
@@ -162,7 +162,7 @@ In order to test the functions named (with REGEX pattern) use like this:
 One can test single function as well by providing the exact testfile's function name:
 
 ```console
-❯ forge test --match-test testNonOwner
+❯ forge test --mt testNonOwner
 [⠆] Compiling...
 No files changed, compilation skipped
 
@@ -174,7 +174,7 @@ Test result: ok. 2 passed; 0 failed; finished in 3.72ms
 
 ---
 
-Run a particular test file like `$ forge test ---match-path test/HelloWorld.t.sol -vvv`
+Run a particular test file like `$ forge t ---mp test/HelloWorld.t.sol -vvv`
 
 ![](../../img/foundry_test_1_file_out_of_all.png)
 
